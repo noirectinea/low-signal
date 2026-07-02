@@ -1,26 +1,99 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #1a1a1a;
+  --foreground: #f2efe7;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-low-black: #1a1a1a;
+  --color-low-ash: #202020;
+  --color-low-graphite: #2e2e2a;
+  --color-low-fog: #f2efe7;
+  --color-low-paper: #e9e6d9;
+  --color-low-muted: #a7a196;
+  --color-low-bone: #b8ad9a;
+  --color-low-rust: #7b4638;
+  --color-low-line: rgb(242 239 231 / 0.14);
+  --font-sans: var(--font-inter);
+  --font-serif: var(--font-garamond);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html, body {
+  height: 100%;
+  background-color: #1a1a1a;
+  color: #f2efe7;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-inter), sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Image editorial styling - creates unified visual language */
+img {
+  filter: grayscale(10%) contrast(1.02) brightness(1.01) saturate(1.02) sepia(0.05);
+}
+
+.editorial-image {
+  filter: grayscale(8%) contrast(1.04) brightness(1.01) saturate(1.06) sepia(0.06);
+}
+
+.product-image {
+  filter: grayscale(8%) contrast(1.05) brightness(1) saturate(1.08) sepia(0.05);
+}
+
+.hero-image {
+  filter: grayscale(8%) contrast(1.04) brightness(1.01) saturate(1) sepia(0.04);
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #1a1a1a;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #4a463f;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #756b5d;
+}
+
+/* Selection */
+::selection {
+  background-color: #7b4638;
+  color: #f2efe7;
+}
+
+/* Smooth scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Links */
+a {
+  transition: color 0.3s ease;
+}
+
+/* Typography improvements */
+h1, h2, h3, h4, h5, h6 {
+  font-weight: 300;
+  letter-spacing: 0;
+}
+
+p {
+  -webkit-font-smoothing: antialiased;
+}
+
+button,
+a {
+  -webkit-tap-highlight-color: transparent;
 }

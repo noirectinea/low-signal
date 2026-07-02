@@ -1,0 +1,29 @@
+<svg viewBox="0 0 400 500" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="grad3" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#2a2a2a;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#1f1f1f;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#3d3d3d;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <rect width="400" height="500" fill="url(#grad3)" />
+  
+  <!-- Abstract shapes (experimental aesthetic) -->
+  <rect x="50" y="80" width="300" height="2" fill="#5a5a5a" opacity="0.3" />
+  <rect x="30" y="200" width="340" height="1" fill="#8a8a8a" opacity="0.25" />
+  <rect x="0" y="350" width="400" height="3" fill="#3d3d3d" opacity="0.4" />
+  
+  <!-- Light leak effect -->
+  <ellipse cx="380" cy="100" rx="100" ry="150" fill="#6b6357" opacity="0.08" />
+  
+  <!-- Dark vignette -->
+  <rect width="400" height="500" fill="#000" opacity="0.15" />
+  
+  <!-- Scratches/marks -->
+  <line x1="150" y1="0" x2="140" y2="500" stroke="#5a5a5a" stroke-width="1" opacity="0.2" />
+  
+  <text x="200" y="250" font-family="Arial, sans-serif" font-size="14" fill="#8a8a8a" text-anchor="middle" opacity="0.4">
+    Form
+  </text>
+</svg>
