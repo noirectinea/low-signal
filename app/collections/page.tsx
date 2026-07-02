@@ -121,7 +121,7 @@ export default function CollectionsPage() {
   }
 
   return (
-    <main className="min-h-screen overflow-x-hidden bg-[#cbc8bf] text-[#141311]">
+    <main className="min-h-screen overflow-x-hidden bg-[#c6c2b8] text-[#141311]">
       <AssortmentPanel
         activeFilter={activeFilter}
         open={panelOpen}
@@ -170,7 +170,7 @@ function AssortmentPanel({
 
   return (
     <aside
-      className={`fixed bottom-0 left-0 top-0 z-50 flex w-[86vw] max-w-[392px] flex-col border-r border-black/20 bg-[#cbc8bf] px-8 py-8 text-[10px] uppercase tracking-[0.16em] text-[#141311] transition-transform duration-500 sm:w-[360px] lg:w-[392px] ${
+      className={`fixed bottom-0 left-0 top-0 z-50 flex w-[86vw] max-w-[392px] flex-col border-r border-black/18 bg-[#ece8df] px-8 py-8 text-[10px] uppercase tracking-[0.16em] text-[#141311] transition-transform duration-500 sm:w-[360px] lg:w-[392px] ${
         open ? "translate-x-0" : "-translate-x-full"
       }`}
     >
@@ -235,7 +235,7 @@ function AssortmentPanel({
 
       <Link
         href="/"
-        className="mt-auto grid grid-cols-[42%_1fr] border border-black/14 bg-[#bdb8ae] text-[8px] leading-[1.55] tracking-[0.12em]"
+        className="mt-auto grid grid-cols-[42%_1fr] border border-black/14 bg-[#d8d4ca] text-[8px] leading-[1.55] tracking-[0.12em]"
       >
         <div className="relative min-h-[150px] overflow-hidden">
           <Image
@@ -270,7 +270,7 @@ function CollectionsNav({
   onCollections: () => void;
 }>) {
   return (
-    <nav className="fixed left-0 right-0 top-0 z-30 grid grid-cols-[1fr_auto] items-start gap-6 border-b border-black/24 bg-[#cbc8bf]/92 px-6 py-6 text-[9px] uppercase tracking-[0.18em] text-[#141311] backdrop-blur-sm md:grid-cols-[1fr_auto_1fr] lg:px-12">
+    <nav className="fixed left-0 right-0 top-0 z-30 grid grid-cols-[1fr_auto] items-start gap-6 border-b border-black/20 bg-[#ece8df]/90 px-6 py-6 text-[9px] uppercase tracking-[0.18em] text-[#141311] backdrop-blur-sm md:grid-cols-[1fr_auto_1fr] lg:px-12">
       <Link href="/" className="font-medium">
         Low Signal
       </Link>
@@ -303,7 +303,7 @@ function CollectionsHero({
   onFilters: () => void;
 }>) {
   return (
-    <header className="relative min-h-[72svh] border-b border-black/24 bg-[#cbc8bf] px-6 pb-12 pt-24 lg:px-12">
+    <header className="relative min-h-[72svh] border-b border-black/20 bg-[#c6c2b8] px-6 pb-12 pt-24 lg:px-12">
       <button
         className="absolute right-6 top-28 z-10 hidden items-center gap-3 text-[9px] uppercase tracking-[0.18em] text-black/64 transition-opacity duration-300 hover:opacity-55 md:flex lg:right-12"
         type="button"
@@ -344,7 +344,7 @@ function ProductGrid({
   onFilters: () => void;
 }>) {
   return (
-    <section className="bg-[#cbc8bf] px-6 py-10 lg:px-12">
+    <section className="bg-[#c6c2b8] px-6 py-10 lg:px-12">
       <div className="mb-8 flex flex-col gap-6 border-b border-black/22 pb-6 text-[9px] uppercase tracking-[0.18em] text-black/68 md:flex-row md:items-center md:justify-between">
         <div className="flex items-center gap-5">
           <span>120 Items</span>
@@ -386,7 +386,7 @@ function ProductGrid({
         {items.map((product) => (
           <article
             key={product.name}
-            className="bg-[#cbc8bf]"
+            className="bg-[#d2cec4]"
           >
             <div className="relative aspect-[4/5] overflow-hidden bg-[#171614]">
               <Image

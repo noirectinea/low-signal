@@ -47,7 +47,7 @@ const footerLinks = [
 
 export default function AboutPage() {
   return (
-    <main className="min-h-screen overflow-x-hidden bg-[#c9c6bd] text-[#11110f]">
+    <main className="min-h-screen overflow-x-hidden bg-[#c6c2b8] text-[#11110f]">
       <header className="grid border-b border-black/20 px-5 py-5 text-[8px] uppercase tracking-[0.18em] md:grid-cols-[1fr_auto_1fr] md:px-8">
         <Link href="/" className="font-medium leading-[0.95]">
           Low
@@ -86,7 +86,7 @@ export default function AboutPage() {
 
 function AboutColumn() {
   return (
-    <section className="border-b border-black/20 px-6 py-8 lg:border-b-0 lg:border-r lg:px-[4vw] lg:py-[7vh]">
+    <section className="border-b border-black/18 bg-[#ece8df] px-6 py-8 lg:border-b-0 lg:border-r lg:px-[4vw] lg:py-[7vh]">
       <p className="text-[9px] uppercase tracking-[0.22em] text-black/55">
         About
       </p>
@@ -121,7 +121,7 @@ function AboutColumn() {
         <p className="text-black/78">No logos. No noise. Just clothes, people, and the places between.</p>
       </div>
 
-      <div className="relative mt-10 h-[155px] overflow-hidden border border-black/15 bg-[#bdb8ae] md:h-[190px]">
+      <div className="relative mt-10 h-[155px] overflow-hidden border border-black/14 bg-[#d8d4ca] md:h-[190px]">
         <Image
           src="/images/low-signal/selected-garments-detail.jpg"
           alt="Black garment fabric detail on a muted studio surface"
@@ -151,7 +151,7 @@ function AboutColumn() {
 
 function LookbookColumn() {
   return (
-    <section className="border-b border-black/20 bg-[#bebab1] px-6 py-8 lg:border-b-0 lg:border-r lg:px-[3vw] lg:py-[7vh]">
+    <section className="border-b border-black/18 bg-[#c9c5bb] px-6 py-8 lg:border-b-0 lg:border-r lg:px-[3vw] lg:py-[7vh]">
       <div className="flex items-center gap-4 text-[10px] uppercase tracking-[0.18em] text-black/62">
         <span>Lookbook</span>
         <span className="h-px w-7 bg-black/35" />
@@ -197,7 +197,7 @@ function LookbookColumn() {
 
 function LookGrid() {
   return (
-    <section className="bg-[#c4c1b8] px-5 py-8 lg:px-[2.5vw] lg:py-[7vh]">
+    <section className="bg-[#bfbcb3] px-5 py-8 lg:px-[2.5vw] lg:py-[7vh]">
       <div className="mb-8 flex items-center justify-between border-b border-black/18 pb-5 text-[8px] uppercase tracking-[0.18em]">
         <span>Lookbook grid</span>
         <span>12 looks</span>
@@ -206,7 +206,7 @@ function LookGrid() {
       <div className="grid grid-cols-2 gap-x-4 gap-y-7 sm:grid-cols-3 xl:grid-cols-4">
         {lookbookImages.map((src, index) => (
           <figure key={src} className={index % 3 === 1 ? "pt-5" : ""}>
-            <div className="relative aspect-[3/4] overflow-hidden border border-black/14 bg-[#b8b4aa]">
+            <div className="relative aspect-[3/4] overflow-hidden border border-black/14 bg-[#d8d4ca]">
               <Image
                 src={src}
                 alt={`LOW SIGNAL look ${String(index + 1).padStart(2, "0")}`}

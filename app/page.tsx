@@ -156,7 +156,7 @@ function EditorialGrid() {
         href="/collections"
         className="relative grid border-b border-black/20 md:grid-cols-[47.96%_52.04%] md:border-b-0 md:border-r"
       >
-        <div className="flex h-full flex-col bg-[#cbc8bf] px-[27px] py-[34px]">
+        <div className="flex h-full flex-col bg-[#ece8df] px-[27px] py-[34px]">
           <Kicker number="02" />
           <p className="mt-[24px] text-[10px] uppercase leading-[1.5] tracking-[0.22em]">
             Spring 2026
@@ -186,7 +186,7 @@ function EditorialGrid() {
       <a
         id="lookbook"
         href="#"
-        className="flex h-full flex-col border-b border-black/20 bg-[#d7d4ca] px-[46px] py-[34px] md:border-b-0 md:border-r"
+        className="flex h-full flex-col border-b border-black/20 bg-[#eeeae2] px-[46px] py-[34px] md:border-b-0 md:border-r"
       >
         <Kicker number="03" />
         <p className="mt-[23px] text-[10px] uppercase tracking-[0.2em]">
@@ -316,7 +316,7 @@ function MaterialForm() {
 function SelectedPieces() {
   return (
     <section className="grid min-h-[92svh] w-screen border-t border-black/20 bg-[#cbc8bf] lg:grid-cols-[32.5vw_1fr]">
-      <div className="border-b border-black/20 bg-[#c8c4ba] px-[7vw] py-[72px] lg:border-b-0 lg:border-r lg:px-[6vw] lg:py-[12vh]">
+      <div className="border-b border-black/20 bg-[#ece8df] px-[7vw] py-[72px] lg:border-b-0 lg:border-r lg:px-[6vw] lg:py-[12vh]">
         <Kicker number="06" />
         <h2 className="mt-[42px] text-[11px] uppercase leading-[1.45] tracking-[0.22em]">
           Selected Pieces
@@ -349,7 +349,7 @@ function SelectedPieces() {
       </div>
 
       <div className="flex min-w-0 flex-col">
-        <div className="flex items-center justify-between border-b border-black/20 bg-[#cbc8bf] px-[7vw] py-5 lg:px-[3vw]">
+        <div className="flex items-center justify-between border-b border-black/20 bg-[#d2cec4] px-[7vw] py-5 lg:px-[3vw]">
           <span className="text-[8px] uppercase tracking-[0.18em] text-black/45">
             Three pieces / Current rail
           </span>
@@ -382,12 +382,12 @@ function SelectedPieces() {
             <Link
               href="/collections"
               key={product.name}
-              className={`group flex min-w-0 flex-col border-r border-black/20 bg-[#cbc8bf] last:border-r-0 ${
+              className={`group flex min-w-0 flex-col border-r border-black/18 bg-[#d2cec4] last:border-r-0 ${
                 index === 1 ? "lg:pt-[3.2vh]" : index === 2 ? "lg:pt-[1.1vh]" : ""
               }`}
             >
               <div
-                className={`mx-5 mt-5 border-y border-black/18 bg-[#bdb8ae] py-3 lg:mx-[1.7vw] ${
+                className={`mx-5 mt-5 border-y border-black/16 bg-[#e4e0d7] py-3 lg:mx-[1.7vw] ${
                   index === 1 ? "lg:mt-[3.2vh]" : "lg:mt-[5.4vh]"
                 }`}
               >
@@ -429,7 +429,7 @@ function SelectedPieces() {
           ))}
         </div>
 
-        <div className="relative overflow-hidden border-b border-black/20 bg-[#bdb8ae] px-[7vw] py-8 text-[8px] uppercase tracking-[0.16em] lg:px-[3vw]">
+        <div className="relative overflow-hidden border-b border-black/18 bg-[#c4c0b6] px-[7vw] py-8 text-[8px] uppercase tracking-[0.16em] lg:px-[3vw]">
           <div className="absolute left-[3vw] right-[3vw] top-8 h-px bg-black/16" />
           <div className="absolute bottom-8 left-[12%] hidden h-px w-[18%] bg-black/14 md:block" />
           <div className="grid gap-6 pt-8 md:grid-cols-[1.1fr_0.9fr_1fr]">
