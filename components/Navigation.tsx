@@ -24,7 +24,7 @@ export function Navigation() {
             Lookbook
           </Link>
           <Link
-            href="#about"
+            href="/about"
             className="text-low-muted transition-colors duration-300 hover:text-low-fog"
           >
             About

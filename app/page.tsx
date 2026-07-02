@@ -100,7 +100,7 @@ function HeroPanel() {
         <nav className="hidden gap-[38px] md:flex">
           <Link href="/collections">Collections</Link>
           <a href="#lookbook">Lookbook</a>
-          <a href="#about">About</a>
+          <Link href="/about">About</Link>
         </nav>
         <div className="ml-auto flex items-start gap-[24px]">
           <span>2026 / Issue 01</span>
@@ -119,9 +119,9 @@ function HeroPanel() {
           <span>Spring 2026 / Issue 01</span>
           <span>Garment index</span>
         </div>
-        <a className="mt-[44px] inline-flex border-b border-black pb-[5px] text-[8px] uppercase tracking-[0.16em]" href="#about">
+        <Link className="mt-[44px] inline-flex border-b border-black pb-[5px] text-[8px] uppercase tracking-[0.16em]" href="/about">
           About the brand
-        </a>
+        </Link>
       </div>
 
       <div className="absolute bottom-[30px] left-[5.15vw] z-20 hidden w-[210px] grid-cols-3 gap-4 border-t border-black/18 pt-4 text-[7px] uppercase leading-[1.45] tracking-[0.16em] text-black/42 md:grid">
@@ -285,7 +285,7 @@ function MaterialForm() {
           </div>
           <a
             className="mt-[42px] inline-flex border-b border-black pb-[5px] text-[8px] uppercase tracking-[0.16em]"
-            href="#about"
+            href="/about"
           >
             Our approach
           </a>
