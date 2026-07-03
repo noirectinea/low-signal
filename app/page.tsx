@@ -377,42 +377,32 @@ function SelectedPieces() {
           </div>
         </div>
 
-        <div className="grid auto-cols-[78vw] grid-flow-col overflow-x-auto border-b border-black/20 lg:auto-cols-auto lg:grid-flow-row lg:grid-cols-[1.05fr_0.92fr_1fr] lg:overflow-visible">
+        <div className="grid auto-cols-[78vw] grid-flow-col gap-px overflow-x-auto border-b border-black/18 bg-black/14 p-px lg:auto-cols-auto lg:grid-flow-row lg:grid-cols-3 lg:overflow-visible">
           {selectedPieces.map((product, index) => (
             <Link
               href="/collections"
               key={product.name}
-              className={`group flex min-w-0 flex-col border-r border-black/18 bg-[#d2cec4] last:border-r-0 ${
-                index === 1 ? "lg:pt-[3.2vh]" : index === 2 ? "lg:pt-[1.1vh]" : ""
-              }`}
+              className="group flex min-w-0 flex-col bg-[#d2cec4]"
             >
-              <div
-                className={`mx-5 mt-5 border-y border-black/16 bg-[#e4e0d7] py-3 lg:mx-[1.7vw] ${
-                  index === 1 ? "lg:mt-[3.2vh]" : "lg:mt-[5.4vh]"
-                }`}
-              >
-                <div
-                  className={`relative overflow-hidden bg-[#151413] ${
-                    index === 1 ? "aspect-[3.6/5]" : index === 2 ? "aspect-[4.35/5]" : "aspect-[4/5]"
+              <div className="px-4 pt-4 lg:px-[1.45vw] lg:pt-[1.45vw]">
+                <figure className="relative aspect-[4/5] overflow-hidden bg-[#d8d4ca]">
+                <Image
+                  src={product.image}
+                  alt={product.name}
+                  fill
+                  sizes="(min-width: 1024px) 20vw, 78vw"
+                  className={`product-image object-cover brightness-[0.84] contrast-[1.05] saturate-[0.76] transition duration-500 group-hover:brightness-[0.9] ${
+                    index === 1 ? "object-[50%_18%]" : "object-[50%_12%]"
                   }`}
-                >
-                  <Image
-                    src={product.image}
-                    alt={product.name}
-                    fill
-                    sizes="(min-width: 1024px) 20vw, 78vw"
-                    className={`product-image object-cover brightness-[0.8] contrast-[1.07] saturate-[0.76] transition duration-700 group-hover:brightness-[0.88] ${
-                      index === 1 ? "object-[48%_38%]" : index === 2 ? "object-[52%_55%]" : "object-center"
-                    }`}
-                  />
-                  <div className="absolute inset-0 bg-[#151413]/8" />
-                  <span className="absolute left-4 top-4 text-[8px] uppercase tracking-[0.16em] text-[#f5f2ed]/70">
-                    {String(index + 1).padStart(2, "0")}
-                  </span>
-                </div>
+                />
+                <div className="absolute inset-0 bg-[#151413]/5" />
+                <span className="absolute left-4 top-4 text-[8px] uppercase tracking-[0.16em] text-[#f5f2ed]/72">
+                  {String(index + 1).padStart(2, "0")}
+                </span>
+                </figure>
               </div>
 
-              <div className="flex flex-1 flex-col px-5 pb-8 pt-5 lg:px-[1.7vw] lg:pb-[6vh]">
+              <div className="flex flex-1 flex-col px-4 pb-7 pt-5 lg:px-[1.45vw] lg:pb-[4.8vh]">
                 <div className="grid grid-cols-[1fr_auto] gap-6 text-[9px] uppercase tracking-[0.14em]">
                   <div>
                     <h3>{product.name}</h3>
@@ -429,22 +419,16 @@ function SelectedPieces() {
           ))}
         </div>
 
-        <div className="relative overflow-hidden border-b border-black/18 bg-[#c4c0b6] px-[7vw] py-8 text-[8px] uppercase tracking-[0.16em] lg:px-[3vw]">
-          <div className="absolute left-[3vw] right-[3vw] top-8 h-px bg-black/16" />
-          <div className="absolute bottom-8 left-[12%] hidden h-px w-[18%] bg-black/14 md:block" />
-          <div className="grid gap-6 pt-8 md:grid-cols-[1.1fr_0.9fr_1fr]">
+        <div className="border-b border-black/18 bg-[#c4c0b6] px-[7vw] py-7 text-[8px] uppercase tracking-[0.16em] lg:px-[3vw]">
+          <div className="grid gap-5 border-y border-black/16 py-5 md:grid-cols-3">
             {editorialNotes.map(([title, text], index) => (
               <div
                 key={title}
-                className={`border-black/18 pb-5 ${
-                  index === 0
-                    ? "max-w-[260px] border-b"
-                    : index === 1
-                      ? "max-w-[300px] border-t pt-5 md:mt-8"
-                      : "ml-auto max-w-[260px] border-b md:mt-2"
+                className={`border-black/14 md:border-r md:pr-6 ${
+                  index === 2 ? "md:border-r-0" : ""
                 }`}
               >
-                <p className="text-[10px] tracking-[0.2em]">{title}</p>
+                <p className="text-[9px] tracking-[0.2em]">{title}</p>
                 <p className="mt-3 leading-[1.5] tracking-[0.12em] text-black/45">
                   {text}
                 </p>
