@@ -144,7 +144,6 @@ export default function CollectionsPage() {
         }`}
       >
         <CollectionsNav onCollections={() => setPanelOpen(true)} />
-        <CollectionsHero onFilters={() => setPanelOpen(true)} />
         <ProductGrid
           activeFilter={activeFilter}
           items={visibleProducts}
@@ -297,43 +296,6 @@ function CollectionsNav({
   );
 }
 
-function CollectionsHero({
-  onFilters,
-}: Readonly<{
-  onFilters: () => void;
-}>) {
-  return (
-    <header className="relative min-h-[72svh] border-b border-black/20 bg-[#c6c2b8] px-6 pb-12 pt-24 lg:px-12">
-      <button
-        className="absolute right-6 top-28 z-10 hidden items-center gap-3 text-[9px] uppercase tracking-[0.18em] text-black/64 transition-opacity duration-300 hover:opacity-55 md:flex lg:right-12"
-        type="button"
-        onClick={onFilters}
-      >
-        <span className="grid gap-[3px]">
-          <span className="h-px w-4 bg-black/60" />
-          <span className="h-px w-4 bg-black/60" />
-          <span className="h-px w-4 bg-black/60" />
-        </span>
-        Filters
-      </button>
-
-      <div className="flex min-h-[calc(72svh-9rem)] flex-col justify-end">
-        <div className="grid max-w-[760px] grid-cols-1 gap-4 border-y border-black/18 py-5 text-[9px] uppercase tracking-[0.2em] text-black/58 sm:grid-cols-3">
-          <span>05 - Garments</span>
-          <span>Spring 2026</span>
-          <span>120 Pieces</span>
-        </div>
-
-        <h2 className="mt-10 max-w-[1180px] font-serif text-[clamp(6.6rem,17vw,18.5rem)] leading-[0.72] tracking-[-0.065em] text-black">
-          SIGNAL
-          <br />
-          STUDIES
-        </h2>
-      </div>
-    </header>
-  );
-}
-
 function ProductGrid({
   activeFilter,
   items,
@@ -344,8 +306,29 @@ function ProductGrid({
   onFilters: () => void;
 }>) {
   return (
-    <section className="bg-[#c6c2b8] px-6 py-10 lg:px-12">
-      <div className="mb-8 flex flex-col gap-6 border-b border-black/22 pb-6 text-[9px] uppercase tracking-[0.18em] text-black/68 md:flex-row md:items-center md:justify-between">
+    <section className="bg-[#f0ece4] px-5 pb-12 pt-[104px] lg:px-12 lg:pb-16">
+      <div className="mb-10 grid border-b border-black/16 pb-8 lg:grid-cols-[1fr_auto]">
+        <div className="max-w-[520px]">
+          <div className="flex items-center gap-4 text-[9px] uppercase tracking-[0.2em] text-black/50">
+            <span>05</span>
+            <span className="h-px w-7 bg-black/28" />
+            <span>Garments</span>
+            <span>Spring 2026</span>
+          </div>
+          <h1 className="mt-8 font-serif text-[clamp(3.9rem,8.4vw,8.2rem)] leading-[0.82] tracking-[-0.06em] text-black/92">
+            Garment
+            <br />
+            archive.
+          </h1>
+        </div>
+
+        <p className="mt-8 max-w-[310px] self-end text-[9px] uppercase leading-[1.7] tracking-[0.18em] text-black/48 lg:mt-0">
+          Dark neutral clothing, concrete light, and pieces kept for daily
+          repeat.
+        </p>
+      </div>
+
+      <div className="mb-8 flex flex-col gap-6 border-b border-black/18 pb-5 text-[9px] uppercase tracking-[0.18em] text-black/68 md:flex-row md:items-center md:justify-between">
         <div className="flex items-center gap-5">
           <span>120 Items</span>
           {activeFilter !== "All garments" && (
@@ -379,27 +362,43 @@ function ProductGrid({
             <span className="h-px w-4 bg-black/40" />
             <span className="h-px w-4 bg-black/40" />
           </span>
+          <button
+            className="hidden items-center gap-3 transition-opacity duration-300 hover:opacity-55 md:flex"
+            type="button"
+            onClick={onFilters}
+          >
+            <span className="grid gap-[3px]">
+              <span className="h-px w-4 bg-black/60" />
+              <span className="h-px w-4 bg-black/60" />
+              <span className="h-px w-4 bg-black/60" />
+            </span>
+            Filters
+          </button>
         </div>
       </div>
 
-      <div className="grid gap-px bg-black/18 sm:grid-cols-2 xl:grid-cols-4">
-        {items.map((product) => (
+      <div className="grid gap-px bg-black/16 sm:grid-cols-2 xl:grid-cols-4">
+        {items.map((product, index) => (
           <article
             key={product.name}
-            className="bg-[#d2cec4]"
+            className="bg-[#ebe6dc]"
           >
-            <div className="relative aspect-[4/5] overflow-hidden bg-[#171614]">
+            <div className="relative aspect-[3/4] overflow-hidden bg-[#d8d3c8]">
               <Image
                 src={product.image}
                 alt={product.name}
                 fill
                 sizes="(min-width: 1280px) 21vw, (min-width: 640px) 44vw, 100vw"
-                className="product-image object-cover object-center brightness-[0.72] contrast-[1.08] saturate-[0.72]"
+                className={`product-image object-cover brightness-[0.86] contrast-[1.05] saturate-[0.76] ${
+                  index === 1 || index === 5 || index === 8
+                    ? "object-[50%_20%]"
+                    : "object-[50%_12%]"
+                }`}
               />
-              <div className="absolute inset-0 bg-[#171614]/10" />
+              <div className="absolute inset-0 bg-[#171614]/5" />
             </div>
 
-            <div className="grid grid-cols-[1fr_auto] gap-5 border-t border-black/18 px-5 py-5 text-[9px] uppercase tracking-[0.15em]">
+            <div className="grid min-h-[126px] grid-cols-[1fr_auto] gap-5 border-t border-black/14 px-5 py-5 text-[9px] uppercase tracking-[0.15em]">
               <div>
                 <h3>{product.name}</h3>
                 <p className="mt-3 text-black/42">{product.category}</p>
