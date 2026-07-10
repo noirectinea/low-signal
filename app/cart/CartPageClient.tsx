@@ -145,7 +145,7 @@ export function CartPageClient() {
           <div className="grid border-b border-black/16 pb-8 lg:grid-cols-[1fr_auto]">
             <div>
               <p className="text-[9px] uppercase tracking-[0.2em] text-black/50">
-                Order / Current rail
+                Cart / Current rail
               </p>
               <h1 className="mt-8 font-serif text-[56px] uppercase leading-[0.84] tracking-[-0.052em] text-black/92 sm:text-[76px] lg:text-[96px]">
                 Your cart
@@ -153,7 +153,7 @@ export function CartPageClient() {
             </div>
             <p className="mt-8 max-w-[330px] self-end text-[10px] uppercase leading-[1.7] tracking-[0.18em] text-black/50 lg:mt-0">
               Review selected garments, adjust quantities, then continue to
-              checkout.
+              secure checkout.
             </p>
           </div>
 
@@ -276,6 +276,7 @@ function CartLine({
           <div className="mt-5 grid gap-1 text-black/50">
             <p>Category: {item.category}</p>
             <p>Color: {item.color ?? "Black"}</p>
+            {item.materials ? <p>Material: {item.materials}</p> : null}
             <p>Size: {item.size ?? "M"}</p>
             <p>
               Availability:{" "}
@@ -363,7 +364,7 @@ function OrderSummary({
           }`}
           href="/checkout"
         >
-          {isChecking ? "Checking stock" : "Checkout"}
+          {isChecking ? "Checking stock" : "Proceed to checkout"}
           <span aria-hidden="true">-&gt;</span>
         </Link>
       )}

@@ -36,8 +36,8 @@ export function Hero() {
               A brand that behaves like a note found between pages.
             </p>
             <p className="col-span-4 col-start-2 mt-10 text-sm leading-6 text-low-muted md:col-span-3 md:col-start-3">
-              Not minimal. Not polished. A restrained system of garments,
-              pauses, documents, and unresolved images.
+              Not loud. Not decorative. Restrained garments, quiet pauses, and
+              images that leave room around the body.
             </p>
           </div>
         </div>

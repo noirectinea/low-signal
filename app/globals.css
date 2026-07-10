@@ -110,16 +110,34 @@ a {
 
 .product-display-title {
   font-family: var(--font-archivo), Arial, sans-serif;
-  font-weight: 500;
-  letter-spacing: 0.015em;
-  line-height: 0.88;
-  font-stretch: 92%;
+  font-weight: 600;
+  letter-spacing: 0.028em;
+  line-height: 0.9;
+  font-stretch: 88%;
 }
 
 .add-to-cart-label {
   font-family: var(--font-archivo), Arial, sans-serif;
   font-weight: 600;
-  letter-spacing: 0.14em;
+  letter-spacing: 0.12em;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .quiet-reveal {
+    animation: quiet-reveal 700ms ease-out both;
+  }
+
+  @keyframes quiet-reveal {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
 }
 
 .hero-printed-title {

@@ -150,7 +150,7 @@ function ShopIntro() {
 
       <div className="my-auto py-10">
         <p className="font-[var(--font-shop-selected)] text-[11px] font-medium uppercase tracking-[0.12em] text-black/50">
-          Buy the collection
+          Current rail
         </p>
         <h2 className="mt-9 max-w-[520px] font-[var(--font-shop-selected-serif)] text-[54px] font-normal uppercase leading-[0.88] tracking-[-0.052em] text-black/94 sm:text-[72px] lg:text-[84px] xl:text-[96px]">
           Shop
@@ -168,7 +168,7 @@ function ShopIntro() {
       <div className="grid gap-6 border-t border-black/14 pt-6 sm:grid-cols-[1fr_auto] sm:items-end">
         <div className="grid gap-3 text-[10px] uppercase tracking-[0.18em] text-black/46">
           <span>Available online</span>
-          <span>Product pages / cart ready</span>
+          <span>Selected for daily repeat</span>
         </div>
         <Link
           className="w-fit border-b border-black/56 pb-[6px] font-[var(--font-shop-selected)] text-[10px] font-medium uppercase tracking-[0.12em] transition-opacity duration-300 hover:opacity-55"

@@ -224,7 +224,7 @@ function EditorialGrid() {
           <div className="relative h-[150px] w-full overflow-hidden border border-[#f5f2ed]/10 bg-[#211f1c] md:h-[clamp(148px,18vh,196px)] md:w-[84%]">
             <Image
               src={garmentOne}
-              alt="LOW SIGNAL garment study"
+              alt="LOW SIGNAL outer layer detail"
               fill
               sizes="24vw"
               className="editorial-image object-cover object-center"
@@ -245,7 +245,7 @@ function EditorialGrid() {
             />
           </div>
           <p className="mt-3 text-[7px] uppercase tracking-[0.18em] text-[#f5f2ed]/42">
-            Knit study / 02
+            Knit texture / 02
           </p>
         </div>
         <div className="pointer-events-none absolute bottom-[31px] left-[30%] hidden h-px w-[10%] bg-[#f5f2ed]/12 md:block" />
@@ -308,7 +308,7 @@ function MaterialForm() {
           </div>
 
           <div className="grid gap-2 border-t border-black/16 pt-4 text-[8px] uppercase leading-[1.6] tracking-[0.18em] text-black/48 md:ml-[3vw] md:w-[88%] md:grid-cols-[1fr_auto] md:items-start">
-            <span>Material study / 01</span>
+            <span>Material note / 01</span>
             <span className="md:text-right">Washed black / texture / time</span>
           </div>
         </div>

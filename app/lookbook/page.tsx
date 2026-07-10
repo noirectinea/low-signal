@@ -146,7 +146,7 @@ function LookbookHero() {
         </div>
 
         <div className="mt-16 grid gap-4 border-t border-black/16 pt-6 text-[9px] uppercase leading-[1.75] tracking-[0.18em] text-black/50 sm:grid-cols-2">
-          <p>Campaign study / Low Signal</p>
+          <p>Campaign note / Low Signal</p>
           <p className="sm:text-right">Cold paper / washed black / quiet volume</p>
         </div>
       </div>

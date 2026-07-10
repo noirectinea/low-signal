@@ -27,6 +27,24 @@ const entryCards: Array<{
   },
 ];
 
+const categoryPreviews = [
+  {
+    image: "/images/low-signal/selected-collection/outer-layer.jpg",
+    label: "Outerwear",
+    note: "Washed shells, field layers, and quiet protection.",
+  },
+  {
+    image: "/images/low-signal/selected-collection/knitwear.jpg",
+    label: "Knitwear",
+    note: "Rib texture, soft wool, and pieces built for repeat wear.",
+  },
+  {
+    image: "/images/low-signal/selected-collection/trousers.jpg",
+    label: "Trousers",
+    note: "Relaxed volume, dry cloth, and a low break over the shoe.",
+  },
+];
+
 export const metadata = {
   title: "Spring 2026 Collections / LOW SIGNAL",
 };
@@ -36,7 +54,7 @@ export default function CollectionsPage() {
     <main className="min-h-screen overflow-x-hidden bg-[#e6e7e2] text-[#121211]">
       <CollectionsNav />
 
-      <section className="mx-auto grid min-h-screen w-full max-w-[1680px] px-5 pb-16 pt-[96px] sm:px-6 lg:grid-cols-[minmax(320px,480px)_1fr] lg:gap-14 lg:px-12 lg:pb-20 lg:pt-[112px] xl:gap-20 xl:px-14">
+      <section className="mx-auto grid min-h-[88svh] w-full max-w-[1680px] px-5 pb-12 pt-[96px] sm:px-6 lg:grid-cols-[minmax(320px,480px)_1fr] lg:gap-14 lg:px-12 lg:pb-14 lg:pt-[112px] xl:gap-20 xl:px-14">
         <header className="border-b border-black/16 pb-10 lg:border-b-0 lg:pb-0">
           <p className="text-[9px] uppercase tracking-[0.22em] text-black/48">
             05 — Collection / LOW SIGNAL
@@ -68,6 +86,53 @@ export default function CollectionsPage() {
               label={card.label}
               priority={card.imagePriority}
             />
+          ))}
+        </div>
+      </section>
+
+      <section className="mx-auto grid max-w-[1680px] gap-6 border-t border-black/16 px-5 py-10 sm:px-6 lg:grid-cols-[minmax(280px,420px)_1fr] lg:px-12 lg:py-12 xl:px-14">
+        <div className="grid content-between gap-8 border-b border-black/14 pb-7 lg:border-b-0 lg:border-r lg:pb-0 lg:pr-10">
+          <div>
+            <p className="text-[9px] uppercase tracking-[0.18em] text-black/54">
+              Collection notes
+            </p>
+            <p className="mt-6 max-w-[360px] text-[11px] uppercase leading-[1.78] tracking-[0.15em] text-black/64">
+              Spring 2026 is built around dark neutrals, concrete light, and
+              garments that sit close to daily routine.
+            </p>
+          </div>
+
+          <div className="flex flex-wrap gap-x-7 gap-y-3 text-[9px] uppercase tracking-[0.16em]">
+            <Link className="border-b border-black/60 pb-[5px]" href="/collections/men">
+              Shop men →
+            </Link>
+            <Link className="border-b border-black/60 pb-[5px]" href="/collections/women">
+              Shop women →
+            </Link>
+          </div>
+        </div>
+
+        <div className="grid gap-4 sm:grid-cols-3">
+          {categoryPreviews.map((preview) => (
+            <Link
+              className="group grid gap-4 border-b border-black/14 pb-4"
+              href="/collections"
+              key={preview.label}
+            >
+              <div className="relative aspect-[5/4] overflow-hidden border border-black/12 bg-[#d1d3cd]">
+                <Image
+                  alt={`${preview.label} preview`}
+                  className="object-cover brightness-[0.84] contrast-[1.05] saturate-[0.62] transition duration-700 group-hover:scale-[1.03] group-hover:brightness-[0.9]"
+                  fill
+                  sizes="(min-width: 1024px) 22vw, 90vw"
+                  src={preview.image}
+                />
+              </div>
+              <div className="grid gap-3 text-[9px] uppercase leading-[1.7] tracking-[0.16em]">
+                <p className="text-black">{preview.label}</p>
+                <p className="text-black/58">{preview.note}</p>
+              </div>
+            </Link>
           ))}
         </div>
       </section>

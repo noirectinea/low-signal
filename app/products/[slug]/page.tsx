@@ -61,7 +61,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
       src: "/images/low-signal/selected-collection/material-detail.png",
     },
     {
-      alt: "LOW SIGNAL material study",
+      alt: "LOW SIGNAL material detail",
       src: "/images/low-signal/journal/fabric-detail.jpg",
     },
   ].slice(0, 3);
@@ -135,21 +135,36 @@ export default async function ProductPage({ params }: ProductPageProps) {
 
             <ProductPurchasePanel product={product} />
 
-            <details className="group border-b border-black/16 py-6 text-[9px] uppercase leading-[1.75] tracking-[0.16em] text-black/54">
-              <summary className="flex cursor-pointer list-none items-center justify-between text-black">
-                <span>Details / Shipping</span>
-                <span className="transition-transform duration-300 group-open:rotate-45">
-                  +
-                </span>
-              </summary>
-              <div className="mt-5 grid max-w-[520px] gap-4">
-                <p>{product.materials}</p>
-                <p>
-                  Regular fit. Ships in 2-4 days when available. Returns
-                  accepted on unworn pieces within 14 days.
-                </p>
-              </div>
-            </details>
+            <div className="divide-y divide-black/16 border-b border-black/16">
+              <details className="group py-6 text-[9px] uppercase leading-[1.75] tracking-[0.15em] text-black/58">
+                <summary className="flex cursor-pointer list-none items-center justify-between text-black">
+                  <span>Details</span>
+                  <span className="transition-transform duration-300 group-open:rotate-45">
+                    +
+                  </span>
+                </summary>
+                <div className="mt-5 grid max-w-[520px] gap-4">
+                  <p>{product.materials}</p>
+                  <p>
+                    A quiet everyday shape with room for layering and a washed
+                    surface that softens through wear.
+                  </p>
+                </div>
+              </details>
+
+              <details className="group py-6 text-[9px] uppercase leading-[1.75] tracking-[0.15em] text-black/58">
+                <summary className="flex cursor-pointer list-none items-center justify-between text-black">
+                  <span>Shipping & Returns</span>
+                  <span className="transition-transform duration-300 group-open:rotate-45">
+                    +
+                  </span>
+                </summary>
+                <div className="mt-5 grid max-w-[520px] gap-4">
+                  <p>Ships in 2-4 days when available.</p>
+                  <p>Returns accepted on unworn pieces within 14 days.</p>
+                </div>
+              </details>
+            </div>
           </div>
 
           <div className="mt-10 grid gap-5 border-t border-black/16 pt-6 text-[9px] uppercase tracking-[0.18em] sm:grid-cols-[1fr_auto]">

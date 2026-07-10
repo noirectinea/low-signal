@@ -12,7 +12,7 @@ import {
   type ProductGender,
   type ProductSize,
 } from "@/data/products";
-import { getAvailabilityLabel, getAvailabilityState } from "@/lib/availability";
+import { getAvailabilityState } from "@/lib/availability";
 
 const categories = ["Outerwear", "Shirts", "Knitwear", "Trousers"] as const;
 const materialOptions = [
@@ -667,67 +667,77 @@ function AdvancedFilterPanel({
   }
 
   return (
-    <div className="mt-7 divide-y divide-black/12 border-y border-black/12 text-[8px] uppercase tracking-[0.18em] transition-colors duration-300 hover:border-black/18">
-      <div className="flex items-center justify-between py-4 text-black/52">
-        <span>Selection filters</span>
+    <details className="group mt-7 border-y border-black/12 text-[8px] uppercase tracking-[0.16em] transition-colors duration-300 hover:border-black/18">
+      <summary className="flex cursor-pointer list-none items-center justify-between py-4 text-black/58 transition-all duration-300 hover:px-2 hover:text-black">
+        <span>
+          Filter +
+          {filterCount > 0 ? ` / ${filterCount}` : ""}
+        </span>
         {filterCount > 0 ? (
           <button
-            className="border-b border-black/40 pb-1 text-black/62 transition-opacity duration-300 hover:opacity-55"
+            className="relative z-10 border-b border-black/40 pb-1 text-black/62 transition-opacity duration-300 hover:opacity-55"
             type="button"
-            onClick={clearFilters}
+            onClick={(event) => {
+              event.preventDefault();
+              clearFilters();
+            }}
           >
-            Clear all
+            Clear
           </button>
         ) : (
-          <span>None</span>
+          <span className="text-[12px] leading-none transition-transform duration-300 group-open:rotate-45">
+            +
+          </span>
         )}
-      </div>
+      </summary>
 
-      <OptionDisclosure
-        activeValue={activeFilters.size}
-        label="Size"
-        options={sizeOptions.map((size) => ({
-          count: products.filter((product) => product.size === size).length,
-          key: size,
-          label: size,
-        }))}
-        onSelect={(value) => updateFilter("size", value)}
-      />
-      <OptionDisclosure
-        activeValue={activeFilters.color}
-        label="Color"
-        options={colorOptions.map((color) => ({
-          count: products.filter((product) => product.color === color).length,
-          key: color,
-          label: color,
-        }))}
-        onSelect={(value) => updateFilter("color", value)}
-      />
-      <OptionDisclosure
-        activeValue={activeFilters.material}
-        label="Material"
-        options={materialOptions.map((material) => ({
-          count: products.filter((product) =>
-            productMatchesMaterial(product, material.key),
-          ).length,
-          key: material.key,
-          label: material.label,
-        }))}
-        onSelect={(value) => updateFilter("material", value)}
-      />
-      <OptionDisclosure
-        activeValue={activeFilters.price}
-        label="Price"
-        options={priceOptions.map((price) => ({
-          count: products.filter((product) =>
-            productMatchesPrice(product, price.key),
-          ).length,
-          key: price.key,
-          label: price.label,
-        }))}
-        onSelect={(value) => updateFilter("price", value)}
-      />
-    </div>
+      <div className="divide-y divide-black/12 border-t border-black/12">
+        <OptionDisclosure
+          activeValue={activeFilters.size}
+          label="Size"
+          options={sizeOptions.map((size) => ({
+            count: products.filter((product) => product.size === size).length,
+            key: size,
+            label: size,
+          }))}
+          onSelect={(value) => updateFilter("size", value)}
+        />
+        <OptionDisclosure
+          activeValue={activeFilters.color}
+          label="Color"
+          options={colorOptions.map((color) => ({
+            count: products.filter((product) => product.color === color).length,
+            key: color,
+            label: color,
+          }))}
+          onSelect={(value) => updateFilter("color", value)}
+        />
+        <OptionDisclosure
+          activeValue={activeFilters.material}
+          label="Material"
+          options={materialOptions.map((material) => ({
+            count: products.filter((product) =>
+              productMatchesMaterial(product, material.key),
+            ).length,
+            key: material.key,
+            label: material.label,
+          }))}
+          onSelect={(value) => updateFilter("material", value)}
+        />
+        <OptionDisclosure
+          activeValue={activeFilters.price}
+          label="Price"
+          options={priceOptions.map((price) => ({
+            count: products.filter((product) =>
+              productMatchesPrice(product, price.key),
+            ).length,
+            key: price.key,
+            label: price.label,
+          }))}
+          onSelect={(value) => updateFilter("price", value)}
+        />
+      </div>
+    </details>
   );
 }
 
@@ -748,6 +758,7 @@ function OptionDisclosure<Value extends string>({
 }>) {
   const activeLabel = options.find((option) => option.key === activeValue)
     ?.label;
+  const visibleOptions = options.filter((option) => option.count > 0);
 
   return (
     <details className="group">
@@ -761,14 +772,13 @@ function OptionDisclosure<Value extends string>({
         </span>
       </summary>
       <div className="grid pb-4">
-        {options.map((option) => (
+        {visibleOptions.map((option) => (
           <button
-            className={`flex items-center justify-between py-2 text-left transition-all duration-300 hover:px-2 hover:opacity-65 disabled:cursor-not-allowed disabled:opacity-25 ${
+            className={`flex items-center justify-between py-2 text-left transition-all duration-300 hover:px-2 hover:opacity-65 ${
               activeValue === option.key
                 ? "px-2 text-black"
                 : "text-black/46"
             }`}
-            disabled={option.count === 0}
             key={option.key}
             type="button"
             onClick={() => onSelect(option.key)}
@@ -951,7 +961,6 @@ function ProductCard({
   const selectedStock =
     sizeOptions.find((option) => option.label === activeSize)?.stock ?? 0;
   const totalStock = sizeOptions.reduce((total, size) => total + size.stock, 0);
-  const availabilityLabel = getAvailabilityLabel(totalStock);
   const isSoldOut = getAvailabilityState(totalStock) === "sold_out";
 
   function addSelectedSize(size: string) {
@@ -971,8 +980,8 @@ function ProductCard({
       <div className="relative aspect-[4/5] overflow-hidden border border-black/10 bg-[#d1d3cd]">
         <Image
           alt={product.name}
-          className={`product-image object-cover brightness-[0.86] contrast-[1.06] saturate-[0.62] transition-[filter,transform] ease-out group-hover:brightness-[0.72] ${
-            isWomen ? "duration-300 group-hover:scale-[1.02]" : "duration-700"
+          className={`product-image object-cover brightness-[0.86] contrast-[1.06] saturate-[0.62] transition-[filter,transform] ease-out group-hover:scale-[1.03] group-hover:brightness-[0.78] ${
+            isWomen ? "duration-500" : "duration-700"
           } ${
             product.objectPosition ?? "object-center"
           }`}
@@ -1032,9 +1041,6 @@ function ProductCard({
             {product.name}
           </h2>
           <p className="mt-2 text-black/46">{product.category}</p>
-          <p className="mt-2 text-[8px] tracking-[0.14em] text-black/46">
-            {availabilityLabel}
-          </p>
           <p className="mt-3 text-[11px] tracking-[0.12em] text-black/88">
             ${product.price}
           </p>

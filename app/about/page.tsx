@@ -1,52 +1,44 @@
 import Image from "next/image";
 import Link from "next/link";
+import { CartCountLink } from "@/components/CartCountLink";
 import { LogoMark } from "@/components/LogoMark";
 
-const descriptionBlocks = [
+const approachBlocks = [
   {
-    title: "Brand idea",
-    text: "LOW SIGNAL is a fictional independent clothing label built around quiet presence, daily repeat, and garments that do not ask to be noticed.",
+    title: "Daily repeat",
+    text: "Pieces are cut for ordinary days: walking, working, waiting, moving through the same routes again.",
   },
   {
-    title: "Material & form",
-    text: "The clothing mood is washed black fabric, dry cotton, wool texture, concrete light, and shapes that sit close to routine rather than performance.",
+    title: "Washed black",
+    text: "The palette sits between black, charcoal, stone, and paper. It softens through light, wash, and wear.",
   },
   {
-    title: "Site concept",
-    text: "This website works as a full editorial ecommerce concept: collections, product pages, cart, checkout flow, lookbook, and brand story.",
+    title: "Quiet volume",
+    text: "Outer layers, knit pieces, shirts, and trousers keep room around the body without turning loud.",
   },
   {
-    title: "Digital system",
-    text: "The visual system is based on muted paper, concrete white, washed fabric tone, thin borders, quiet typography, and restrained product interaction.",
+    title: "Small batches",
+    text: "The rail stays considered. New pieces arrive slowly, with attention to fabric, proportion, and repeat use.",
   },
 ];
 
 const materialLanguage = [
   {
-    title: "Washed black",
-    text: "Garments sit between black and charcoal, softened by wear, wash, and shadow.",
+    title: "Dry cotton",
+    text: "A crisp hand that creases naturally and settles into routine.",
   },
   {
-    title: "Concrete light",
-    text: "Cold daylight, dry rooms, and pale surfaces keep the product language quiet.",
+    title: "Wool texture",
+    text: "Soft structure, matte surface, and warmth without weight.",
   },
   {
-    title: "Quiet volume",
-    text: "Shapes are roomy without spectacle: coats, knit layers, and trousers with room to move.",
+    title: "Raw canvas",
+    text: "Dense plain weave for jackets, bags, and everyday outer layers.",
   },
   {
-    title: "Daily repeat",
-    text: "The system is built for pieces that can be worn often without becoming loud.",
+    title: "Worn nylon",
+    text: "Light protection with a softened, low-shine finish.",
   },
-];
-
-const projectDetails = [
-  "Frontend direction",
-  "Ecommerce flow",
-  "Responsive layout",
-  "Cart system",
-  "Product pages",
-  "Visual direction",
 ];
 
 const footerLinks = [
@@ -64,12 +56,10 @@ export default function AboutPage() {
       <section className="grid min-h-screen border-b border-black/18 pt-[64px] lg:grid-cols-[42%_58%]">
         <div className="flex flex-col justify-between border-b border-black/18 bg-[#eeeee8] px-5 py-10 lg:border-b-0 lg:border-r lg:px-[4vw] lg:py-[7vh]">
           <div>
-            <p className="text-[9px] uppercase tracking-[0.22em] text-black/48">
-              About / Project note
+            <p className="text-[9px] uppercase tracking-[0.18em] text-black/54">
+              About / Low Signal
             </p>
-            <h1
-              className="mt-10 font-serif text-[17vw] uppercase leading-[0.8] tracking-[-0.055em] text-[#11110f] sm:text-[92px] lg:text-[7vw]"
-            >
+            <h1 className="mt-10 font-serif text-[17vw] uppercase leading-[0.8] tracking-[-0.055em] text-[#11110f] sm:text-[92px] lg:text-[7vw]">
               OBSERVES.
               <br />
               DOES NOT
@@ -78,38 +68,39 @@ export default function AboutPage() {
             </h1>
           </div>
 
-          <p className="mt-12 max-w-[460px] border-t border-black/16 pt-6 text-[11px] uppercase leading-[1.76] tracking-[0.17em] text-black/60">
-            A quiet fashion system for garments, images, and commerce. Built to
-            feel editorial first, functional second, and never loud.
+          <p className="mt-12 max-w-[460px] border-t border-black/16 pt-6 text-[11px] uppercase leading-[1.76] tracking-[0.15em] text-black/66">
+            LOW SIGNAL makes quiet clothing for daily repetition: washed black
+            layers, dry textures, and shapes that settle into the body over
+            time.
           </p>
         </div>
 
         <div className="grid bg-[#d9d9d1] lg:grid-cols-[1fr_34%]">
           <div className="px-5 py-10 lg:px-10 lg:py-[7vh]">
             <div className="border-b border-black/16 pb-7">
-              <p className="text-[9px] uppercase tracking-[0.22em] text-black/45">
-                LOW SIGNAL / System description
+              <p className="text-[9px] uppercase tracking-[0.18em] text-black/54">
+                Material, form, routine
               </p>
-              <p className="mt-8 max-w-[640px] text-[13px] uppercase leading-[1.75] tracking-[0.18em] text-black/70">
-                LOW SIGNAL is an editorial ecommerce study for an independent
-                clothing label: part catalog, part lookbook, part restrained
-                brand archive.
+              <p className="mt-8 max-w-[650px] text-[13px] uppercase leading-[1.75] tracking-[0.15em] text-black/76">
+                The brand is built around garments that do not ask to be
+                noticed immediately. They are meant to be returned to, worn in,
+                and understood through repetition.
               </p>
             </div>
 
             <div className="divide-y divide-black/14 border-b border-black/16">
-              {descriptionBlocks.map((block) => (
+              {approachBlocks.map((block) => (
                 <section
-                  className="grid gap-5 py-7 text-[9px] uppercase leading-[1.75] tracking-[0.16em] sm:grid-cols-[150px_1fr]"
+                  className="grid gap-5 py-7 text-[9px] uppercase leading-[1.75] tracking-[0.15em] sm:grid-cols-[150px_1fr]"
                   key={block.title}
                 >
                   <h2 className="text-black">{block.title}</h2>
-                  <p className="max-w-[520px] text-black/54">{block.text}</p>
+                  <p className="max-w-[520px] text-black/62">{block.text}</p>
                 </section>
               ))}
             </div>
 
-            <div className="mt-8 grid gap-5 text-[9px] uppercase leading-[1.8] tracking-[0.18em] text-black/46 sm:grid-cols-3">
+            <div className="mt-8 grid gap-5 text-[9px] uppercase leading-[1.8] tracking-[0.16em] text-black/56 sm:grid-cols-3">
               <p>Muted paper</p>
               <p>Concrete light</p>
               <p>Washed black fabric</p>
@@ -137,16 +128,19 @@ export default function AboutPage() {
                   className="object-cover brightness-[0.84] contrast-[1.04] saturate-[0.7]"
                 />
               </div>
-              <div className="flex flex-col justify-between px-5 py-6 text-[9px] uppercase leading-[1.75] tracking-[0.17em] text-black/52">
-                <p>Material note / washed black / dry hand / low signal.</p>
+              <div className="flex flex-col justify-between px-5 py-6 text-[9px] uppercase leading-[1.75] tracking-[0.15em] text-black/58">
+                <p>Washed black / dry hand / concrete light / low signal.</p>
                 <Link href="/lookbook" className="w-fit border-b border-black/50 pb-1 text-black">
                   View lookbook -&gt;
                 </Link>
               </div>
             </div>
 
-            <div className="px-5 py-6 text-[9px] uppercase leading-[1.8] tracking-[0.18em] text-black/44">
-              <p>Designed as a complete storefront direction: shop, cart, product detail, lookbook, and brand story.</p>
+            <div className="px-5 py-6 text-[9px] uppercase leading-[1.8] tracking-[0.16em] text-black/54">
+              <p>
+                Clothing for quiet rooms, repeated routes, and the small
+                changes that happen through wear.
+              </p>
             </div>
           </aside>
         </div>
@@ -154,8 +148,8 @@ export default function AboutPage() {
 
       <AboutExpansion />
 
-      <footer className="flex flex-wrap items-center justify-between gap-5 border-t border-black/18 bg-[#deded7] px-5 py-5 text-[9px] uppercase tracking-[0.18em] md:px-8">
-        <span>LOW SIGNAL / BRAND SYSTEM</span>
+      <footer className="flex flex-wrap items-center justify-between gap-5 border-t border-black/18 bg-[#deded7] px-5 py-5 text-[9px] uppercase tracking-[0.16em] md:px-8">
+        <span>LOW SIGNAL / MATERIAL LANGUAGE</span>
         <nav className="flex flex-wrap gap-x-7 gap-y-3">
           {footerLinks.map(([label, href]) => (
             <Link key={label} href={href}>
@@ -173,18 +167,18 @@ function AboutExpansion() {
     <section className="border-b border-black/18 bg-[#deded7] px-5 py-12 lg:px-12 lg:py-16">
       <div className="mx-auto grid max-w-[1560px] gap-8 lg:grid-cols-[0.9fr_1.1fr]">
         <div className="border-y border-black/16 py-7">
-          <p className="text-[9px] uppercase tracking-[0.22em] text-black/46">
-            A. Brand system
+          <p className="text-[9px] uppercase tracking-[0.18em] text-black/54">
+            A. Approach
           </p>
           <h2 className="mt-8 max-w-[560px] font-serif text-[50px] uppercase leading-[0.82] tracking-[-0.055em] text-black/94 sm:text-[70px] lg:text-[86px]">
             Quiet clothing,
             <br />
-            built to sell.
+            built for return.
           </h2>
-          <p className="mt-9 max-w-[540px] text-[11px] uppercase leading-[1.82] tracking-[0.17em] text-black/60">
-            LOW SIGNAL is a fictional independent clothing label with a quiet
-            presence: washed black garments, daily repeat, no loud logos, and
-            product decisions that stay close to routine.
+          <p className="mt-9 max-w-[540px] text-[11px] uppercase leading-[1.82] tracking-[0.15em] text-black/66">
+            The shape is restrained, the fabric is tactile, and the color stays
+            close to shadow. LOW SIGNAL pieces are made to become familiar
+            instead of decorative.
           </p>
         </div>
 
@@ -200,27 +194,27 @@ function AboutExpansion() {
           </div>
 
           <div className="grid border-y border-black/16">
-            <section className="border-b border-black/14 py-7 text-[9px] uppercase leading-[1.8] tracking-[0.17em]">
-              <p className="text-black">B. Digital ecommerce concept</p>
-              <p className="mt-7 max-w-[560px] text-black/54">
-                The site works as a full ecommerce concept: collection entry,
-                gender rails, product listing pages, product detail pages,
-                cart, checkout direction, lookbook, and brand story.
+            <section className="border-b border-black/14 py-7 text-[9px] uppercase leading-[1.8] tracking-[0.15em]">
+              <p className="text-black">B. Daily uniform</p>
+              <p className="mt-7 max-w-[560px] text-black/62">
+                The rail moves between outerwear, knitwear, shirting, and
+                trousers. Each garment is designed to work alone or in quiet
+                layers.
               </p>
             </section>
 
             <section className="py-7">
-              <p className="text-[9px] uppercase tracking-[0.22em] text-black/46">
+              <p className="text-[9px] uppercase tracking-[0.18em] text-black/54">
                 C. Material language
               </p>
               <div className="mt-6 grid gap-px bg-black/12 sm:grid-cols-2">
                 {materialLanguage.map((item) => (
                   <div
-                    className="bg-[#deded7] px-5 py-5 text-[9px] uppercase leading-[1.75] tracking-[0.16em]"
+                    className="bg-[#deded7] px-5 py-5 text-[9px] uppercase leading-[1.75] tracking-[0.15em]"
                     key={item.title}
                   >
                     <h3 className="text-black">{item.title}</h3>
-                    <p className="mt-5 text-black/50">{item.text}</p>
+                    <p className="mt-5 text-black/56">{item.text}</p>
                   </div>
                 ))}
               </div>
@@ -229,17 +223,17 @@ function AboutExpansion() {
         </div>
 
         <div className="grid gap-4 lg:col-span-2 lg:grid-cols-[1.1fr_0.9fr]">
-          <section className="border-y border-black/16 py-7 text-[9px] uppercase leading-[1.8] tracking-[0.17em]">
-            <p className="text-black">D. Project details</p>
-            <p className="mt-7 max-w-[700px] text-black/54">
-              A portfolio ecommerce system for a fashion label: structured
-              product shopping, cart behavior, responsive catalog layouts, and
-              visual direction that stays cold, minimal, and commercial.
+          <section className="border-y border-black/16 py-7 text-[9px] uppercase leading-[1.8] tracking-[0.15em]">
+            <p className="text-black">D. Wear notes</p>
+            <p className="mt-7 max-w-[700px] text-black/62">
+              Wash cold, dry naturally, and let the surface change. Creases,
+              fading, and softened edges are part of how the garment records
+              use.
             </p>
             <div className="mt-8 grid gap-px bg-black/12 sm:grid-cols-3">
-              {projectDetails.map((detail) => (
+              {["Layer often", "Wash gently", "Wear repeatedly"].map((detail) => (
                 <span
-                  className="bg-[#deded7] px-4 py-4 text-black/56"
+                  className="bg-[#deded7] px-4 py-4 text-black/60"
                   key={detail}
                 >
                   {detail}
@@ -261,8 +255,8 @@ function AboutExpansion() {
                 className="object-cover object-[58%_54%] brightness-[0.72] contrast-[1.06] saturate-[0.66] transition duration-700 group-hover:brightness-[0.82]"
               />
               <div className="absolute inset-0 bg-black/22" />
-              <div className="absolute inset-x-6 bottom-6 flex items-end justify-between gap-6 text-[9px] uppercase tracking-[0.18em] text-[#f4f0e8]/78">
-                <span>Spring 2026 / shop system</span>
+              <div className="absolute inset-x-6 bottom-6 flex items-end justify-between gap-6 text-[9px] uppercase tracking-[0.16em] text-[#f4f0e8]/78">
+                <span>Spring 2026 / current rail</span>
                 <span className="border-b border-[#f4f0e8]/55 pb-[5px]">
                   Enter collection →
                 </span>
@@ -277,7 +271,7 @@ function AboutExpansion() {
 
 function AboutNav() {
   return (
-    <nav className="fixed left-0 right-0 top-0 z-30 grid min-h-[64px] grid-cols-[1fr_auto] items-start gap-6 border-b border-black/16 bg-[#e3e3dc]/92 px-5 py-5 text-[9px] uppercase tracking-[0.18em] text-[#141311] backdrop-blur-sm md:grid-cols-[1fr_auto_1fr] lg:px-12">
+    <nav className="fixed left-0 right-0 top-0 z-30 grid min-h-[64px] grid-cols-[1fr_auto] items-start gap-6 border-b border-black/16 bg-[#e3e3dc]/92 px-5 py-5 text-[9px] uppercase tracking-[0.16em] text-[#141311] backdrop-blur-sm md:grid-cols-[1fr_auto_1fr] lg:px-12">
       <LogoMark />
 
       <div className="hidden justify-center gap-14 md:flex">
@@ -290,7 +284,7 @@ function AboutNav() {
       </div>
 
       <div className="flex justify-end">
-        <Link href="/cart">Cart</Link>
+        <CartCountLink />
       </div>
     </nav>
   );
