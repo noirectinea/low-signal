@@ -24,7 +24,7 @@ export function Hero() {
             <p className="mb-5 text-[10px] uppercase tracking-[0.22em] text-low-muted">
               Observes. Does not explain.
             </p>
-            <h1 className="font-serif text-[clamp(4.8rem,14vw,13rem)] font-medium leading-[0.78] text-low-fog">
+            <h1 className="font-serif text-[clamp(4.2rem,12vw,11rem)] font-semibold uppercase leading-[0.82] tracking-[-0.06em] text-low-fog">
               LOW
               <br />
               SIGNAL
@@ -32,7 +32,7 @@ export function Hero() {
           </div>
 
           <div className="mt-10 grid grid-cols-5 gap-4 border-t border-low-line pt-6 md:mt-0">
-            <p className="col-span-5 font-serif text-2xl leading-[1.08] text-low-paper md:col-span-4 md:text-3xl">
+            <p className="col-span-5 font-serif text-2xl font-medium uppercase leading-[1] tracking-[-0.02em] text-low-paper md:col-span-4 md:text-3xl">
               A brand that behaves like a note found between pages.
             </p>
             <p className="col-span-4 col-start-2 mt-10 text-sm leading-6 text-low-muted md:col-span-3 md:col-start-3">

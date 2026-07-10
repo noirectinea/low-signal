@@ -30,7 +30,7 @@ export function CollectionsSection({
               Catalogue
             </p>
             <div className="col-span-12 md:col-span-6 md:col-start-4">
-              <h2 className="font-serif text-5xl font-light leading-[0.95] text-low-fog md:text-7xl">
+              <h2 className="font-serif text-5xl font-semibold uppercase leading-[0.9] tracking-[-0.04em] text-low-fog md:text-7xl">
               {title}
             </h2>
             {description && (
@@ -54,7 +54,7 @@ export function CollectionsSection({
 
             <div className="grid grid-cols-12 gap-4 border-y border-low-line py-12 md:py-16">
               <div className="col-span-12 md:col-span-5 md:col-start-2">
-                <p className="font-serif text-3xl leading-[1.06] text-low-paper md:text-5xl">
+                <p className="font-serif text-3xl font-medium uppercase leading-[1] tracking-[-0.02em] text-low-paper md:text-5xl">
                   Clothes presented as evidence, not persuasion.
                 </p>
               </div>
@@ -92,7 +92,7 @@ export function CollectionsSection({
   return (
     <section className="w-full bg-low-black px-4 py-20 sm:px-6 md:py-32 lg:px-8">
       <div className="mx-auto max-w-[1500px]">
-        <h2 className="mb-16 font-serif text-4xl font-light text-low-fog md:mb-24 md:text-5xl">
+        <h2 className="mb-16 font-serif text-4xl font-semibold uppercase leading-[0.95] tracking-[-0.04em] text-low-fog md:mb-24 md:text-5xl">
           {title}
         </h2>
         <div className="grid grid-cols-1 gap-8 md:grid-cols-3 md:gap-12">

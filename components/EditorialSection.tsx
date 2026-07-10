@@ -30,7 +30,7 @@ export function EditorialSection({
       <div className="relative z-10 mx-auto max-w-[1280px]">
         <div className={`space-y-8 ${alignClass}`}>
           {title && (
-            <h2 className="max-w-3xl font-serif text-5xl font-light leading-[0.98] text-low-fog md:text-7xl">
+            <h2 className="max-w-3xl font-serif text-5xl font-semibold uppercase leading-[0.92] tracking-[-0.04em] text-low-fog md:text-7xl">
               {title}
             </h2>
           )}
@@ -43,7 +43,7 @@ export function EditorialSection({
 
           {quote && (
             <blockquote className="max-w-3xl">
-              <p className="border-l border-low-bone pl-6 font-serif text-3xl italic leading-[1.08] text-low-paper md:text-5xl">
+              <p className="border-l border-low-bone pl-6 font-serif text-3xl font-medium uppercase leading-[1] tracking-[-0.02em] text-low-paper md:text-5xl">
                 {quote}
               </p>
             </blockquote>

@@ -1,420 +1,157 @@
-"use client";
-
 import Image from "next/image";
+import { Cormorant_Garamond } from "next/font/google";
 import Link from "next/link";
-import { useMemo, useState } from "react";
+import { CartCountLink } from "@/components/CartCountLink";
+import { LogoMark } from "@/components/LogoMark";
+import { getProductsByGender, type ProductGender } from "@/data/products";
 
-const products = [
+const collectionsDisplay = Cormorant_Garamond({
+  subsets: ["latin"],
+  weight: ["500", "600"],
+  display: "swap",
+});
+
+const entryCards: Array<{
+  gender: ProductGender;
+  imagePriority?: boolean;
+  label: string;
+}> = [
   {
-    name: "Field Jacket",
-    category: "Outerwear",
-    price: 280,
-    image: "/images/low-signal/products/product-01.jpg",
+    gender: "men",
+    imagePriority: true,
+    label: "MEN",
   },
   {
-    name: "Washed Longsleeve",
-    category: "Shirts",
-    price: 140,
-    image: "/images/low-signal/products/product-02.jpg",
-  },
-  {
-    name: "Textured Knit",
-    category: "Knitwear",
-    price: 160,
-    image: "/images/low-signal/products/product-03.jpg",
-  },
-  {
-    name: "Wide Trouser",
-    category: "Trousers",
-    price: 210,
-    image: "/images/low-signal/products/product-04.jpg",
-  },
-  {
-    name: "Work Jacket",
-    category: "Jackets",
-    price: 260,
-    image: "/images/low-signal/products/product-05.jpg",
-  },
-  {
-    name: "Utility Overshirt",
-    category: "Shirts",
-    price: 190,
-    image: "/images/low-signal/products/product-06.jpg",
-  },
-  {
-    name: "Cotton Shirt",
-    category: "Shirts",
-    price: 170,
-    image: "/images/low-signal/products/product-07.jpg",
-  },
-  {
-    name: "Outer Coat",
-    category: "Outerwear",
-    price: 420,
-    image: "/images/low-signal/products/product-08.jpg",
-  },
-  {
-    name: "Long Skirt",
-    category: "Trousers",
-    price: 180,
-    image: "/images/low-signal/products/product-09.jpg",
-  },
-  {
-    name: "Zip Jacket",
-    category: "Jackets",
-    price: 180,
-    image: "/images/low-signal/products/product-10.jpg",
-  },
-  {
-    name: "Taupe Chore Coat",
-    category: "Outerwear",
-    price: 300,
-    image: "/images/low-signal/products/product-11.jpg",
-  },
-  {
-    name: "Layered Set",
-    category: "Outerwear",
-    price: 360,
-    image: "/images/low-signal/products/product-12.jpg",
+    gender: "women",
+    label: "WOMEN",
   },
 ];
 
-const audienceFilters = [
-  ["All garments", "120"],
-  ["Men", "48"],
-  ["Women", "52"],
-  ["Unisex", "20"],
-];
-
-const categoryFilters = [
-  ["Jackets", "18"],
-  ["Shirts", "24"],
-  ["Knitwear", "16"],
-  ["Outerwear", "22"],
-  ["Trousers", "20"],
-  ["Shorts", "10"],
-  ["Accessories", "10"],
-];
-
-const filterableCategories = new Set([
-  "Jackets",
-  "Shirts",
-  "Knitwear",
-  "Outerwear",
-  "Trousers",
-]);
+export const metadata = {
+  title: "Spring 2026 Collections / LOW SIGNAL",
+};
 
 export default function CollectionsPage() {
-  const [panelOpen, setPanelOpen] = useState(true);
-  const [activeFilter, setActiveFilter] = useState("All garments");
-
-  const visibleProducts = useMemo(() => {
-    if (!filterableCategories.has(activeFilter)) {
-      return products;
-    }
-
-    return products.filter((product) => product.category === activeFilter);
-  }, [activeFilter]);
-
-  function chooseFilter(label: string) {
-    setActiveFilter(label);
-  }
-
   return (
-    <main className="min-h-screen overflow-x-hidden bg-[#c6c2b8] text-[#141311]">
-      <AssortmentPanel
-        activeFilter={activeFilter}
-        open={panelOpen}
-        onClose={() => setPanelOpen(false)}
-        onFilter={chooseFilter}
-      />
+    <main className="min-h-screen overflow-x-hidden bg-[#e6e7e2] text-[#121211]">
+      <CollectionsNav />
 
-      {panelOpen && (
-        <button
-          aria-label="Close filters"
-          className="fixed inset-0 z-40 bg-black/10 lg:hidden"
-          type="button"
-          onClick={() => setPanelOpen(false)}
-        />
-      )}
+      <section className="mx-auto grid min-h-screen w-full max-w-[1680px] px-5 pb-16 pt-[96px] sm:px-6 lg:grid-cols-[minmax(320px,480px)_1fr] lg:gap-14 lg:px-12 lg:pb-20 lg:pt-[112px] xl:gap-20 xl:px-14">
+        <header className="border-b border-black/16 pb-10 lg:border-b-0 lg:pb-0">
+          <p className="text-[9px] uppercase tracking-[0.22em] text-black/48">
+            05 — Collection / LOW SIGNAL
+          </p>
 
-      <div
-        className={`transition-[padding] duration-500 ${
-          panelOpen ? "lg:pl-[392px]" : "lg:pl-0"
-        }`}
-      >
-        <CollectionsNav onCollections={() => setPanelOpen(true)} />
-        <ProductGrid
-          activeFilter={activeFilter}
-          items={visibleProducts}
-          onFilters={() => setPanelOpen(true)}
-        />
-      </div>
+          <h1 className={`${collectionsDisplay.className} mt-8 max-w-[560px] text-[62px] font-semibold uppercase leading-[0.86] tracking-[-0.03em] text-black/94 sm:text-[82px] lg:text-[94px] xl:text-[106px]`}>
+            <span>SPRING</span>{" "}
+            <span className="inline-block scale-[0.94] tracking-[-0.012em] [font-feature-settings:'tnum']">
+              2026
+            </span>
+          </h1>
+
+          <p className="mt-8 max-w-[430px] text-[11px] uppercase leading-[1.82] tracking-[0.17em] text-black/60">
+            Dark neutral clothing, cut for daily repeat. Washed fabrics, quiet
+            volume, and pieces that move with you.
+          </p>
+
+          <div className="mt-10 flex items-center gap-4 border-y border-black/16 py-5 text-[9px] uppercase tracking-[0.18em] text-black/54">
+            <span className="h-px w-8 bg-black/30" />
+            <span>Choose a shop rail</span>
+          </div>
+        </header>
+
+        <div className="grid content-end gap-5 pt-7 sm:grid-cols-2 lg:pt-0">
+          {entryCards.map((card) => (
+            <CollectionEntryCard
+              gender={card.gender}
+              key={card.gender}
+              label={card.label}
+              priority={card.imagePriority}
+            />
+          ))}
+        </div>
+      </section>
     </main>
   );
 }
 
-function AssortmentPanel({
-  activeFilter,
-  onClose,
-  onFilter,
-  open,
-}: Readonly<{
-  activeFilter: string;
-  onClose: () => void;
-  onFilter: (label: string) => void;
-  open: boolean;
-}>) {
-  const panelFilters = [audienceFilters, categoryFilters];
-
+function CollectionsNav() {
   return (
-    <aside
-      className={`fixed bottom-0 left-0 top-0 z-50 flex w-[86vw] max-w-[392px] flex-col border-r border-black/18 bg-[#ece8df] px-8 py-8 text-[10px] uppercase tracking-[0.16em] text-[#141311] transition-transform duration-500 sm:w-[360px] lg:w-[392px] ${
-        open ? "translate-x-0" : "-translate-x-full"
-      }`}
-    >
-      <div className="flex items-start justify-between">
-        <button
-          className="text-left transition-opacity duration-300 hover:opacity-55"
-          type="button"
-          onClick={onClose}
-        >
-          Close
-        </button>
-        <button
-          aria-label="Close collections panel"
-          className="relative size-6"
-          type="button"
-          onClick={onClose}
-        >
-          <span className="absolute left-1/2 top-1/2 h-px w-6 -translate-x-1/2 rotate-45 bg-black" />
-          <span className="absolute left-1/2 top-1/2 h-px w-6 -translate-x-1/2 -rotate-45 bg-black" />
-        </button>
-      </div>
+    <nav className="fixed left-0 right-0 top-0 z-30 grid min-h-[64px] grid-cols-[1fr_auto] items-start gap-6 border-b border-black/14 bg-[#e1e2dd]/94 px-5 py-5 text-[9px] uppercase tracking-[0.18em] text-[#121211] backdrop-blur-sm md:grid-cols-[1fr_auto_1fr] lg:px-12">
+      <LogoMark />
 
-      <div className="mt-20">
-        <p className="text-[9px] tracking-[0.2em] text-black/58">
+      <div className="hidden justify-center gap-14 md:flex">
+        <Link href="/">Home</Link>
+        <Link className="border-b border-black pb-2" href="/collections">
           Collections
-        </p>
-        <h1 className="mt-8 max-w-[280px] font-serif text-[42px] normal-case leading-[0.96] tracking-[-0.04em] text-black sm:text-[50px]">
-          Explore the
-          <br />
-          assortment.
-        </h1>
+        </Link>
+        <Link href="/lookbook">Lookbook</Link>
+        <Link href="/about">About</Link>
       </div>
 
-      <div className="mt-14 grid gap-12">
-        {panelFilters.map((group, groupIndex) => (
-          <div key={groupIndex} className="grid gap-0">
-            {groupIndex === 1 && (
-              <p className="mb-8 text-[9px] tracking-[0.18em] text-black/42">
-                Categories
-              </p>
-            )}
-            {group.map(([label, count]) => {
-              const isActive = activeFilter === label;
-
-              return (
-                <button
-                  key={label}
-                  className={`flex items-center justify-between border-b border-black/22 py-3 text-left transition-opacity duration-300 hover:opacity-65 ${
-                    isActive ? "text-black" : "text-black/62"
-                  }`}
-                  type="button"
-                  onClick={() => onFilter(label)}
-                >
-                  <span>{label}</span>
-                  <span className="text-black/42">{count}</span>
-                </button>
-              );
-            })}
-          </div>
-        ))}
-      </div>
-
-      <Link
-        href="/"
-        className="mt-auto grid grid-cols-[42%_1fr] border border-black/14 bg-[#d8d4ca] text-[8px] leading-[1.55] tracking-[0.12em]"
-      >
-        <div className="relative min-h-[150px] overflow-hidden">
-          <Image
-            src="/images/hero/coast-hero.png"
-            alt="LOW SIGNAL lookbook coast"
-            fill
-            sizes="140px"
-            className="editorial-image object-cover object-[52%_50%] brightness-[0.72] contrast-[1.05] saturate-[0.78]"
-          />
-        </div>
-        <div className="flex min-h-[150px] flex-col justify-between px-5 py-6">
-          <div>
-            <p>Spring 2026</p>
-            <p className="mt-6 text-black/62">
-              A collection built on restraint, quiet structures, and small
-              interruptions.
-            </p>
-          </div>
-          <span className="inline-flex items-center gap-5 border-b border-black/55 pb-1">
-            View lookbook
-            <span aria-hidden="true">-&gt;</span>
-          </span>
-        </div>
-      </Link>
-    </aside>
-  );
-}
-
-function CollectionsNav({
-  onCollections,
-}: Readonly<{
-  onCollections: () => void;
-}>) {
-  return (
-    <nav className="fixed left-0 right-0 top-0 z-30 grid grid-cols-[1fr_auto] items-start gap-6 border-b border-black/20 bg-[#ece8df]/90 px-6 py-6 text-[9px] uppercase tracking-[0.18em] text-[#141311] backdrop-blur-sm md:grid-cols-[1fr_auto_1fr] lg:px-12">
-      <Link href="/" className="font-medium">
-        Low Signal
-      </Link>
-
-      <div className="hidden justify-center gap-12 md:flex">
-        <button
-          className="border-b border-black pb-2"
-          type="button"
-          onClick={onCollections}
-        >
-          Collections
-        </button>
-        <Link href="/">Lookbook</Link>
-        <Link href="/">Journal</Link>
-      </div>
-
-      <div className="flex justify-end gap-6">
-        <span>Cart (0)</span>
-        <button className="text-left" type="button" onClick={onCollections}>
-          Menu
-        </button>
+      <div className="flex justify-end">
+        <CartCountLink />
       </div>
     </nav>
   );
 }
 
-function ProductGrid({
-  activeFilter,
-  items,
-  onFilters,
+function CollectionEntryCard({
+  gender,
+  label,
+  priority = false,
 }: Readonly<{
-  activeFilter: string;
-  items: typeof products;
-  onFilters: () => void;
+  gender: ProductGender;
+  label: string;
+  priority?: boolean;
 }>) {
+  const products = getProductsByGender(gender);
+  const leadImage =
+    gender === "men"
+      ? {
+          className: "object-[50%_43%]",
+          src: "/images/low-signal/products/product-01.jpg",
+        }
+      : {
+          className: "object-[50%_47%]",
+          src: "/images/low-signal/products/product-07.jpg",
+        };
+
   return (
-    <section className="bg-[#f0ece4] px-5 pb-12 pt-[104px] lg:px-12 lg:pb-16">
-      <div className="mb-10 grid border-b border-black/16 pb-8 lg:grid-cols-[1fr_auto]">
-        <div className="max-w-[520px]">
-          <div className="flex items-center gap-4 text-[9px] uppercase tracking-[0.2em] text-black/50">
-            <span>05</span>
-            <span className="h-px w-7 bg-black/28" />
-            <span>Garments</span>
-            <span>Spring 2026</span>
+    <article className="group border-y border-black/18 py-4 sm:border-b sm:border-t-0 sm:pt-0">
+      <Link
+        className="block focus:outline-none focus-visible:ring-1 focus-visible:ring-black"
+        href={`/collections/${gender}`}
+      >
+        <div className="relative aspect-[4/5] overflow-hidden border border-black/12 bg-[#d1d3cd]">
+          <Image
+            alt={`${label} Spring 2026 category`}
+            className={`editorial-image object-cover brightness-[0.82] contrast-[1.06] saturate-[0.66] transition duration-700 group-hover:brightness-[0.9] ${leadImage.className}`}
+            fill
+            priority={priority}
+            sizes="(min-width: 1024px) 34vw, (min-width: 640px) 45vw, 92vw"
+            src={leadImage.src}
+          />
+          <span className="absolute left-4 top-4 text-[9px] uppercase tracking-[0.18em] text-[#f2f3ee]/90 mix-blend-difference">
+            {String(products.length).padStart(2, "0")} items
+          </span>
+        </div>
+
+        <div className="grid grid-cols-[1fr_auto] items-end gap-4 border-b border-black/14 pb-5 pt-5 uppercase">
+          <div>
+            <h2 className="font-serif text-[44px] uppercase leading-[0.88] tracking-[-0.05em] text-black/94 sm:text-[54px] lg:text-[62px]">
+              {label}
+            </h2>
+            <p className="mt-4 text-[9px] tracking-[0.18em] text-black/50">
+              {String(products.length).padStart(2, "0")} products / Spring 2026
+            </p>
           </div>
-          <h1 className="mt-8 font-serif text-[clamp(3.9rem,8.4vw,8.2rem)] leading-[0.82] tracking-[-0.06em] text-black/92">
-            Garment
-            <br />
-            archive.
-          </h1>
-        </div>
 
-        <p className="mt-8 max-w-[310px] self-end text-[9px] uppercase leading-[1.7] tracking-[0.18em] text-black/48 lg:mt-0">
-          Dark neutral clothing, concrete light, and pieces kept for daily
-          repeat.
-        </p>
-      </div>
-
-      <div className="mb-8 flex flex-col gap-6 border-b border-black/18 pb-5 text-[9px] uppercase tracking-[0.18em] text-black/68 md:flex-row md:items-center md:justify-between">
-        <div className="flex items-center gap-5">
-          <span>120 Items</span>
-          {activeFilter !== "All garments" && (
-            <span className="text-black/38">{activeFilter}</span>
-          )}
-        </div>
-
-        <div className="flex flex-wrap items-center gap-7">
-          <button
-            className="flex items-center gap-3 md:hidden"
-            type="button"
-            onClick={onFilters}
-          >
-            <span className="grid gap-[3px]">
-              <span className="h-px w-4 bg-black/70" />
-              <span className="h-px w-4 bg-black/70" />
-              <span className="h-px w-4 bg-black/70" />
-            </span>
-            Filters
-          </button>
-          <span>Sort by: Newest</span>
-          <span aria-hidden="true">⌄</span>
-          <span className="grid grid-cols-2 gap-[3px]">
-            <span className="size-[5px] border border-black/70" />
-            <span className="size-[5px] border border-black/70" />
-            <span className="size-[5px] border border-black/70" />
-            <span className="size-[5px] border border-black/70" />
+          <span className="mb-1 border-b border-black/58 pb-1 text-[9px] tracking-[0.18em] text-black transition-opacity duration-300 group-hover:opacity-55">
+            SHOP {label} →
           </span>
-          <span className="grid gap-[4px]">
-            <span className="h-px w-4 bg-black/40" />
-            <span className="h-px w-4 bg-black/40" />
-            <span className="h-px w-4 bg-black/40" />
-          </span>
-          <button
-            className="hidden items-center gap-3 transition-opacity duration-300 hover:opacity-55 md:flex"
-            type="button"
-            onClick={onFilters}
-          >
-            <span className="grid gap-[3px]">
-              <span className="h-px w-4 bg-black/60" />
-              <span className="h-px w-4 bg-black/60" />
-              <span className="h-px w-4 bg-black/60" />
-            </span>
-            Filters
-          </button>
         </div>
-      </div>
-
-      <div className="grid gap-px bg-black/16 sm:grid-cols-2 xl:grid-cols-4">
-        {items.map((product, index) => (
-          <article
-            key={product.name}
-            className="bg-[#ebe6dc]"
-          >
-            <div className="relative aspect-[3/4] overflow-hidden bg-[#d8d3c8]">
-              <Image
-                src={product.image}
-                alt={product.name}
-                fill
-                sizes="(min-width: 1280px) 21vw, (min-width: 640px) 44vw, 100vw"
-                className={`product-image object-cover brightness-[0.86] contrast-[1.05] saturate-[0.76] ${
-                  index === 1 || index === 5 || index === 8
-                    ? "object-[50%_20%]"
-                    : "object-[50%_12%]"
-                }`}
-              />
-              <div className="absolute inset-0 bg-[#171614]/5" />
-            </div>
-
-            <div className="grid min-h-[126px] grid-cols-[1fr_auto] gap-5 border-t border-black/14 px-5 py-5 text-[9px] uppercase tracking-[0.15em]">
-              <div>
-                <h3>{product.name}</h3>
-                <p className="mt-3 text-black/42">{product.category}</p>
-                <p className="mt-6">${product.price}</p>
-              </div>
-              <button
-                className="self-end text-[24px] leading-none text-black/80 transition-opacity duration-300 hover:opacity-45"
-                type="button"
-                aria-label={`Add ${product.name} to cart`}
-              >
-                +
-              </button>
-            </div>
-          </article>
-        ))}
-      </div>
-    </section>
+      </Link>
+    </article>
   );
 }

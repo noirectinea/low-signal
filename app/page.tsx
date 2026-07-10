@@ -1,71 +1,47 @@
 import Image from "next/image";
 import Link from "next/link";
-import { Libre_Caslon_Display } from "next/font/google";
-
-const display = Libre_Caslon_Display({
-  subsets: ["latin"],
-  weight: "400",
-  display: "swap",
-});
+import { HomeSelectedPieces } from "@/components/HomeSelectedPieces";
+import { LogoMark } from "@/components/LogoMark";
 
 const heroImage = "/images/hero/ch1.png";
 const collectionImage = "/images/hero/ch3.png";
 const lookbookImage = "/images/low-signal/lookbook-coast.jpg";
-const garmentOne = "/images/low-signal/selected-garments-main.jpg";
+const garmentOne = "/images/low-signal/products/product-06.jpg";
 const garmentTwo = "/images/low-signal/selected-garments-detail.jpg";
-const materialImage = "/images/hero/coast-hero3.png";
-const journalImage = "/images/hero/ch6.png";
-const selectedPieces = [
-  {
-    name: "Field Jacket",
-    category: "Outerwear",
-    price: "$180",
-    image: "/images/low-signal/products/product-01.jpg",
-  },
-  {
-    name: "Washed Longsleeve",
-    category: "Tops",
-    price: "$90",
-    image: "/images/low-signal/products/product-02.jpg",
-  },
-  {
-    name: "Wide Trouser",
-    category: "Bottoms",
-    price: "$140",
-    image: "/images/low-signal/products/product-04.jpg",
-  },
+const materialStoryImage =
+  "/images/low-signal/selected-collection/material-form-original.png";
+const journalImages = [
+  ["/images/low-signal/journal/fabric-detail.jpg", "Fabric detail"],
+  ["/images/low-signal/journal/road-coast.jpg", "Road / cloudy coast"],
+  ["/images/low-signal/journal/garment-chair.jpg", "Garment on chair"],
+  ["/images/low-signal/journal/hardware-detail.jpg", "Button / label detail"],
+  ["/images/low-signal/journal/studio-table.jpg", "Studio table note"],
 ];
 
 const materialNotes = ["Washed cotton", "Dry wool", "Raw canvas", "Worn nylon"];
-const editorialNotes = [
-  ["Cut when needed", "Small runs / Issue 01"],
-  ["Worn until quiet", "Repeated wear / Current rail"],
-  ["Room to move", "Archive fit / Low Signal"],
-];
 const journalRows = [
   ["01", "Field note"],
   ["02", "Material log"],
   ["03", "Coastal light"],
   ["04", "Road note"],
 ];
-const archiveLinks = [
-  "Collections",
-  "Lookbook",
-  "Journal",
-  "Contact",
-  "Shipping",
-  "Instagram",
+const footerLinks = [
+  ["Collections", "/collections"],
+  ["Lookbook", "/lookbook"],
+  ["About", "/about"],
+  ["Contact", "#contact"],
+  ["Shipping", "#shipping"],
 ];
 
 export default function Home() {
   return (
-    <main className="min-h-screen w-screen overflow-x-hidden bg-[#f5f2ed] text-[#111]">
-      <section className="grid w-screen overflow-hidden bg-[#f5f2ed] md:h-[100svh] md:grid-rows-[65fr_35fr]">
+    <main className="min-h-screen w-full overflow-x-hidden bg-[#e4e5df] text-[#111]">
+      <section className="grid w-full overflow-hidden bg-[#e4e5df] md:h-[100svh] md:grid-rows-[65fr_35fr]">
         <HeroPanel />
         <EditorialGrid />
       </section>
       <MaterialForm />
-      <SelectedPieces />
+      <HomeSelectedPieces />
       <JournalSection />
       <FinalFooter />
     </main>
@@ -74,8 +50,8 @@ export default function Home() {
 
 function HeroPanel() {
   return (
-    <section className="relative min-h-[620px] overflow-hidden border-b border-black/20 bg-[#f5f2ed] md:h-full md:min-h-0">
-      <div className="absolute inset-y-0 left-0 w-[29.5vw] bg-[#f5f2ed]" />
+    <section className="relative min-h-[620px] overflow-hidden border-b border-black/20 bg-[#e4e5df] md:h-full md:min-h-0">
+      <div className="absolute inset-y-0 left-0 w-[29.5vw] bg-[#e4e5df]" />
       <div className="absolute inset-y-0 left-[29.5vw] right-0">
         <Image
           src={heroImage}
@@ -92,14 +68,11 @@ function HeroPanel() {
       <div className="absolute left-[75.15vw] right-[18px] top-[48px] z-20 h-px bg-black/40" />
 
       <header className="absolute left-[18px] right-[18px] top-[16px] z-30 flex h-[32px] items-start text-[8px] uppercase tracking-[0.16em]">
-        <Link href="/" className="relative -top-[3px] w-[18.1vw] font-medium leading-[0.95]">
-          Low
-          <br />
-          Signal
-        </Link>
+        <LogoMark className="relative -top-[3px] w-[18.1vw]" />
         <nav className="hidden gap-[38px] md:flex">
+          <Link href="/">Home</Link>
           <Link href="/collections">Collections</Link>
-          <a href="#lookbook">Lookbook</a>
+          <Link href="/lookbook">Lookbook</Link>
           <Link href="/about">About</Link>
         </nav>
         <div className="ml-auto flex items-start gap-[24px]">
@@ -110,16 +83,36 @@ function HeroPanel() {
         </div>
       </header>
 
-      <div className="absolute left-[5.15vw] top-[57%] z-20 hidden md:block">
+      <div className="absolute left-[5.15vw] top-1/2 z-20 hidden w-[210px] -translate-y-1/2 flex-col items-start md:flex">
         <Kicker number="01" />
-        <p className="mt-[28px] max-w-[205px] text-[12px] uppercase leading-[1.46] tracking-[0.19em]">
+        <p className="mt-[26px] max-w-[205px] text-[12px] uppercase leading-[1.52] tracking-[0.19em]">
           Independent clothing for people who observe first.
         </p>
-        <div className="mt-[30px] grid max-w-[205px] gap-3 border-y border-black/18 py-4 text-[8px] uppercase leading-[1.45] tracking-[0.17em] text-black/48">
+        <div className="mt-[26px] grid w-full gap-[10px] border-y border-black/18 py-[14px] text-[8px] uppercase leading-[1.5] tracking-[0.17em] text-black/48">
           <span>Spring 2026 / Issue 01</span>
           <span>Garment index</span>
         </div>
-        <Link className="mt-[44px] inline-flex border-b border-black pb-[5px] text-[8px] uppercase tracking-[0.16em]" href="/about">
+        <div className="mt-[32px] grid gap-3 text-[10px] uppercase tracking-[0.18em]">
+          <Link
+            className="group inline-flex w-fit items-center gap-3 border-b border-black/70 pb-[6px] transition-opacity duration-300 hover:opacity-55"
+            href="/collections"
+          >
+            <span>Shop Spring 2026</span>
+            <span className="transition-transform duration-300 group-hover:translate-x-1">
+              →
+            </span>
+          </Link>
+          <Link
+            className="group inline-flex w-fit items-center gap-3 border-b border-black/45 pb-[6px] transition-opacity duration-300 hover:opacity-55"
+            href="/lookbook"
+          >
+            <span>View Lookbook</span>
+            <span className="transition-transform duration-300 group-hover:translate-x-1">
+              →
+            </span>
+          </Link>
+        </div>
+        <Link className="mt-[22px] inline-flex border-b border-black/28 pb-[5px] text-[8px] uppercase tracking-[0.16em] text-black/52 transition-opacity duration-300 hover:opacity-60" href="/about">
           About the brand
         </Link>
       </div>
@@ -135,7 +128,7 @@ function HeroPanel() {
       </p>
 
       <h1
-        className={`${display.className} absolute left-[42.7vw] top-[28.8%] z-30 text-[13.1vw] leading-[0.75] tracking-[-0.047em] text-[#f3eee7]/82 mix-blend-screen [text-shadow:0_2px_18px_rgba(17,17,17,0.32)]`}
+        className="hero-printed-title absolute left-[42.2vw] top-[25.8%] z-30 text-[13.4vw] uppercase sm:text-[13vw]"
       >
         LOW
         <br />
@@ -154,9 +147,9 @@ function EditorialGrid() {
     <section className="grid border-b border-black/20 md:h-full md:grid-cols-[32.5vw_24vw_1fr]">
       <Link
         href="/collections"
-        className="relative grid border-b border-black/20 md:grid-cols-[47.96%_52.04%] md:border-b-0 md:border-r"
+        className="group relative grid border-b border-black/20 transition-colors duration-300 hover:bg-black/[0.025] md:grid-cols-[47.96%_52.04%] md:border-b-0 md:border-r"
       >
-        <div className="flex h-full flex-col bg-[#ece8df] px-[27px] py-[34px]">
+        <div className="flex h-full flex-col bg-[#e8e9e3] px-[27px] py-[34px]">
           <Kicker number="02" />
           <p className="mt-[24px] text-[10px] uppercase leading-[1.5] tracking-[0.22em]">
             Spring 2026
@@ -165,8 +158,11 @@ function EditorialGrid() {
             A collection built on restraint, quiet structures, and small
             interruptions.
           </p>
-          <span className="mt-auto inline-flex w-fit border-b border-black pb-[4px] text-[8px] uppercase tracking-[0.16em]">
+          <span className="mt-auto inline-flex w-fit gap-2 border-b border-black/65 pb-[4px] text-[9px] uppercase tracking-[0.16em] transition-opacity duration-300 group-hover:opacity-55">
             View collection
+            <span className="transition-transform duration-300 group-hover:translate-x-1">
+              →
+            </span>
           </span>
         </div>
         <div className="relative h-[260px] overflow-hidden md:h-full">
@@ -174,7 +170,7 @@ function EditorialGrid() {
             src={collectionImage}
             alt="LOW SIGNAL collection preview"
             fill
-          sizes="17vw"
+            sizes="17vw"
             className="editorial-image object-cover object-[50%_18%]"
           />
         </div>
@@ -183,10 +179,9 @@ function EditorialGrid() {
         <div className="pointer-events-none absolute bottom-0 right-[27px] top-0 hidden w-px bg-black/12 md:block" />
       </Link>
 
-      <a
-        id="lookbook"
-        href="#"
-        className="flex h-full flex-col border-b border-black/20 bg-[#eeeae2] px-[46px] py-[34px] md:border-b-0 md:border-r"
+      <Link
+        href="/lookbook"
+        className="group flex h-full flex-col border-b border-black/20 bg-[#ebece6] px-[46px] py-[34px] transition-colors duration-300 hover:bg-[#e4e5df] md:border-b-0 md:border-r"
       >
         <Kicker number="03" />
         <p className="mt-[23px] text-[10px] uppercase tracking-[0.2em]">
@@ -201,23 +196,29 @@ function EditorialGrid() {
             className="editorial-image object-cover object-[58%_54%]"
           />
         </div>
-        <span className="mt-auto inline-flex w-[76px] border-b border-black pb-[4px] text-[8px] uppercase tracking-[0.16em]">
+        <span className="mt-auto inline-flex w-fit gap-2 border-b border-black/65 pb-[4px] text-[9px] uppercase tracking-[0.16em] transition-opacity duration-300 group-hover:opacity-55">
           View lookbook
+          <span className="transition-transform duration-300 group-hover:translate-x-1">
+            →
+          </span>
         </span>
-      </a>
+      </Link>
 
-      <section className="relative grid min-h-[320px] bg-[#151413] text-[#f5f2ed] md:min-h-0 md:grid-cols-[30%_44%_26%]">
+      <Link
+        href="#selected-pieces"
+        className="group relative grid min-h-[320px] bg-[#151413] text-[#f5f2ed] transition-colors duration-300 hover:bg-[#1c1b19] md:min-h-0 md:grid-cols-[30%_44%_26%]"
+      >
         <div className="flex h-full flex-col px-[30px] py-[34px]">
           <Kicker number="04" light />
           <p className="mt-[24px] max-w-[92px] text-[10px] uppercase leading-[1.62] tracking-[0.2em]">
             Selected garments
           </p>
-          <Link
-            href="/collections"
-            className="mt-auto inline-flex w-[42px] border-b border-[#f5f2ed]/70 pb-[4px] text-[8px] uppercase tracking-[0.16em]"
-          >
-            Explore
-          </Link>
+          <span className="mt-auto inline-flex w-fit gap-2 border-b border-[#f5f2ed]/70 pb-[4px] text-[9px] uppercase tracking-[0.16em] transition-opacity duration-300 group-hover:opacity-60">
+            Shop selected
+            <span className="transition-transform duration-300 group-hover:translate-x-1">
+              →
+            </span>
+          </span>
         </div>
         <div className="flex h-full flex-col justify-center px-[30px] pb-[28px] md:px-0 md:py-[26px]">
           <div className="relative h-[150px] w-full overflow-hidden border border-[#f5f2ed]/10 bg-[#211f1c] md:h-[clamp(148px,18vh,196px)] md:w-[84%]">
@@ -248,192 +249,67 @@ function EditorialGrid() {
           </p>
         </div>
         <div className="pointer-events-none absolute bottom-[31px] left-[30%] hidden h-px w-[10%] bg-[#f5f2ed]/12 md:block" />
-      </section>
+      </Link>
     </section>
   );
 }
 
 function MaterialForm() {
   return (
-    <section className="grid min-h-[88svh] w-screen border-t border-black/20 bg-[#d7d4ca] md:grid-cols-[41.5vw_1fr]">
-      <div className="relative min-h-[64svh] border-r border-black/20 bg-[#cbc8bf] md:min-h-0">
+    <section className="grid min-h-[76svh] w-full border-t border-black/20 bg-[#d6d7d1] md:grid-cols-[38vw_1fr]">
+      <div className="relative min-h-[64svh] border-r border-black/18 bg-[#d4d5cf] md:min-h-0">
         <div className="px-[8.5vw] py-[76px] md:px-0 md:py-0">
           <div className="md:absolute md:left-[8.5vw] md:top-[22%] md:max-w-[310px]">
-          <Kicker number="05" />
-          <h2 className="mt-[42px] text-[11px] uppercase leading-[1.45] tracking-[0.22em]">
-            Material & Form
-          </h2>
-          <p className="mt-[34px] text-[18px] uppercase leading-[1.42] tracking-[0.18em]">
-            We work with materials
-            <br />
-            that age quietly and
-            <br />
-            take on character
-            <br />
-            over time.
-          </p>
-          <div className="mt-[40px] grid max-w-[240px] border-y border-black/18 text-[8px] uppercase tracking-[0.17em] text-black/54">
-            {materialNotes.map((item) => (
-              <div
-                key={item}
-                className="flex justify-between border-b border-black/12 py-3 last:border-b-0"
-              >
-                <span>{item}</span>
-                <span className="text-black/34">01</span>
-              </div>
-            ))}
-          </div>
-          <a
-            className="mt-[42px] inline-flex border-b border-black pb-[5px] text-[8px] uppercase tracking-[0.16em]"
-            href="/about"
-          >
-            Our approach
-          </a>
-          </div>
-        </div>
-      </div>
-
-      <div className="relative min-h-[64svh] overflow-hidden p-[7vw] md:min-h-0 md:p-[4.2vw]">
-        <div className="relative h-full min-h-[54svh] overflow-hidden border border-black/16 bg-[#c8c4ba]">
-          <Image
-            src={materialImage}
-            alt="Folded dark garment on a concrete surface"
-            fill
-            sizes="50vw"
-            className="editorial-image object-cover object-center brightness-[1.04] contrast-[1.04]"
-          />
-          <div className="absolute inset-0 bg-[#d8cfc1]/5 mix-blend-screen" />
-          <div className="absolute inset-0 bg-black/8" />
-          <p className="absolute bottom-5 left-5 text-[8px] uppercase tracking-[0.18em] text-[#f5f2ed]/66">
-            Crop note / handled fabric
-          </p>
-        </div>
-      </div>
-    </section>
-  );
-}
-
-function SelectedPieces() {
-  return (
-    <section className="grid min-h-[92svh] w-screen border-t border-black/20 bg-[#cbc8bf] lg:grid-cols-[32.5vw_1fr]">
-      <div className="border-b border-black/20 bg-[#ece8df] px-[7vw] py-[72px] lg:border-b-0 lg:border-r lg:px-[6vw] lg:py-[12vh]">
-        <Kicker number="06" />
-        <h2 className="mt-[42px] text-[11px] uppercase leading-[1.45] tracking-[0.22em]">
-          Selected Pieces
-        </h2>
-        <div className="mt-[26px] grid max-w-[230px] grid-cols-3 border-y border-black/18 py-3 text-[7px] uppercase leading-[1.5] tracking-[0.16em] text-black/42">
-          <span>Current rail</span>
-          <span>Three pieces</span>
-          <span>Issue 01</span>
-        </div>
-        <p className="mt-[46px] max-w-[330px] text-[29px] uppercase leading-[1.04] tracking-[0.13em] md:text-[38px] lg:text-[2.7vw]">
-          Garments with
-          <br />
-          room to disappear.
-        </p>
-        <p className="mt-[34px] max-w-[292px] text-[11px] uppercase leading-[1.72] tracking-[0.18em] text-black/52">
-          Built for repeated wear.
-          <br />
-          Plain until you notice the cut.
-        </p>
-        <p className="mt-[24px] max-w-[245px] text-[9px] uppercase leading-[1.7] tracking-[0.16em] text-black/42">
-          A short rail for colder light, long walks, and the same door every
-          morning.
-        </p>
-        <Link
-          href="/collections"
-          className="mt-[56px] inline-flex border-b border-black pb-[5px] text-[8px] uppercase tracking-[0.16em]"
-        >
-          Shop collection
-        </Link>
-      </div>
-
-      <div className="flex min-w-0 flex-col">
-        <div className="flex items-center justify-between border-b border-black/20 bg-[#d2cec4] px-[7vw] py-5 lg:px-[3vw]">
-          <span className="text-[8px] uppercase tracking-[0.18em] text-black/45">
-            Three pieces / Current rail
-          </span>
-          <div className="flex items-center gap-3">
-            <button
-              type="button"
-              className="grid size-7 place-items-center rounded-full border border-black/20 text-[12px] leading-none text-black/55 transition-colors duration-300 hover:border-black/45 hover:text-black"
-              aria-label="Previous selected piece"
-            >
-              ←
-            </button>
-            <button
-              type="button"
-              className="grid size-7 place-items-center rounded-full border border-black/20 text-[12px] leading-none text-black/55 transition-colors duration-300 hover:border-black/45 hover:text-black"
-              aria-label="Next selected piece"
-            >
-              →
-            </button>
-            <Link
-              href="/collections"
-              className="ml-2 border-b border-black/70 pb-[4px] text-[8px] uppercase tracking-[0.16em]"
-            >
-              View all
-            </Link>
-          </div>
-        </div>
-
-        <div className="grid auto-cols-[78vw] grid-flow-col gap-px overflow-x-auto border-b border-black/18 bg-black/14 p-px lg:auto-cols-auto lg:grid-flow-row lg:grid-cols-3 lg:overflow-visible">
-          {selectedPieces.map((product, index) => (
-            <Link
-              href="/collections"
-              key={product.name}
-              className="group flex min-w-0 flex-col bg-[#d2cec4]"
-            >
-              <div className="px-4 pt-4 lg:px-[1.45vw] lg:pt-[1.45vw]">
-                <figure className="relative aspect-[4/5] overflow-hidden bg-[#d8d4ca]">
-                <Image
-                  src={product.image}
-                  alt={product.name}
-                  fill
-                  sizes="(min-width: 1024px) 20vw, 78vw"
-                  className={`product-image object-cover brightness-[0.84] contrast-[1.05] saturate-[0.76] transition duration-500 group-hover:brightness-[0.9] ${
-                    index === 1 ? "object-[50%_18%]" : "object-[50%_12%]"
-                  }`}
-                />
-                <div className="absolute inset-0 bg-[#151413]/5" />
-                <span className="absolute left-4 top-4 text-[8px] uppercase tracking-[0.16em] text-[#f5f2ed]/72">
-                  {String(index + 1).padStart(2, "0")}
-                </span>
-                </figure>
-              </div>
-
-              <div className="flex flex-1 flex-col px-4 pb-7 pt-5 lg:px-[1.45vw] lg:pb-[4.8vh]">
-                <div className="grid grid-cols-[1fr_auto] gap-6 text-[9px] uppercase tracking-[0.14em]">
-                  <div>
-                    <h3>{product.name}</h3>
-                    <p className="mt-3 text-black/45">{product.category}</p>
-                  </div>
-                  <p>{product.price}</p>
+            <Kicker number="05" />
+            <h2 className="mt-[42px] text-[11px] uppercase leading-[1.45] tracking-[0.22em]">
+              Material & Form
+            </h2>
+            <p className="mt-[34px] text-[18px] uppercase leading-[1.48] tracking-[0.16em] md:text-[20px]">
+              We work with materials
+              <br />
+              that age quietly and
+              <br />
+              take on character
+              <br />
+              over time.
+            </p>
+            <div className="mt-[40px] grid max-w-[260px] border-y border-black/18 text-[9px] uppercase tracking-[0.17em] text-black/56">
+              {materialNotes.map((item) => (
+                <div
+                  key={item}
+                  className="flex justify-between border-b border-black/12 py-3 last:border-b-0"
+                >
+                  <span>{item}</span>
+                  <span className="h-px w-8 self-center bg-black/20" />
                 </div>
-                <div className="mt-7 h-px w-10 bg-black/28" />
-                <div className="mt-4 text-[8px] uppercase tracking-[0.16em] text-black/38">
-                  {index === 0 ? "Rail note / outer layer" : index === 1 ? "Sleeve study / daily repeat" : "Cut note / archive fit"}
-                </div>
-              </div>
-            </Link>
-          ))}
+              ))}
+            </div>
+            <a
+              className="mt-[42px] inline-flex border-b border-black pb-[5px] text-[9px] uppercase tracking-[0.16em]"
+              href="/about"
+            >
+              Our approach
+            </a>
+          </div>
         </div>
+      </div>
 
-        <div className="border-b border-black/18 bg-[#c4c0b6] px-[7vw] py-7 text-[8px] uppercase tracking-[0.16em] lg:px-[3vw]">
-          <div className="grid gap-5 border-y border-black/16 py-5 md:grid-cols-3">
-            {editorialNotes.map(([title, text], index) => (
-              <div
-                key={title}
-                className={`border-black/14 md:border-r md:pr-6 ${
-                  index === 2 ? "md:border-r-0" : ""
-                }`}
-              >
-                <p className="text-[9px] tracking-[0.2em]">{title}</p>
-                <p className="mt-3 leading-[1.5] tracking-[0.12em] text-black/45">
-                  {text}
-                </p>
-              </div>
-            ))}
+      <div className="relative min-h-[64svh] bg-[#d6d7d1] px-5 py-10 md:min-h-0 md:px-[5vw] md:py-[7vh]">
+        <div className="grid h-full content-center gap-5">
+          <div className="relative aspect-[16/11] w-full overflow-hidden border border-black/14 bg-[#bfc0b8] md:ml-[3vw] md:w-[88%]">
+            <Image
+              src={materialStoryImage}
+              alt="Close black washed fabric, rib texture, and shadow"
+              fill
+              sizes="(min-width: 1024px) 44vw, 92vw"
+              className="editorial-image object-cover object-[50%_48%] brightness-[0.72] contrast-[1.08] saturate-[0.62]"
+            />
+            <div className="absolute inset-0 bg-[#11110f]/10" />
+          </div>
+
+          <div className="grid gap-2 border-t border-black/16 pt-4 text-[8px] uppercase leading-[1.6] tracking-[0.18em] text-black/48 md:ml-[3vw] md:w-[88%] md:grid-cols-[1fr_auto] md:items-start">
+            <span>Material study / 01</span>
+            <span className="md:text-right">Washed black / texture / time</span>
           </div>
         </div>
       </div>
@@ -443,26 +319,32 @@ function SelectedPieces() {
 
 function JournalSection() {
   return (
-    <section className="w-screen overflow-hidden border-t border-black/18 bg-[#cbc8bf] px-[6vw] py-[64px] text-[#111] md:px-[4.5vw] md:py-[7vh]">
-      <div className="grid gap-10 lg:grid-cols-[31vw_1fr]">
-        <aside className="flex min-h-[58svh] max-w-[390px] flex-col">
+    <section id="journal" className="w-full overflow-hidden border-t border-black/18 bg-[#d4d5cf] px-[6vw] py-12 text-[#111] md:px-[4.5vw] md:py-[5vh]">
+      <div className="grid gap-9 lg:grid-cols-[28vw_1fr]">
+        <aside className="flex max-w-[360px] flex-col">
           <Kicker number="07" />
           <h2 className="mt-[34px] text-[11px] uppercase leading-[1.45] tracking-[0.22em]">
             Journal
           </h2>
-          <p className="mt-[40px] text-[24px] uppercase leading-[1.18] tracking-[0.15em] md:text-[30px]">
+          <p className="mt-[32px] text-[22px] uppercase leading-[1.18] tracking-[0.15em] md:text-[26px]">
             Notes kept
             <br />
             between weather
             <br />
             and cloth.
           </p>
-          <p className="mt-[26px] max-w-[330px] text-[10px] uppercase leading-[1.72] tracking-[0.16em] text-black/48">
+          <p className="mt-[22px] max-w-[330px] text-[10px] uppercase leading-[1.72] tracking-[0.16em] text-black/52">
             A record of surfaces, repeated wear, road light, and things seen
             before the room gets loud.
           </p>
+          <a
+            href="#journal"
+            className="mt-[28px] inline-flex w-fit border-b border-black/55 pb-[6px] text-[9px] uppercase tracking-[0.18em] transition-opacity duration-300 hover:opacity-55"
+          >
+            Read journal →
+          </a>
 
-          <div className="mt-auto border-y border-black/18 py-5 text-[8px] uppercase leading-[1.65] tracking-[0.17em] text-black/48">
+          <div className="mt-9 border-y border-black/18 py-4 text-[9px] uppercase leading-[1.65] tracking-[0.17em] text-black/50">
             <p className="text-black/68">Current entry</p>
             <p className="mt-4">Road note / 01</p>
             <p className="mt-4 max-w-[275px]">
@@ -472,10 +354,10 @@ function JournalSection() {
         </aside>
 
         <div className="min-w-0">
-          <div className="relative h-[38svh] min-h-[280px] overflow-hidden border border-black/15 bg-[#bdb8ae] md:h-[46svh]">
+          <div className="relative h-[30svh] min-h-[230px] overflow-hidden border border-black/15 bg-[#bdc0b9] md:h-[34svh]">
             <Image
-              src={journalImage}
-              alt="Open book, dark fabric, and cup on a quiet surface"
+              src={lookbookImage}
+              alt="Man standing near the sea in a LOW SIGNAL editorial photograph"
               fill
               sizes="62vw"
               className="editorial-image object-cover object-center brightness-[0.9] contrast-[1.05] saturate-[0.82]"
@@ -488,14 +370,10 @@ function JournalSection() {
           </div>
 
           <div className="mt-6 grid gap-6 lg:grid-cols-[1fr_170px]">
-            <div className="grid gap-4 sm:grid-cols-3">
-              {[
-                [garmentTwo, "Fabric / button detail"],
-                [lookbookImage, "Grey coast / road light"],
-                [garmentOne, "Zipper / garment detail"],
-              ].map(([src, label], index) => (
+            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
+              {journalImages.map(([src, label], index) => (
                 <div key={label} className={index === 1 ? "sm:mt-7" : ""}>
-                  <div className="relative h-[112px] overflow-hidden border border-black/14 bg-[#151413]">
+                  <div className="relative h-[92px] overflow-hidden border border-black/14 bg-[#151413]">
                     <Image
                       src={src}
                       alt={label}
@@ -506,14 +384,14 @@ function JournalSection() {
                       }`}
                     />
                   </div>
-                  <p className="mt-3 text-[7px] uppercase tracking-[0.17em] text-black/40">
+                  <p className="mt-3 text-[8px] uppercase tracking-[0.17em] text-black/42">
                     {label}
                   </p>
                 </div>
               ))}
             </div>
 
-            <div className="border-y border-black/18 py-4 text-[8px] uppercase leading-[1.55] tracking-[0.16em] text-black/50 lg:mt-7">
+            <div className="border-y border-black/18 py-4 text-[9px] uppercase leading-[1.55] tracking-[0.16em] text-black/52 lg:mt-7">
               <p className="text-black/70">Field note</p>
               <p className="mt-2">Coastal light</p>
               <p className="mt-5 text-black/70">Location</p>
@@ -523,7 +401,7 @@ function JournalSection() {
             </div>
           </div>
 
-          <div className="mt-8 border-t border-black/20 text-[8px] uppercase tracking-[0.17em] text-black/58">
+          <div className="mt-7 border-t border-black/20 text-[9px] uppercase tracking-[0.17em] text-black/58">
             {journalRows.map(([number, label]) => (
               <a
                 key={number}
@@ -544,34 +422,43 @@ function JournalSection() {
 
 function FinalFooter() {
   return (
-    <footer className="grid min-h-[34svh] w-screen border-t border-black/20 bg-[#c8c4ba] text-[8px] uppercase tracking-[0.16em] md:grid-cols-[22vw_1fr_18vw]">
-      <div className="border-b border-black/18 px-[7vw] py-[38px] md:border-b-0 md:border-r md:px-[3vw]">
+    <footer className="grid w-full border-t border-black/20 bg-[#d8d9d3] text-[9px] uppercase tracking-[0.16em] md:grid-cols-[24vw_1fr_18vw]">
+      <div className="border-b border-black/18 px-[7vw] py-[28px] md:border-b-0 md:border-r md:px-[3vw] md:py-[30px]">
         <Kicker number="08" />
-        <h2 className="mt-[30px] text-[11px] uppercase tracking-[0.22em]">
-          Archive index
+        <h2 className="mt-[22px] text-[11px] uppercase tracking-[0.18em]">
+          Spring 2026
         </h2>
+        <p className="mt-6 max-w-[190px] text-[20px] leading-[1.05] tracking-[0.12em]">
+          Available now
+        </p>
+        <Link
+          href="/collections"
+          className="mt-6 inline-flex w-fit border-b border-black/55 pb-[6px] text-[9px] tracking-[0.15em] transition-opacity duration-300 hover:opacity-55"
+        >
+          Shop collection →
+        </Link>
       </div>
 
-      <div className="flex flex-col justify-between border-b border-black/18 px-[7vw] py-[38px] md:border-b-0 md:border-r md:px-[4vw]">
-        <p className="max-w-[620px] text-[15px] leading-[1.45] tracking-[0.18em] md:text-[19px]">
+      <div className="flex flex-col justify-between border-b border-black/18 px-[7vw] py-[28px] md:border-b-0 md:border-r md:px-[4vw] md:py-[30px]">
+        <p className="max-w-[620px] text-[15px] leading-[1.45] tracking-[0.15em] md:text-[18px]">
           Low Signal exists for quiet garments,
           daily repeat, and people who observe first.
         </p>
-        <div className="mt-[38px] flex flex-wrap gap-x-8 gap-y-3 border-t border-black/18 pt-5">
-          {archiveLinks.map((link) => (
-            <a
-              key={link}
-              href={link === "Collections" ? "/collections" : "#"}
+        <div className="mt-[28px] flex flex-wrap gap-x-8 gap-y-3 border-t border-black/18 pt-4">
+          {footerLinks.map(([label, href]) => (
+            <Link
+              key={label}
+              href={href}
               className="border-b border-black/20 pb-2 transition-opacity duration-300 hover:opacity-55"
             >
-              {link}
-            </a>
+              {label}
+            </Link>
           ))}
         </div>
       </div>
 
-      <div className="px-[7vw] py-[38px] md:px-[2vw]">
-        <div className="relative h-[108px] overflow-hidden border border-black/16 bg-[#151413] md:h-[126px]">
+      <div className="px-[7vw] py-[28px] md:px-[2vw] md:py-[30px]">
+        <div className="relative h-[92px] overflow-hidden border border-black/16 bg-[#d1ccc2] md:h-[108px]">
           <Image
             src={garmentTwo}
             alt="LOW SIGNAL fabric detail"
@@ -580,7 +467,7 @@ function FinalFooter() {
             className="editorial-image object-cover object-center brightness-[0.86] contrast-[1.04]"
           />
         </div>
-        <p className="mt-4 text-black/46">Fabric detail / closing page</p>
+        <p className="mt-3 text-black/56">Fabric detail / closing page</p>
       </div>
     </footer>
   );

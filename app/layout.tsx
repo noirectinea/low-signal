@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Inter, EB_Garamond } from "next/font/google";
+import { Archivo, Inter, Libre_Caslon_Display } from "next/font/google";
 import "./globals.css";
 
 const inter = Inter({
@@ -8,11 +8,18 @@ const inter = Inter({
   display: "swap",
 });
 
-const garamond = EB_Garamond({
-  variable: "--font-garamond",
+const archivo = Archivo({
+  variable: "--font-archivo",
   subsets: ["latin"],
   display: "swap",
   weight: ["400", "500", "600", "700"],
+});
+
+const archivalDisplay = Libre_Caslon_Display({
+  variable: "--font-display-archival",
+  subsets: ["latin"],
+  display: "swap",
+  weight: "400",
 });
 
 export const metadata: Metadata = {
@@ -28,9 +35,11 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${inter.variable} ${garamond.variable} h-full antialiased`}
+      className={`${inter.variable} ${archivo.variable} ${archivalDisplay.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col bg-low-black text-low-fog">{children}</body>
+      <body className="min-h-full flex flex-col bg-[#e5e6e1] text-[#121211]">
+        {children}
+      </body>
     </html>
   );
 }

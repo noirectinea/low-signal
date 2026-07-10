@@ -21,7 +21,7 @@ export function Footer() {
             <ul className="space-y-2">
               <li>
                 <Link
-                  href="#collections"
+                  href="/collections"
                   className="text-xs text-low-muted transition-colors hover:text-low-fog"
                 >
                   Collections
@@ -29,7 +29,7 @@ export function Footer() {
               </li>
               <li>
                 <Link
-                  href="#lookbook"
+                  href="/lookbook"
                   className="text-xs text-low-muted transition-colors hover:text-low-fog"
                 >
                   Lookbook

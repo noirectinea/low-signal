@@ -1,8 +1,8 @@
 @import "tailwindcss";
 
 :root {
-  --background: #1a1a1a;
-  --foreground: #f2efe7;
+  --background: #e5e6e1;
+  --foreground: #121211;
 }
 
 @theme inline {
@@ -18,19 +18,29 @@
   --color-low-rust: #7b4638;
   --color-low-line: rgb(242 239 231 / 0.14);
   --font-sans: var(--font-inter);
-  --font-serif: var(--font-garamond);
+  --font-serif: var(--font-display-archival);
+  --font-editorial: var(--font-display-archival);
 }
 
 html, body {
   height: 100%;
-  background-color: #1a1a1a;
-  color: #f2efe7;
+  max-width: 100%;
+  overflow-x: clip;
+  overscroll-behavior: none;
+  background-color: #e5e6e1;
+  color: #121211;
 }
 
 body {
   font-family: var(--font-inter), sans-serif;
+  overscroll-behavior-y: none;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+main,
+section {
+  max-width: 100%;
 }
 
 /* Image editorial styling - creates unified visual language */
@@ -85,7 +95,7 @@ a {
 
 /* Typography improvements */
 h1, h2, h3, h4, h5, h6 {
-  font-weight: 300;
+  font-weight: 400;
   letter-spacing: 0;
 }
 
@@ -96,4 +106,85 @@ p {
 button,
 a {
   -webkit-tap-highlight-color: transparent;
+}
+
+.product-display-title {
+  font-family: var(--font-archivo), Arial, sans-serif;
+  font-weight: 500;
+  letter-spacing: 0.015em;
+  line-height: 0.88;
+  font-stretch: 92%;
+}
+
+.add-to-cart-label {
+  font-family: var(--font-archivo), Arial, sans-serif;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+}
+
+.hero-printed-title {
+  font-family: var(--font-display-archival), Georgia, serif;
+  font-weight: 400;
+  letter-spacing: -0.052em;
+  line-height: 0.72;
+  color: rgb(244 241 233 / 0.78);
+  mix-blend-mode: screen;
+  text-shadow:
+    0 1px 18px rgb(17 17 17 / 0.28),
+    0 0 1px rgb(244 241 233 / 0.28);
+  filter: contrast(1.08) saturate(0.75);
+}
+
+.hero-printed-title::before {
+  content: "LOW\A SIGNAL";
+  position: absolute;
+  inset: 0;
+  color: transparent;
+  -webkit-text-stroke: 0.018em rgb(244 241 233 / 0.2);
+  opacity: 0.42;
+  mix-blend-mode: screen;
+  pointer-events: none;
+  white-space: pre;
+}
+
+.hero-printed-title::after {
+  content: "";
+  position: absolute;
+  inset: -0.02em;
+  background:
+    radial-gradient(circle at 18% 24%, rgb(17 17 17 / 0.34) 0 0.05em, transparent 0.065em),
+    radial-gradient(circle at 74% 42%, rgb(17 17 17 / 0.22) 0 0.04em, transparent 0.055em),
+    linear-gradient(92deg, transparent 0 12%, rgb(17 17 17 / 0.26) 12.3% 12.6%, transparent 12.9% 38%, rgb(17 17 17 / 0.16) 38.2% 38.6%, transparent 39% 100%),
+    repeating-linear-gradient(0deg, rgb(17 17 17 / 0.16) 0 1px, transparent 1px 5px);
+  background-size: 1.8em 1.8em, 2.3em 2.3em, 100% 100%, 100% 0.09em;
+  mix-blend-mode: multiply;
+  opacity: 0.24;
+  pointer-events: none;
+}
+
+/* Quiet UI labels: a little less fragile without becoming loud. */
+:where(p, span, a, button, summary, label, div)[class*="uppercase"][class*="tracking-"] {
+  letter-spacing: 0.138em;
+}
+
+:where(p, span, a, button, summary, label, div).text-low-muted {
+  color: #918b82;
+}
+
+:where(p, span, a, button, summary, label, div)[class*="text-black/4"] {
+  color: rgb(18 18 17 / 0.62);
+}
+
+:where(p, span, a, button, summary, label, div)[class*="text-black/5"] {
+  color: rgb(18 18 17 / 0.68);
+}
+
+:where(p, span, a, button, summary, label, div)[class*="text-black/3"] {
+  color: rgb(18 18 17 / 0.52);
+}
+
+:where(p, span, a, button, summary, label, div)[class*="text-[#f4f0e8]/5"],
+:where(p, span, a, button, summary, label, div)[class*="text-[#eceee8]/5"],
+:where(p, span, a, button, summary, label, div)[class*="text-[#e6e6de]/5"] {
+  color: rgb(244 240 232 / 0.68);
 }

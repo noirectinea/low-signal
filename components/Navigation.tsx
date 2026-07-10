@@ -1,24 +1,27 @@
 import Link from "next/link";
+import { LogoMark } from "./LogoMark";
 
 export function Navigation() {
   return (
     <nav className="fixed top-0 z-50 w-full border-b border-low-line bg-low-black/82 backdrop-blur-md">
       <div className="mx-auto flex max-w-[1500px] items-center justify-between px-4 py-4 sm:px-6 lg:px-8">
-        <Link href="/" className="text-[11px] font-semibold uppercase leading-[0.95] tracking-[0.24em] text-low-fog">
-          LOW
-          <br />
-          SIGNAL
-        </Link>
+        <LogoMark className="text-low-fog" />
 
         <div className="hidden gap-12 text-[10px] uppercase tracking-[0.16em] md:flex">
           <Link
-            href="#collections"
+            href="/"
+            className="text-low-muted transition-colors duration-300 hover:text-low-fog"
+          >
+            Home
+          </Link>
+          <Link
+            href="/collections"
             className="text-low-muted transition-colors duration-300 hover:text-low-fog"
           >
             Collections
           </Link>
           <Link
-            href="#lookbook"
+            href="/lookbook"
             className="text-low-muted transition-colors duration-300 hover:text-low-fog"
           >
             Lookbook

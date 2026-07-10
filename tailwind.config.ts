@@ -26,8 +26,8 @@ const config: Config = {
       },
       fontFamily: {
         'sans': ['var(--font-inter)', 'sans-serif'],
-        'serif': ['var(--font-garamond)', 'serif'],
-        'editorial': ['var(--font-garamond)', 'serif'],
+        'serif': ['var(--font-archivo)', 'sans-serif'],
+        'editorial': ['var(--font-archivo)', 'sans-serif'],
       },
       fontSize: {
         'xs': ['11px', { lineHeight: '16px', letterSpacing: '0.05em' }],

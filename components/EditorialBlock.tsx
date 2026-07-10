@@ -28,10 +28,10 @@ export function EditorialBlock({
           className={`
             ${sizeClasses[size]}
             ${alignClasses[align]}
-            font-serif font-light
+            font-serif font-semibold uppercase
             text-low-fog
-            leading-tight
-            tracking-wide
+            leading-[0.95]
+            tracking-[-0.04em]
           `}
         >
           {text}
