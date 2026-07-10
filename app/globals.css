@@ -109,24 +109,24 @@ a {
 }
 
 .product-display-title {
-  font-family: Baskerville, "Libre Baskerville", Georgia, serif;
-  font-weight: 600;
-  letter-spacing: -0.018em;
-  line-height: 0.9;
+  font-family: var(--font-display-refined), var(--font-display-archival), Georgia, serif;
+  font-weight: 500;
+  letter-spacing: -0.006em;
+  line-height: 0.92;
 }
 
 .controlled-display-title {
-  font-family: Baskerville, "Libre Baskerville", Georgia, serif;
-  font-weight: 600;
-  letter-spacing: -0.026em;
-  line-height: 0.86;
+  font-family: var(--font-display-refined), var(--font-display-archival), Georgia, serif;
+  font-weight: 400;
+  letter-spacing: -0.012em;
+  line-height: 0.88;
 }
 
 .fashion-rail-title {
-  font-family: Baskerville, "Libre Baskerville", Georgia, serif;
-  font-weight: 600;
-  letter-spacing: -0.024em;
-  line-height: 0.88;
+  font-family: var(--font-display-refined), var(--font-display-archival), Georgia, serif;
+  font-weight: 400;
+  letter-spacing: 0.012em;
+  line-height: 0.9;
 }
 
 .add-to-cart-label {

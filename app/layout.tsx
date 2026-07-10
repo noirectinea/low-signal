@@ -1,5 +1,10 @@
 import type { Metadata } from "next";
-import { Archivo, Inter, Libre_Caslon_Display } from "next/font/google";
+import {
+  Archivo,
+  Cormorant_Garamond,
+  Inter,
+  Libre_Caslon_Display,
+} from "next/font/google";
 import "./globals.css";
 
 const inter = Inter({
@@ -22,6 +27,13 @@ const archivalDisplay = Libre_Caslon_Display({
   weight: "400",
 });
 
+const refinedDisplay = Cormorant_Garamond({
+  variable: "--font-display-refined",
+  subsets: ["latin"],
+  display: "swap",
+  weight: ["400", "500"],
+});
+
 export const metadata: Metadata = {
   title: "LOW SIGNAL",
   description: "LOW SIGNAL is an independent clothing brand: quiet, observant, and slightly strange.",
@@ -35,7 +47,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${inter.variable} ${archivo.variable} ${archivalDisplay.variable} h-full antialiased`}
+      className={`${inter.variable} ${archivo.variable} ${archivalDisplay.variable} ${refinedDisplay.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col bg-[#e5e6e1] text-[#121211]">
         {children}
