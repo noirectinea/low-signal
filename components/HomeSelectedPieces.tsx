@@ -150,7 +150,7 @@ function ShopIntro() {
 
       <div className="my-auto py-10">
         <p className="font-[var(--font-shop-selected)] text-[11px] font-medium uppercase tracking-[0.12em] text-black/50">
-          Current rail
+          Spring selection
         </p>
         <h2 className="mt-9 max-w-[520px] font-[var(--font-shop-selected-serif)] text-[54px] font-normal uppercase leading-[0.88] tracking-[-0.052em] text-black/94 sm:text-[72px] lg:text-[84px] xl:text-[96px]">
           Shop
@@ -160,8 +160,8 @@ function ShopIntro() {
           pieces
         </h2>
         <p className="mt-9 max-w-[390px] text-[12px] uppercase leading-[1.72] tracking-[0.18em] text-black/58">
-          Carefully chosen garments and fabric studies from Spring 2026. Built
-          for daily repetition in quiet environments.
+          Washed cotton, dense knitwear, black canvas and trousers from Spring
+          2026. Cut for regular wear and easy layering.
         </p>
       </div>
 
@@ -261,7 +261,7 @@ function BottomRailStrip() {
           Spring 2026 available online
         </p>
         <p className="mt-3 max-w-[430px] text-[10px] leading-[1.65]">
-          Choose a rail and move directly into the current collection.
+          Enter the seasonal selection through men&apos;s or women&apos;s.
         </p>
       </div>
       <div className="flex flex-wrap gap-x-8 gap-y-3 font-[var(--font-shop-selected)] text-[10px] font-medium tracking-[0.12em] text-black">

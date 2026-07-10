@@ -18,7 +18,7 @@ const approachBlocks = [
   },
   {
     title: "Small batches",
-    text: "The rail stays considered. New pieces arrive slowly, with attention to fabric, proportion, and repeat use.",
+    text: "New pieces arrive in small seasonal runs, with attention to fabric, proportion, and repeat use.",
   },
 ];
 
@@ -59,19 +59,18 @@ export default function AboutPage() {
             <p className="text-[9px] uppercase tracking-[0.18em] text-black/54">
               About / Low Signal
             </p>
-            <h1 className="mt-10 font-serif text-[17vw] uppercase leading-[0.8] tracking-[-0.055em] text-[#11110f] sm:text-[92px] lg:text-[7vw]">
-              OBSERVES.
+            <h1 className="controlled-display-title mt-10 text-[17vw] uppercase text-[#11110f] sm:text-[92px] lg:text-[7vw]">
+              MATERIAL
               <br />
-              DOES NOT
+              FIRST.
               <br />
-              EXPLAIN.
+              WORN OFTEN.
             </h1>
           </div>
 
           <p className="mt-12 max-w-[460px] border-t border-black/16 pt-6 text-[11px] uppercase leading-[1.76] tracking-[0.15em] text-black/66">
-            LOW SIGNAL makes quiet clothing for daily repetition: washed black
-            layers, dry textures, and shapes that settle into the body over
-            time.
+            LOW SIGNAL works with washed black garments, dry cotton, dense
+            knitwear and wide everyday shapes.
           </p>
         </div>
 
@@ -82,9 +81,8 @@ export default function AboutPage() {
                 Material, form, routine
               </p>
               <p className="mt-8 max-w-[650px] text-[13px] uppercase leading-[1.75] tracking-[0.15em] text-black/76">
-                The brand is built around garments that do not ask to be
-                noticed immediately. They are meant to be returned to, worn in,
-                and understood through repetition.
+                The brand focuses on outer layers, shirts, knit pieces and
+                trousers in black, charcoal, concrete and wool tones.
               </p>
             </div>
 
@@ -138,8 +136,8 @@ export default function AboutPage() {
 
             <div className="px-5 py-6 text-[9px] uppercase leading-[1.8] tracking-[0.16em] text-black/54">
               <p>
-                Clothing for quiet rooms, repeated routes, and the small
-                changes that happen through wear.
+                Fabrics are chosen for texture, weight and the way they age
+                through use.
               </p>
             </div>
           </aside>
@@ -170,15 +168,14 @@ function AboutExpansion() {
           <p className="text-[9px] uppercase tracking-[0.18em] text-black/54">
             A. Approach
           </p>
-          <h2 className="mt-8 max-w-[560px] font-serif text-[50px] uppercase leading-[0.82] tracking-[-0.055em] text-black/94 sm:text-[70px] lg:text-[86px]">
-            Quiet clothing,
+          <h2 className="controlled-display-title mt-8 max-w-[560px] text-[50px] uppercase text-black/94 sm:text-[70px] lg:text-[86px]">
+            Washed black,
             <br />
-            built for return.
+            cut for daily wear.
           </h2>
           <p className="mt-9 max-w-[540px] text-[11px] uppercase leading-[1.82] tracking-[0.15em] text-black/66">
-            The shape is restrained, the fabric is tactile, and the color stays
-            close to shadow. LOW SIGNAL pieces are made to become familiar
-            instead of decorative.
+            Spring 2026 is built around small runs, soft structure and a
+            reduced palette of black, charcoal, concrete and wool tones.
           </p>
         </div>
 
@@ -197,9 +194,8 @@ function AboutExpansion() {
             <section className="border-b border-black/14 py-7 text-[9px] uppercase leading-[1.8] tracking-[0.15em]">
               <p className="text-black">B. Daily uniform</p>
               <p className="mt-7 max-w-[560px] text-black/62">
-                The rail moves between outerwear, knitwear, shirting, and
-                trousers. Each garment is designed to work alone or in quiet
-                layers.
+                The collection moves between outerwear, knitwear, shirting and
+                trousers. Each piece is made to work alone or in simple layers.
               </p>
             </section>
 
@@ -256,7 +252,7 @@ function AboutExpansion() {
               />
               <div className="absolute inset-0 bg-black/22" />
               <div className="absolute inset-x-6 bottom-6 flex items-end justify-between gap-6 text-[9px] uppercase tracking-[0.16em] text-[#f4f0e8]/78">
-                <span>Spring 2026 / current rail</span>
+                <span>Spring 2026 / current selection</span>
                 <span className="border-b border-[#f4f0e8]/55 pb-[5px]">
                   Enter collection →
                 </span>

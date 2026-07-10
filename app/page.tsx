@@ -86,7 +86,7 @@ function HeroPanel() {
       <div className="absolute left-[5.15vw] top-1/2 z-20 hidden w-[210px] -translate-y-1/2 flex-col items-start md:flex">
         <Kicker number="01" />
         <p className="mt-[26px] max-w-[205px] text-[12px] uppercase leading-[1.52] tracking-[0.19em]">
-          Independent clothing for people who observe first.
+          Washed black clothing for daily wear.
         </p>
         <div className="mt-[26px] grid w-full gap-[10px] border-y border-black/18 py-[14px] text-[8px] uppercase leading-[1.5] tracking-[0.17em] text-black/48">
           <span>Spring 2026 / Issue 01</span>
@@ -124,7 +124,7 @@ function HeroPanel() {
       </div>
 
       <p className="absolute right-[74px] top-[104px] z-30 max-w-[74px] text-[9px] uppercase leading-[1.34] tracking-[0.18em] text-black/68">
-        Observes. Does not explain.
+        Spring 2026 / Washed black.
       </p>
 
       <h1
@@ -136,7 +136,7 @@ function HeroPanel() {
       </h1>
 
       <p className="absolute bottom-[34px] right-[232px] z-30 hidden max-w-[245px] text-center text-[9px] uppercase leading-[1.45] tracking-[0.19em] text-[#f5f2ed]/78 md:block">
-        A brand that behaves like a note found between pages.
+        Washed cotton, dense knitwear, black canvas, wide trousers.
       </p>
     </section>
   );
@@ -334,8 +334,8 @@ function JournalSection() {
             and cloth.
           </p>
           <p className="mt-[22px] max-w-[330px] text-[10px] uppercase leading-[1.72] tracking-[0.16em] text-black/52">
-            A record of surfaces, repeated wear, road light, and things seen
-            before the room gets loud.
+            Garments, road light, studio notes, and fabric details from the
+            current season.
           </p>
           <a
             href="#journal"
@@ -441,8 +441,8 @@ function FinalFooter() {
 
       <div className="flex flex-col justify-between border-b border-black/18 px-[7vw] py-[28px] md:border-b-0 md:border-r md:px-[4vw] md:py-[30px]">
         <p className="max-w-[620px] text-[15px] leading-[1.45] tracking-[0.15em] md:text-[18px]">
-          Low Signal exists for quiet garments,
-          daily repeat, and people who observe first.
+          Low Signal works with washed cotton, dense knitwear, black canvas,
+          and garments made for repeat wear.
         </p>
         <div className="mt-[28px] flex flex-wrap gap-x-8 gap-y-3 border-t border-black/18 pt-4">
           {footerLinks.map(([label, href]) => (

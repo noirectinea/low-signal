@@ -24,18 +24,18 @@ export default async function RegisterPage({
             <p className="text-[9px] uppercase tracking-[0.16em] text-black/64">
               Account / Register
             </p>
-            <h1 className="mt-8 max-w-[760px] font-serif text-[52px] uppercase leading-[0.86] tracking-[-0.05em] sm:text-[74px]">
-              Create a customer record
+            <h1 className="controlled-display-title mt-8 max-w-[760px] text-[52px] uppercase sm:text-[74px]">
+              Create account
             </h1>
             <p className="mt-8 max-w-[430px] text-[10px] uppercase leading-[1.8] tracking-[0.16em] text-black/58">
-              Keep order history and delivery details connected to your LOW
-              SIGNAL account.
+              Save delivery details and keep order history connected to your
+              LOW SIGNAL account.
             </p>
           </div>
 
           <form
             action={registerAction}
-            className="h-fit border border-black/16 p-6 text-[9px] uppercase tracking-[0.16em]"
+            className="h-fit border border-black/16 p-6 text-[9px] uppercase tracking-[0.14em]"
           >
             <input name="next" type="hidden" value={next} />
             <AuthField label="Full name" name="fullName" required />
@@ -52,16 +52,16 @@ export default async function RegisterPage({
             ) : null}
 
             <button
-              className="mt-7 w-full bg-black px-5 py-4 text-[#ecece5]"
+              className="add-to-cart-label mt-7 w-full bg-black px-5 py-4 text-[#ecece5] transition-opacity duration-300 hover:opacity-80"
               type="submit"
             >
-              Register -&gt;
+              Create account -&gt;
             </button>
             <Link
               className="mt-5 block text-center text-black/58"
               href={`/account/login?next=${encodeURIComponent(next)}`}
             >
-              Already registered
+              Already have an account
             </Link>
           </form>
         </div>

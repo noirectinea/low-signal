@@ -147,7 +147,7 @@ export function CartPageClient() {
               <p className="text-[9px] uppercase tracking-[0.2em] text-black/50">
                 Cart / Current rail
               </p>
-              <h1 className="mt-8 font-serif text-[56px] uppercase leading-[0.84] tracking-[-0.052em] text-black/92 sm:text-[76px] lg:text-[96px]">
+              <h1 className="controlled-display-title mt-8 text-[56px] uppercase text-black/92 sm:text-[76px] lg:text-[96px]">
                 Your cart
               </h1>
             </div>

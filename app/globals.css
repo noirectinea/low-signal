@@ -109,11 +109,24 @@ a {
 }
 
 .product-display-title {
-  font-family: var(--font-archivo), Arial, sans-serif;
+  font-family: Baskerville, "Libre Baskerville", Georgia, serif;
   font-weight: 600;
-  letter-spacing: 0.028em;
+  letter-spacing: -0.018em;
   line-height: 0.9;
-  font-stretch: 88%;
+}
+
+.controlled-display-title {
+  font-family: Baskerville, "Libre Baskerville", Georgia, serif;
+  font-weight: 600;
+  letter-spacing: -0.026em;
+  line-height: 0.86;
+}
+
+.fashion-rail-title {
+  font-family: Baskerville, "Libre Baskerville", Georgia, serif;
+  font-weight: 600;
+  letter-spacing: -0.024em;
+  line-height: 0.88;
 }
 
 .add-to-cart-label {
@@ -182,7 +195,15 @@ a {
 
 /* Quiet UI labels: a little less fragile without becoming loud. */
 :where(p, span, a, button, summary, label, div)[class*="uppercase"][class*="tracking-"] {
-  letter-spacing: 0.138em;
+  letter-spacing: 0.122em;
+}
+
+:where(p, span, a, button, summary, label, div)[class*="text-[7px]"] {
+  font-size: 8px;
+}
+
+:where(p, span, a, button, summary, label, div)[class*="text-[8px]"] {
+  font-size: 9px;
 }
 
 :where(p, span, a, button, summary, label, div).text-low-muted {

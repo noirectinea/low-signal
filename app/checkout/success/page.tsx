@@ -31,15 +31,15 @@ export default async function CheckoutSuccessPage({
             <p className="text-[9px] uppercase tracking-[0.16em] text-black/64">
               Checkout / Order received
             </p>
-            <h1 className="mt-8 max-w-[760px] font-serif text-[52px] uppercase leading-[0.86] tracking-[-0.05em] sm:text-[74px]">
+            <h1 className="controlled-display-title mt-8 max-w-[760px] text-[52px] uppercase sm:text-[74px]">
               Order placed
             </h1>
             <p className="mt-6 text-[11px] uppercase tracking-[0.18em] text-black/72">
               {orderNumber}
             </p>
             <p className="mt-8 max-w-[420px] text-[10px] uppercase leading-[1.8] tracking-[0.16em] text-black/58">
-              The order was created from verified catalog prices and inventory.
-              Stock has been updated after order creation.
+              Your order has been saved. You can follow its status from your
+              account orders page.
             </p>
           </div>
 
@@ -61,7 +61,7 @@ export default async function CheckoutSuccessPage({
             </div>
             <div className="mt-6 grid gap-4">
               <Link
-                className="flex justify-center bg-black px-5 py-4 text-[#ecece5]"
+                className="add-to-cart-label flex justify-center bg-black px-5 py-4 text-[#ecece5] transition-opacity duration-300 hover:opacity-80"
                 href="/collections"
               >
                 Continue shopping -&gt;

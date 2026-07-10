@@ -29,18 +29,18 @@ export default async function LoginPage({ searchParams }: LoginPageProps) {
             <p className="text-[9px] uppercase tracking-[0.16em] text-black/64">
               Account / Login
             </p>
-            <h1 className="mt-8 max-w-[720px] font-serif text-[52px] uppercase leading-[0.86] tracking-[-0.05em] sm:text-[74px]">
-              Return to your rail
+            <h1 className="controlled-display-title mt-8 max-w-[720px] text-[52px] uppercase sm:text-[74px]">
+              Sign in
             </h1>
             <p className="mt-8 max-w-[430px] text-[10px] uppercase leading-[1.8] tracking-[0.16em] text-black/58">
-              Sign in to view previous orders and use your saved delivery
+              View previous orders and use your saved delivery
               details at checkout.
             </p>
           </div>
 
           <form
             action={loginAction}
-            className="h-fit border border-black/16 p-6 text-[9px] uppercase tracking-[0.16em]"
+            className="h-fit border border-black/16 p-6 text-[9px] uppercase tracking-[0.14em]"
           >
             <input name="next" type="hidden" value={next} />
             {redirectMessage ? (
@@ -66,10 +66,10 @@ export default async function LoginPage({ searchParams }: LoginPageProps) {
             ) : null}
 
             <button
-              className="mt-7 w-full bg-black px-5 py-4 text-[#ecece5]"
+              className="add-to-cart-label mt-7 w-full bg-black px-5 py-4 text-[#ecece5] transition-opacity duration-300 hover:opacity-80"
               type="submit"
             >
-              Login -&gt;
+              Sign in -&gt;
             </button>
             <Link
               className="mt-5 block text-center text-black/58"

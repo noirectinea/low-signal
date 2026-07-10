@@ -1,15 +1,8 @@
 import Image from "next/image";
-import { Cormorant_Garamond } from "next/font/google";
 import Link from "next/link";
 import { CartCountLink } from "@/components/CartCountLink";
 import { LogoMark } from "@/components/LogoMark";
 import { getProductsByGender, type ProductGender } from "@/data/products";
-
-const collectionsDisplay = Cormorant_Garamond({
-  subsets: ["latin"],
-  weight: ["500", "600"],
-  display: "swap",
-});
 
 const entryCards: Array<{
   gender: ProductGender;
@@ -60,7 +53,7 @@ export default function CollectionsPage() {
             05 — Collection / LOW SIGNAL
           </p>
 
-          <h1 className={`${collectionsDisplay.className} mt-8 max-w-[560px] text-[62px] font-semibold uppercase leading-[0.86] tracking-[-0.03em] text-black/94 sm:text-[82px] lg:text-[94px] xl:text-[106px]`}>
+          <h1 className="controlled-display-title mt-8 max-w-[560px] text-[62px] uppercase text-black/94 sm:text-[82px] lg:text-[94px] xl:text-[106px]">
             <span>SPRING</span>{" "}
             <span className="inline-block scale-[0.94] tracking-[-0.012em] [font-feature-settings:'tnum']">
               2026
@@ -74,7 +67,7 @@ export default function CollectionsPage() {
 
           <div className="mt-10 flex items-center gap-4 border-y border-black/16 py-5 text-[9px] uppercase tracking-[0.18em] text-black/54">
             <span className="h-px w-8 bg-black/30" />
-            <span>Choose a shop rail</span>
+            <span>Spring 2026 is divided into two rails.</span>
           </div>
         </header>
 
@@ -183,7 +176,7 @@ function CollectionEntryCard({
         };
 
   return (
-    <article className="group border-y border-black/18 py-4 sm:border-b sm:border-t-0 sm:pt-0">
+    <article className="quiet-reveal group border-y border-black/18 py-4 sm:border-b sm:border-t-0 sm:pt-0">
       <Link
         className="block focus:outline-none focus-visible:ring-1 focus-visible:ring-black"
         href={`/collections/${gender}`}
@@ -191,7 +184,7 @@ function CollectionEntryCard({
         <div className="relative aspect-[4/5] overflow-hidden border border-black/12 bg-[#d1d3cd]">
           <Image
             alt={`${label} Spring 2026 category`}
-            className={`editorial-image object-cover brightness-[0.82] contrast-[1.06] saturate-[0.66] transition duration-700 group-hover:brightness-[0.9] ${leadImage.className}`}
+            className={`editorial-image object-cover brightness-[0.82] contrast-[1.06] saturate-[0.66] transition duration-700 group-hover:scale-[1.03] group-hover:brightness-[0.9] ${leadImage.className}`}
             fill
             priority={priority}
             sizes="(min-width: 1024px) 34vw, (min-width: 640px) 45vw, 92vw"
@@ -204,7 +197,7 @@ function CollectionEntryCard({
 
         <div className="grid grid-cols-[1fr_auto] items-end gap-4 border-b border-black/14 pb-5 pt-5 uppercase">
           <div>
-            <h2 className="font-serif text-[44px] uppercase leading-[0.88] tracking-[-0.05em] text-black/94 sm:text-[54px] lg:text-[62px]">
+            <h2 className="fashion-rail-title text-[44px] uppercase text-black/94 sm:text-[54px] lg:text-[62px]">
               {label}
             </h2>
             <p className="mt-4 text-[9px] tracking-[0.18em] text-black/50">

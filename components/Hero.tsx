@@ -15,16 +15,16 @@ export function Hero() {
           />
           <div className="absolute -right-8 top-10 hidden h-px w-32 bg-low-line md:block" />
           <div className="absolute bottom-6 left-5 max-w-44 text-[10px] uppercase leading-relaxed tracking-[0.18em] text-low-paper/78">
-            Independent clothing for people who observe first.
+            Washed black clothing for daily wear.
           </div>
         </div>
 
         <div className="col-span-12 flex flex-col justify-between pt-10 md:col-span-5 md:col-start-8 md:pt-20 lg:col-span-5 lg:col-start-8">
           <div>
             <p className="mb-5 text-[10px] uppercase tracking-[0.22em] text-low-muted">
-              Observes. Does not explain.
+              Spring 2026 / Washed black
             </p>
-            <h1 className="font-serif text-[clamp(4.2rem,12vw,11rem)] font-semibold uppercase leading-[0.82] tracking-[-0.06em] text-low-fog">
+            <h1 className="controlled-display-title text-[clamp(4.2rem,12vw,11rem)] uppercase text-low-fog">
               LOW
               <br />
               SIGNAL
@@ -32,8 +32,8 @@ export function Hero() {
           </div>
 
           <div className="mt-10 grid grid-cols-5 gap-4 border-t border-low-line pt-6 md:mt-0">
-            <p className="col-span-5 font-serif text-2xl font-medium uppercase leading-[1] tracking-[-0.02em] text-low-paper md:col-span-4 md:text-3xl">
-              A brand that behaves like a note found between pages.
+            <p className="col-span-5 text-2xl uppercase leading-[1.1] tracking-[0.02em] text-low-paper md:col-span-4 md:text-3xl">
+              Washed cotton, dense knitwear, black canvas, wide trousers.
             </p>
             <p className="col-span-4 col-start-2 mt-10 text-sm leading-6 text-low-muted md:col-span-3 md:col-start-3">
               Not loud. Not decorative. Restrained garments, quiet pauses, and

@@ -132,7 +132,7 @@ function LookbookHero() {
           <p className="text-[10px] uppercase tracking-[0.2em] text-black/50">
             01-12 Frames / Spring 2026
           </p>
-          <h1 className="mt-8 max-w-[560px] font-serif text-[54px] uppercase leading-[0.84] tracking-[-0.052em] text-black/94 sm:text-[72px] lg:text-[88px]">
+          <h1 className="controlled-display-title mt-8 max-w-[560px] text-[54px] uppercase text-black/94 sm:text-[72px] lg:text-[88px]">
             Lookbook 01
             <br />
             Coastal Light
@@ -140,8 +140,8 @@ function LookbookHero() {
             Spring 2026
           </h1>
           <p className="mt-10 max-w-[430px] text-[12px] uppercase leading-[1.78] tracking-[0.16em] text-black/58">
-            Washed black garments, coastal air, concrete rooms, and quiet forms
-            made for daily repeat.
+            Washed black garments, coastal air, concrete rooms, and pieces cut
+            for regular wear.
           </p>
         </div>
 
@@ -251,7 +251,7 @@ function MaterialChapter() {
         <CompactEditorialNote>
           A body moves.
           <br />
-          The fabric remembers.
+          Fabric, weight, and surface.
         </CompactEditorialNote>
       </div>
 
@@ -438,8 +438,8 @@ function ShopCta() {
           <p className="text-[11px] tracking-[0.2em] text-black/50">
             Spring 2026 available online
           </p>
-          <h2 className="mt-5 max-w-[520px] font-serif text-[42px] leading-[0.88] tracking-[-0.05em] text-black/94 sm:text-[58px]">
-            Enter the rail
+          <h2 className="controlled-display-title mt-5 max-w-[520px] text-[42px] text-black/94 sm:text-[58px]">
+            Shop the collection
             <br />
             from the campaign.
           </h2>
@@ -474,7 +474,7 @@ function CtaPrelude() {
         />
       </div>
       <p className="max-w-[480px] text-[9px] uppercase leading-[1.75] tracking-[0.18em] text-black/46 lg:justify-self-end lg:text-right">
-        Final campaign note / the image closes and the rail opens online.
+        Final campaign note / selected pieces are available online.
       </p>
     </div>
   );

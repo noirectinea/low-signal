@@ -101,7 +101,7 @@ export function ProductPurchasePanel({
 
   return (
     <div className="border-y border-black/16 py-7">
-      <div className="flex items-center justify-between text-[9px] uppercase tracking-[0.18em] text-black/52">
+      <div className="flex items-center justify-between text-[9px] uppercase tracking-[0.14em] text-black/64">
         <span>Size</span>
         <span>
           Selected: {selectedSize} /{" "}
@@ -146,13 +146,13 @@ export function ProductPurchasePanel({
             : "Add to cart"}
         <span aria-hidden="true">-&gt;</span>
       </button>
-      <p className="mt-4 border-t border-black/12 pt-4 text-[9px] uppercase tracking-[0.18em] text-black/42">
+      <p className="mt-4 border-t border-black/12 pt-4 text-[9px] uppercase tracking-[0.14em] text-black/62">
         {totalStock > 0
           ? `${getAvailabilityLabel(selectedStock)} / ships in 2-4 days`
           : "Currently unavailable"}
       </p>
       {message ? (
-        <p className="mt-3 text-[9px] uppercase leading-[1.7] tracking-[0.18em] text-black/54">
+        <p className="mt-3 text-[9px] uppercase leading-[1.7] tracking-[0.14em] text-black/64">
           {message}
         </p>
       ) : null}

@@ -175,7 +175,7 @@ export function CheckoutClient() {
           <p className="text-[9px] uppercase tracking-[0.16em] text-black/64">
             Checkout / Spring 2026
           </p>
-          <h1 className="mt-8 font-serif text-[52px] uppercase leading-[0.86] tracking-[-0.05em] sm:text-[74px]">
+          <h1 className="controlled-display-title mt-8 text-[52px] uppercase sm:text-[74px]">
             Complete order
           </h1>
 
@@ -254,7 +254,7 @@ export function CheckoutClient() {
               <CheckoutField label="Notes" name="notes" />
 
               <button
-                className="mt-3 w-full border border-black bg-[#171614] px-6 py-5 text-[9px] uppercase tracking-[0.16em] text-[#ecece5] transition-opacity duration-300 hover:opacity-82 disabled:cursor-not-allowed disabled:opacity-50 sm:w-fit"
+                className="add-to-cart-label mt-3 w-full border border-black bg-[#171614] px-6 py-5 text-[9px] uppercase text-[#ecece5] transition-opacity duration-300 hover:opacity-82 disabled:cursor-not-allowed disabled:opacity-50 sm:w-fit"
                 disabled={status === "loading"}
                 type="submit"
               >

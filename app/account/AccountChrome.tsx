@@ -21,7 +21,7 @@ export function AccountChrome({
           <p className="text-[9px] uppercase tracking-[0.16em] text-black/64">
             {eyebrow}
           </p>
-          <h1 className="mt-8 max-w-[900px] font-serif text-[52px] uppercase leading-[0.86] tracking-[-0.05em] sm:text-[74px]">
+          <h1 className="controlled-display-title mt-8 max-w-[900px] text-[52px] uppercase sm:text-[74px]">
             {title}
           </h1>
           <div className="mt-12">{children}</div>

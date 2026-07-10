@@ -107,7 +107,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
 
         <div className="flex flex-col justify-between border-black/16 pt-10 lg:border-t-0 lg:bg-[#ddddd6] lg:px-12 lg:py-12 xl:px-16">
           <div>
-            <div className="flex items-center justify-between border-b border-black/16 pb-6 text-[9px] uppercase tracking-[0.18em] text-black/52">
+            <div className="flex items-center justify-between border-b border-black/16 pb-6 text-[9px] uppercase tracking-[0.14em] text-black/64">
               <span>05 - Garment / Spring 2026</span>
               <span>
                 {product.gender} / {product.category}
@@ -120,7 +120,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
               </h1>
               <div className="mt-9 grid gap-4 text-[10px] uppercase tracking-[0.18em] sm:grid-cols-[1fr_auto] sm:items-end">
                 <span>${product.price}</span>
-                <div className="grid gap-2 text-left text-black/46 sm:text-right">
+                <div className="grid gap-2 text-left text-black/62 sm:text-right">
                   <span>{product.color ?? "Washed Black"}</span>
                   <span>{product.materials}</span>
                 </div>
@@ -128,7 +128,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
             </div>
 
             <div className="border-b border-black/16 py-7">
-              <p className="max-w-[460px] text-[10px] uppercase leading-[1.8] tracking-[0.16em] text-black/56">
+              <p className="max-w-[460px] text-[10px] uppercase leading-[1.8] tracking-[0.14em] text-black/66">
                 {product.description}
               </p>
             </div>

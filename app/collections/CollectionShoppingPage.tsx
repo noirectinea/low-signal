@@ -279,7 +279,7 @@ export function CollectionShoppingPage({
         >
           <div>
             <CollectionBreadcrumb gender={gender} genderLabel={genderLabel} />
-            <h1 className="mt-4 max-w-[480px] font-serif text-[48px] uppercase leading-[0.84] tracking-[-0.055em] text-black/94 sm:text-[68px] lg:text-[82px] xl:text-[92px]">
+            <h1 className="fashion-rail-title mt-4 max-w-[480px] text-[48px] uppercase text-black/94 sm:text-[68px] lg:text-[82px] xl:text-[92px]">
               {genderLabel}
             </h1>
             <p className="mt-3 text-[10px] uppercase tracking-[0.18em] text-black/50">
@@ -298,7 +298,7 @@ export function CollectionShoppingPage({
               <span>
                 {String(visibleProducts.length).padStart(2, "0")} Items
               </span>
-              <span>Sort by: Newest</span>
+              <span>Newest first</span>
               <ViewIcons />
             </div>
           </div>
@@ -418,10 +418,10 @@ function ProductSearch({
   setSearchQuery: (value: string) => void;
 }>) {
   return (
-    <div className="border-y border-black/14 py-3 text-[9px] uppercase tracking-[0.18em] transition-colors duration-300 focus-within:border-black/28">
+    <div className="border-y border-black/14 py-3 text-[9px] uppercase tracking-[0.16em] transition-colors duration-300 focus-within:border-black/28">
       <label className="grid gap-2" htmlFor="collection-search">
         <span className="flex items-center justify-between text-black/52">
-          <span>Search garments</span>
+          <span>Search</span>
           <span>{String(resultCount).padStart(2, "0")} found</span>
         </span>
 
@@ -430,7 +430,7 @@ function ProductSearch({
             autoComplete="off"
             className="min-w-0 bg-transparent py-1.5 text-[11px] uppercase tracking-[0.16em] text-black outline-none placeholder:text-black/42"
             id="collection-search"
-            placeholder="TYPE TO SEARCH..."
+            placeholder="PRODUCT NAME..."
             type="search"
             value={searchQuery}
             onChange={(event) => setSearchQuery(event.target.value)}
@@ -444,7 +444,7 @@ function ProductSearch({
               Clear
             </button>
           ) : (
-            <span className="text-black/38">Enter</span>
+          <span className="text-black/50">Type</span>
           )}
         </span>
       </label>
@@ -970,7 +970,10 @@ function ProductCard({
   }
 
   return (
-    <article className="group relative min-w-0 border-b border-black/14 pb-4">
+    <article
+      className="quiet-reveal group relative min-w-0 border-b border-black/14 pb-4"
+      style={{ animationDelay: `${Math.min(index, 10) * 45}ms` }}
+    >
       <Link
         aria-label={`Open ${product.name}`}
         className="absolute inset-0 z-10 focus:outline-none focus-visible:ring-1 focus-visible:ring-black"
@@ -1034,14 +1037,14 @@ function ProductCard({
       <div className="grid grid-cols-[1fr_auto] gap-3 pt-4 text-[9px] uppercase tracking-[0.16em]">
         <div className="min-w-0">
           <h2
-            className={`truncate text-[11px] tracking-[0.14em] text-black transition-transform duration-300 ease-out ${
+            className={`truncate text-[12px] tracking-[0.09em] text-black transition-transform duration-300 ease-out ${
               isWomen ? "group-hover:-translate-y-0.5" : ""
             }`}
           >
             {product.name}
           </h2>
           <p className="mt-2 text-black/46">{product.category}</p>
-          <p className="mt-3 text-[11px] tracking-[0.12em] text-black/88">
+          <p className="mt-3 text-[12px] tracking-[0.08em] text-black/92">
             ${product.price}
           </p>
         </div>
