@@ -12,58 +12,28 @@ import {
 import { type Product, products } from "@/data/products";
 
 type ProductRailItem = {
-  kind: "product";
   product: Product;
-  ratio: "portrait" | "wide";
 };
-
-type CampaignRailItem = {
-  alt: string;
-  href: string;
-  image: string;
-  kind: "campaign";
-  label: string;
-  position?: string;
-  ratio: "portrait" | "wide";
-};
-
-type RailItem = CampaignRailItem | ProductRailItem;
 
 const productsById = new Map(products.map((product) => [product.id, product]));
 
-function productItem(id: string, ratio: ProductRailItem["ratio"] = "portrait"): ProductRailItem {
+function productItem(id: string): ProductRailItem {
   const product = productsById.get(id);
 
   if (!product) {
     throw new Error(`Missing selected product: ${id}`);
   }
 
-  return { kind: "product", product, ratio };
+  return { product };
 }
 
-const railItems: RailItem[] = [
-  productItem("field-jacket", "portrait"),
-  productItem("washed-longsleeve", "wide"),
-  {
-    alt: "LOW SIGNAL men's Spring 2026 campaign",
-    href: "/collections/men",
-    image: "/images/low-signal/collections/spring-2026-rail.png",
-    kind: "campaign",
-    label: "Men's Spring 2026",
-    position: "object-[50%_50%]",
-    ratio: "wide",
-  },
-  {
-    alt: "LOW SIGNAL women's Spring 2026 campaign",
-    href: "/collections/women",
-    image: "/images/low-signal/collections/spring-2026-women-rail.png",
-    kind: "campaign",
-    label: "Women's Spring 2026",
-    position: "object-[50%_50%]",
-    ratio: "wide",
-  },
-  productItem("rib-cardigan", "portrait"),
-  productItem("pleated-pant", "wide"),
+const railItems: ProductRailItem[] = [
+  productItem("field-jacket"),
+  productItem("work-jacket"),
+  productItem("cotton-shirt"),
+  productItem("storm-parka"),
+  productItem("double-face-coat"),
+  productItem("pleated-pant"),
 ];
 
 export function HomeSelectedPieces() {
@@ -173,87 +143,61 @@ export function HomeSelectedPieces() {
   return (
     <section
       aria-labelledby="selected-garments-title"
-      className="selected-garments-section border-y border-black/14 bg-[#dedfd9] py-8 text-[#11110f] sm:py-9 lg:py-10"
+      className="selected-garments-section border-y border-black/14 bg-[#dedfd9] py-7 text-[#11110f] sm:py-8 lg:py-9"
       id="selected-pieces"
     >
       <div className="mx-auto max-w-[1680px] px-5 sm:px-6 lg:px-12">
-        <header className="mb-5 border-b border-black/14 pb-5 lg:mb-6">
-          <div className="flex flex-wrap items-center justify-between gap-x-6 gap-y-3 border-b border-black/10 pb-4 text-[10px] font-medium uppercase tracking-[0.13em] text-black/54">
-            <span>Spring 2026</span>
-            <span>Available online</span>
-            <span>16 garments</span>
-            <span>Issue 01</span>
-          </div>
-          <div className="mt-5 grid gap-5 md:grid-cols-[minmax(220px,0.34fr)_minmax(280px,0.42fr)_auto] md:items-end">
-            <div>
-              <p className="text-[10px] font-medium uppercase tracking-[0.13em] text-black/56">
-                04 / Shop
-              </p>
-              <h2
-                className="mt-3 font-[var(--font-archivo)] text-[30px] font-medium uppercase leading-[0.92] tracking-[-0.02em] text-black/94 sm:text-[38px] lg:text-[44px]"
-                id="selected-garments-title"
-              >
-                Selected garments
-              </h2>
-            </div>
-            <p className="max-w-[430px] text-[13px] leading-[1.5] text-black/64">
-              A compact edit of outer layers, knitwear and soft tailoring, framed as campaign images
-              with pieces available to buy.
-            </p>
-            <nav
-              aria-label="Selected garment collections"
-              className="flex flex-wrap gap-x-6 gap-y-3 text-[10px] font-medium uppercase tracking-[0.12em] md:justify-end"
-            >
-              <Link className="selected-rail-link" href="/collections/men">
-                Shop men →
-              </Link>
-              <Link className="selected-rail-link" href="/collections/women">
-                Shop women →
-              </Link>
-            </nav>
-          </div>
+        <header className="mb-5 grid gap-3 border-b border-black/14 pb-4 text-[10px] font-medium uppercase tracking-[0.13em] text-black/58 md:grid-cols-[minmax(190px,0.34fr)_1fr_auto] md:items-center lg:mb-6">
+          <h2 className="text-[10px] font-medium uppercase tracking-[0.13em]" id="selected-garments-title">
+            04 / Selected garments
+          </h2>
+          <p className="text-black/52">Selected pieces from Spring 2026.</p>
+          <nav
+            aria-label="Selected garment collections"
+            className="flex flex-wrap gap-x-6 gap-y-2 md:justify-end"
+          >
+            <Link className="selected-rail-link" href="/collections/men">
+              Shop men →
+            </Link>
+            <Link className="selected-rail-link" href="/collections/women">
+              Shop women →
+            </Link>
+          </nav>
         </header>
 
-        <div className="grid gap-6 lg:grid-cols-[minmax(260px,27%)_minmax(0,1fr)] lg:gap-7">
+        <div className="grid gap-5 lg:grid-cols-[minmax(300px,36%)_minmax(0,1fr)] lg:gap-6">
           <aside className="selected-static-frame">
             <Link
-              aria-label="Open Spring 2026 collection"
+              aria-label="Open men's Spring 2026 collection"
               className="group block"
-              href="/collections"
+              href="/collections/men"
               onClick={preventClickAfterDrag}
             >
-              <div className="relative h-[58vh] min-h-[380px] max-h-[650px] overflow-hidden border border-black/14 bg-[#c8cbc5]">
+              <div className="relative h-[58vh] min-h-[370px] max-h-[620px] overflow-hidden border border-black/14 bg-[#c8cbc5] lg:h-[60vh]">
                 <Image
-                  alt="LOW SIGNAL Spring 2026 campaign"
-                  className="object-cover object-[50%_50%] brightness-[0.82] contrast-[1.06] saturate-[0.62] transition-transform duration-700 group-hover:scale-[1.012]"
+                  alt="LOW SIGNAL men's Spring 2026 campaign"
+                  className="object-cover object-[50%_50%] brightness-[0.84] contrast-[1.05] saturate-[0.64] transition-transform duration-700 group-hover:scale-[1.012]"
                   fill
-                  sizes="(min-width: 1024px) 27vw, 100vw"
-                  src="/images/low-signal/selected-garments-main.jpg"
+                  sizes="(min-width: 1024px) 36vw, 100vw"
+                  src="/images/low-signal/collections/spring-2026-rail.png"
                 />
-                <div className="absolute inset-x-0 bottom-0 p-5 text-[#f1f1ea] sm:p-6">
-                  <p className="text-[10px] font-medium uppercase tracking-[0.13em] text-white/62">
-                    Campaign frame / 01
-                  </p>
-                  <p className="mt-3 max-w-[260px] font-[var(--font-archivo)] text-[28px] font-medium uppercase leading-[0.94] tracking-[-0.02em] sm:text-[34px] lg:text-[38px]">
-                    Spring uniform
-                  </p>
+                <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/42 via-black/16 to-transparent p-5 text-[#f1f1ea] sm:p-6">
+                  <div className="grid gap-3 text-[10px] font-medium uppercase tracking-[0.13em] text-white/78">
+                    <span>Men&apos;s Spring 2026</span>
+                    <span>08 garments</span>
+                    <span className="selected-cover-link w-fit border-b border-white/62 pb-1 transition-opacity duration-300 group-hover:opacity-65">
+                      View collection →
+                    </span>
+                  </div>
                 </div>
               </div>
             </Link>
-            <div className="mt-4 grid grid-cols-[1fr_auto] gap-4 border-b border-black/16 pb-4 text-[10px] font-medium uppercase tracking-[0.12em] text-black/52">
-              <span>Washed black / concrete / wool cotton</span>
-              <span>Editorial shop</span>
-            </div>
           </aside>
 
           <div className="min-w-0">
-            <div className="mb-3 flex items-center justify-between gap-4 text-[10px] font-medium uppercase tracking-[0.12em] text-black/48">
-              <span>Frames 02-07</span>
-              <span>Drag / Scroll →</span>
-            </div>
             <div
               aria-label="Selected garments. Use left and right arrow keys to browse."
-              className="selected-rail flex snap-x snap-proximity gap-4 overflow-x-auto overscroll-x-contain pb-2 pr-[16vw] [-ms-overflow-style:none] [scrollbar-width:none] sm:gap-5 sm:pr-[20vw] lg:gap-6 lg:pr-[18vw] [&::-webkit-scrollbar]:hidden"
+              className="selected-rail flex snap-x snap-proximity gap-4 overflow-x-auto overscroll-x-contain pb-2 pr-[16vw] [-ms-overflow-style:none] [scrollbar-width:none] sm:gap-5 sm:pr-[18vw] lg:gap-6 lg:pr-[7vw] [&::-webkit-scrollbar]:hidden"
               onKeyDown={handleKeyDown}
               onPointerCancel={finishPointerDrag}
               onPointerDown={handlePointerDown}
@@ -265,9 +209,9 @@ export function HomeSelectedPieces() {
             >
               {railItems.map((item, index) => (
                 <RailCard
-                  index={index + 2}
+                  index={index + 1}
                   item={item}
-                  key={item.kind === "product" ? item.product.id : item.label}
+                  key={item.product.id}
                   onClick={preventClickAfterDrag}
                 />
               ))}
@@ -275,8 +219,7 @@ export function HomeSelectedPieces() {
 
             <div className="mt-5 grid grid-cols-[auto_1fr_auto] items-center gap-4 text-[10px] font-medium uppercase tracking-[0.12em] text-black/56">
               <span>
-                {String(activeIndex + 1).padStart(2, "0")} /{" "}
-                {String(railItems.length + 1).padStart(2, "0")}
+                {String(activeIndex).padStart(2, "0")} / {String(railItems.length).padStart(2, "0")}
               </span>
               <div aria-hidden="true" className="h-px bg-black/18">
                 <div
@@ -316,31 +259,20 @@ function RailCard({
   onClick,
 }: Readonly<{
   index: number;
-  item: RailItem;
+  item: ProductRailItem;
   onClick: (event: MouseEvent<HTMLAnchorElement>) => void;
 }>) {
-  if (item.kind === "campaign") {
-    return <CampaignCard index={index} item={item} onClick={onClick} />;
-  }
-
   const { product } = item;
-  const isWide = item.ratio === "wide";
 
   return (
     <Link
       aria-label={`View piece ${product.name}`}
-      className={`selected-campaign-card group shrink-0 snap-start ${
-        isWide ? "w-[88vw] sm:w-[64vw] lg:w-[43vw]" : "w-[82vw] sm:w-[50vw] lg:w-[36vw]"
-      }`}
+      className="selected-campaign-card group shrink-0 snap-start w-[82vw] sm:w-[44vw] lg:w-[27vw]"
       href={`/products/${product.slug}`}
       onClick={onClick}
     >
-      <div
-        className={`relative overflow-hidden border border-black/14 bg-[#ccd0c9] ${
-          isWide ? "h-[55vh] min-h-[360px] max-h-[620px]" : "h-[60vh] min-h-[380px] max-h-[650px]"
-        }`}
-      >
-        <span className="absolute left-4 top-4 z-10 text-[10px] font-medium uppercase tracking-[0.13em] text-white/66">
+      <div className="relative aspect-[4/5] max-h-[50vh] min-h-[330px] overflow-hidden border border-black/14 bg-[#ccd0c9]">
+        <span className="absolute left-4 top-4 z-10 text-[9px] font-medium uppercase tracking-[0.13em] text-white/70">
           {String(index).padStart(2, "0")}
         </span>
         <Image
@@ -349,70 +281,41 @@ function RailCard({
             product.objectPosition ?? "object-center"
           }`}
           fill
-          sizes={
-            isWide
-              ? "(min-width: 1024px) 43vw, (min-width: 640px) 64vw, 88vw"
-              : "(min-width: 1024px) 36vw, (min-width: 640px) 50vw, 82vw"
-          }
+          sizes="(min-width: 1024px) 27vw, (min-width: 640px) 44vw, 82vw"
           src={product.image}
         />
       </div>
 
-      <div className="grid grid-cols-[1fr_auto] items-start gap-4 border-b border-black/16 py-4">
+      <div className="grid min-h-[104px] grid-rows-[auto_1fr_auto] border-b border-black/16 py-4">
         <div className="grid grid-cols-[1fr_auto] items-baseline gap-4">
-          <h3 className="text-[15px] font-medium uppercase tracking-[0.05em] text-black sm:text-[17px]">
+          <h3 className="text-[15px] font-medium uppercase tracking-[0.04em] text-black sm:text-[16px]">
             {product.name}
           </h3>
-          <span className="text-[14px] text-black/82">${product.price}</span>
+          <span className="text-[14px] font-medium text-black/84">${product.price}</span>
         </div>
-        <span className="selected-rail-link whitespace-nowrap text-[10px] font-medium uppercase tracking-[0.12em]">
-          View piece ↗
-        </span>
+        <p className="mt-2 text-[12px] leading-[1.35] text-black/56">
+          {getProductCaption(product)}
+        </p>
+        <div className="mt-4 text-[10px] font-medium uppercase tracking-[0.12em]">
+          <span className="selected-rail-link whitespace-nowrap">View product ↗</span>
+        </div>
       </div>
     </Link>
   );
 }
 
-function CampaignCard({
-  index,
-  item,
-  onClick,
-}: Readonly<{
-  index: number;
-  item: CampaignRailItem;
-  onClick: (event: MouseEvent<HTMLAnchorElement>) => void;
-}>) {
-  return (
-    <Link
-      aria-label={`Open ${item.label}`}
-      className="selected-campaign-card group relative shrink-0 snap-start w-[88vw] sm:w-[64vw] lg:w-[42vw]"
-      href={item.href}
-      onClick={onClick}
-    >
-      <div className="relative h-[55vh] min-h-[360px] max-h-[620px] overflow-hidden border border-black/14 bg-[#c8cbc5]">
-        <Image
-          alt={item.alt}
-          className={`object-cover brightness-[0.84] contrast-[1.05] saturate-[0.62] transition-transform duration-700 group-hover:scale-[1.012] ${
-            item.position ?? "object-center"
-          }`}
-          fill
-          sizes="(min-width: 1024px) 42vw, (min-width: 640px) 64vw, 88vw"
-          src={item.image}
-        />
-        <div className="absolute inset-x-0 bottom-0 flex items-end justify-between gap-6 p-5 text-[#f1f1ea] sm:p-6">
-          <div>
-            <span className="text-[10px] font-medium uppercase tracking-[0.13em] text-white/62">
-              {String(index).padStart(2, "0")}
-            </span>
-            <h3 className="mt-3 font-[var(--font-archivo)] text-[26px] font-medium uppercase leading-[0.92] tracking-[-0.02em] sm:text-[34px] lg:text-[38px]">
-              {item.label}
-            </h3>
-          </div>
-          <span className="hidden text-[10px] font-medium uppercase tracking-[0.12em] text-white/78 sm:block">
-            View collection ↗
-          </span>
-        </div>
-      </div>
-    </Link>
-  );
+function getProductCaption(product: Product) {
+  if (product.category === "Outerwear") {
+    return "Washed cotton outerwear";
+  }
+
+  if (product.category === "Shirts") {
+    return "Washed cotton shirting";
+  }
+
+  if (product.category === "Knitwear") {
+    return "Cotton wool knitwear";
+  }
+
+  return "Soft tailored trouser";
 }
