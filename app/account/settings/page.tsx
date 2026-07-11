@@ -70,7 +70,7 @@ export default async function AccountSettingsPage({
           className="mt-3 w-full border border-black bg-[#171614] px-6 py-5 text-[#ecece5] sm:w-fit"
           type="submit"
         >
-          Save settings →
+          Save settings -&gt;
         </button>
       </form>
     </AccountChrome>

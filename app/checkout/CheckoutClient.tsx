@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { FormEvent, useEffect, useState } from "react";
-import { PublicNavigation } from "@/components/PublicNavigation";
+import { LogoMark } from "@/components/LogoMark";
 import { cartStorageKey, type CartItem } from "@/data/products";
 import {
   buildOrderPayloadFromCart,
@@ -168,7 +168,7 @@ export function CheckoutClient() {
 
   return (
     <main className="min-h-screen overflow-x-hidden bg-[#e5e6e1] text-[#121211]">
-      <PublicNavigation />
+      <CheckoutNav />
 
       <section className="mx-auto grid max-w-[1320px] gap-10 px-5 pb-16 pt-[104px] lg:grid-cols-[1fr_380px] lg:px-12">
         <div>
@@ -258,7 +258,7 @@ export function CheckoutClient() {
                 disabled={status === "loading"}
                 type="submit"
               >
-                {status === "loading" ? "Saving order..." : "Place order →"}
+                {status === "loading" ? "Saving order..." : "Place order ->"}
               </button>
 
               {message ? (
@@ -315,6 +315,25 @@ function logCheckoutDebug(label: string, value: unknown) {
   }
 
   console.log(`[checkout] ${label}`, value);
+}
+
+function CheckoutNav() {
+  return (
+    <nav className="fixed left-0 right-0 top-0 z-30 grid min-h-[64px] grid-cols-[1fr_auto] items-start gap-6 border-b border-black/16 bg-[#e3e3dc]/92 px-5 py-5 text-[9px] uppercase tracking-[0.16em] text-[#141311] backdrop-blur-sm md:grid-cols-[1fr_auto_1fr] lg:px-12">
+      <LogoMark />
+
+      <div className="hidden justify-center gap-14 md:flex">
+        <Link href="/">Home</Link>
+        <Link href="/collections">Collections</Link>
+        <Link href="/lookbook">Lookbook</Link>
+        <Link href="/about">About</Link>
+      </div>
+
+      <div className="flex justify-end">
+        <Link href="/cart">Cart</Link>
+      </div>
+    </nav>
+  );
 }
 
 function CheckoutField({

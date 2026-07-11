@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
-import { PublicFooter } from "@/components/PublicFooter";
-import { PublicNavigation } from "@/components/PublicNavigation";
+import { CartCountLink } from "@/components/CartCountLink";
+import { LogoMark } from "@/components/LogoMark";
 import { getProductsByGender, type ProductGender } from "@/data/products";
 
 const entryCards: Array<{
@@ -45,12 +45,12 @@ export const metadata = {
 export default function CollectionsPage() {
   return (
     <main className="min-h-screen overflow-x-hidden bg-[#e6e7e2] text-[#121211]">
-      <PublicNavigation />
+      <CollectionsNav />
 
       <section className="mx-auto grid min-h-[88svh] w-full max-w-[1680px] px-5 pb-12 pt-[96px] sm:px-6 lg:grid-cols-[minmax(320px,480px)_1fr] lg:gap-14 lg:px-12 lg:pb-14 lg:pt-[112px] xl:gap-20 xl:px-14">
         <header className="border-b border-black/16 pb-10 lg:border-b-0 lg:pb-0">
-          <p className="micro-label text-black/62">
-            01 / Collection / LOW SIGNAL
+          <p className="text-[9px] uppercase tracking-[0.22em] text-black/48">
+            05 — Collection / LOW SIGNAL
           </p>
 
           <h1 className="controlled-display-title mt-8 max-w-[600px] text-[58px] text-black/94 sm:text-[76px] lg:text-[88px] xl:text-[98px]">
@@ -60,13 +60,18 @@ export default function CollectionsPage() {
             </span>
           </h1>
 
-          <p className="supporting-copy mt-8 max-w-[430px] text-black/68">
-            Dark neutral clothing built from washed cotton, dry wool, compact
-            knitwear, and practical volume.
+          <p className="mt-8 max-w-[430px] text-[11px] uppercase leading-[1.82] tracking-[0.17em] text-black/60">
+            Dark neutral clothing, cut for daily repeat. Washed fabrics, quiet
+            volume, and pieces that move with you.
           </p>
+
+          <div className="mt-10 flex items-center gap-4 border-y border-black/16 py-5 text-[9px] uppercase tracking-[0.18em] text-black/54">
+            <span className="h-px w-8 bg-black/30" />
+            <span>Spring 2026 is divided into two rails.</span>
+          </div>
         </header>
 
-        <div className="grid content-end gap-5 pt-7 sm:grid-cols-[1.06fr_0.94fr] lg:pt-0">
+        <div className="grid content-end gap-5 pt-7 sm:grid-cols-2 lg:pt-0">
           {entryCards.map((card) => (
             <CollectionEntryCard
               gender={card.gender}
@@ -81,12 +86,12 @@ export default function CollectionsPage() {
       <section className="mx-auto grid max-w-[1680px] gap-6 border-t border-black/16 px-5 py-10 sm:px-6 lg:grid-cols-[minmax(280px,420px)_1fr] lg:px-12 lg:py-12 xl:px-14">
         <div className="grid content-between gap-8 border-b border-black/14 pb-7 lg:border-b-0 lg:border-r lg:pb-0 lg:pr-10">
           <div>
-            <p className="micro-label text-black/62">
+            <p className="text-[9px] uppercase tracking-[0.18em] text-black/54">
               Collection notes
             </p>
-            <p className="supporting-copy mt-6 max-w-[360px] text-black/66">
-              The season moves between protective outer layers, compact knits,
-              softened shirts, and trousers with a low, easy break.
+            <p className="mt-6 max-w-[360px] text-[11px] uppercase leading-[1.78] tracking-[0.15em] text-black/64">
+              Spring 2026 is built around dark neutrals, concrete light, and
+              garments that sit close to daily routine.
             </p>
           </div>
 
@@ -116,16 +121,36 @@ export default function CollectionsPage() {
                   src={preview.image}
                 />
               </div>
-              <div className="grid gap-3">
+              <div className="grid gap-3 text-[9px] uppercase leading-[1.7] tracking-[0.16em]">
                 <p className="text-black">{preview.label}</p>
-                <p className="supporting-copy text-black/62">{preview.note}</p>
+                <p className="text-black/58">{preview.note}</p>
               </div>
             </Link>
           ))}
         </div>
       </section>
-      <PublicFooter />
     </main>
+  );
+}
+
+function CollectionsNav() {
+  return (
+    <nav className="fixed left-0 right-0 top-0 z-30 grid min-h-[64px] grid-cols-[1fr_auto] items-start gap-6 border-b border-black/14 bg-[#e1e2dd]/94 px-5 py-5 text-[9px] uppercase tracking-[0.18em] text-[#121211] backdrop-blur-sm md:grid-cols-[1fr_auto_1fr] lg:px-12">
+      <LogoMark />
+
+      <div className="hidden justify-center gap-14 md:flex">
+        <Link href="/">Home</Link>
+        <Link className="border-b border-black pb-2" href="/collections">
+          Collections
+        </Link>
+        <Link href="/lookbook">Lookbook</Link>
+        <Link href="/about">About</Link>
+      </div>
+
+      <div className="flex justify-end">
+        <CartCountLink />
+      </div>
+    </nav>
   );
 }
 
@@ -151,11 +176,7 @@ function CollectionEntryCard({
         };
 
   return (
-    <article
-      className={`quiet-reveal group border-y border-black/18 py-4 sm:border-b sm:border-t-0 sm:pt-0 ${
-        gender === "women" ? "sm:mt-10" : ""
-      }`}
-    >
+    <article className="quiet-reveal group border-y border-black/18 py-4 sm:border-b sm:border-t-0 sm:pt-0">
       <Link
         className="block focus:outline-none focus-visible:ring-1 focus-visible:ring-black"
         href={`/collections/${gender}`}
@@ -169,8 +190,8 @@ function CollectionEntryCard({
             sizes="(min-width: 1024px) 34vw, (min-width: 640px) 45vw, 92vw"
             src={leadImage.src}
           />
-          <span className="micro-label absolute left-4 top-4 text-[#f2f3ee]/90 mix-blend-difference">
-            {gender === "men" ? "01" : "02"}
+          <span className="absolute left-4 top-4 text-[9px] uppercase tracking-[0.18em] text-[#f2f3ee]/90 mix-blend-difference">
+            {String(products.length).padStart(2, "0")} items
           </span>
         </div>
 
@@ -179,8 +200,8 @@ function CollectionEntryCard({
             <h2 className="fashion-rail-title text-[42px] text-black/94 sm:text-[50px] lg:text-[58px]">
               {label}
             </h2>
-            <p className="micro-label mt-4 text-black/58">
-              Spring 2026 / {String(products.length).padStart(2, "0")} pieces
+            <p className="mt-4 text-[9px] tracking-[0.18em] text-black/50">
+              {String(products.length).padStart(2, "0")} products / Spring 2026
             </p>
           </div>
 

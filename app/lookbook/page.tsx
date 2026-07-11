@@ -1,31 +1,31 @@
 import Image from "next/image";
 import Link from "next/link";
 import type { ReactNode } from "react";
-import { PublicFooter } from "@/components/PublicFooter";
-import { PublicNavigation } from "@/components/PublicNavigation";
+import { CartCountLink } from "@/components/CartCountLink";
+import { LogoMark } from "@/components/LogoMark";
 
 const coastalFrames = [
   {
     alt: "Blurred LOW SIGNAL figure moving through coastal wind in dark layers",
-    caption: "Field Jacket / Washed cotton canvas / Frame 01",
+    caption: "COASTAL MOTION / 01",
     crop: "object-[42%_48%]",
     src: "/images/low-signal/lookbook-campaign/coastal-movement.png",
   },
   {
     alt: "Close crop of washed black clothing and hand against wet coastal concrete",
-    caption: "Washed Longsleeve / Black cotton / Frame 02",
+    caption: "WIND DETAIL / 02",
     crop: "object-[54%_50%]",
     src: "/images/low-signal/lookbook-campaign/coastal-garment-detail.png",
   },
   {
     alt: "Low crop of washed black hem and trouser folds near concrete floor",
-    caption: "Wide Trouser / Cotton twill / Frame 03",
+    caption: "HEM / FLOOR / 03",
     crop: "object-[50%_54%]",
     src: "/images/low-signal/lookbook-campaign/material-hem-floor.png",
   },
   {
     alt: "Abstract dark garment movement across concrete light",
-    caption: "Field Jacket / Northern coast / Frame 04",
+    caption: "FABRIC IN MOTION / 04",
     crop: "object-[50%_50%]",
     src: "/images/low-signal/lookbook-campaign/concrete-garment-movement.png",
   },
@@ -34,25 +34,25 @@ const coastalFrames = [
 const roomFrames = [
   {
     alt: "Male LOW SIGNAL model in dark layered clothing beside concrete window light",
-    caption: "Work Jacket / Washed canvas / Frame 05",
+    caption: "CONCRETE ROOM / 05",
     crop: "object-[50%_44%]",
     src: "/images/low-signal/lookbook-campaign/concrete-male-look.png",
   },
   {
     alt: "Close crop of hand at pocket and sleeve in black layers",
-    caption: "Work Jacket / Pocket construction / Frame 06",
+    caption: "HAND / POCKET / 06",
     crop: "object-[52%_50%]",
     src: "/images/low-signal/lookbook-campaign/concrete-hand-pocket.png",
   },
   {
     alt: "Full body LOW SIGNAL campaign look framed by concrete architecture",
-    caption: "Volume Pant / Washed cotton twill / Frame 07",
+    caption: "FINAL LOOK / 07",
     crop: "object-[50%_48%]",
     src: "/images/low-signal/lookbook-campaign/final-full-body.png",
   },
   {
     alt: "Female LOW SIGNAL model in oversized black layers beside cold concrete light",
-    caption: "Double Face Coat / Charcoal wool / Frame 08",
+    caption: "WINDOW PROFILE / 08",
     crop: "object-[58%_46%]",
     src: "/images/low-signal/lookbook-campaign/concrete-female-look.png",
   },
@@ -61,25 +61,25 @@ const roomFrames = [
 const materialFrames = [
   {
     alt: "Black rib knit cardigan texture with buttons on concrete",
-    caption: "Rib Cardigan / Compact knit / Frame 09",
+    caption: "RIB KNIT / 09",
     crop: "object-[50%_58%]",
     src: "/images/low-signal/lookbook-campaign/material-rib-knit.png",
   },
   {
     alt: "Wide black trouser leg moving across concrete floor",
-    caption: "Pleated Pant / Brushed black twill / Frame 10",
+    caption: "TROUSER MOTION / 10",
     crop: "object-[50%_54%]",
     src: "/images/low-signal/lookbook-campaign/concrete-trouser-motion.png",
   },
   {
     alt: "Cropped neck, collar, and shoulder in washed black fabric against concrete",
-    caption: "Collarless Shirt / Washed cotton / Frame 11",
+    caption: "COLLAR / NECK / 11",
     crop: "object-[60%_48%]",
     src: "/images/low-signal/lookbook-campaign/concrete-body-crop.png",
   },
   {
     alt: "Hidden tonal label, stitching, and matte hardware inside black fabric",
-    caption: "Material study / Matte hardware / Frame 12",
+    caption: "HIDDEN LABEL / 12",
     crop: "object-[52%_50%]",
     src: "/images/low-signal/lookbook-campaign/material-hardware-label.png",
   },
@@ -88,13 +88,12 @@ const materialFrames = [
 export default function LookbookPage() {
   return (
     <main className="min-h-screen overflow-x-hidden bg-[#e4e5df] text-[#141311]">
-      <PublicNavigation />
+      <LookbookNav />
       <LookbookHero />
       <CoastalChapter />
       <ConcreteChapter />
       <MaterialChapter />
       <ShopCta />
-      <PublicFooter />
     </main>
   );
 }
@@ -133,9 +132,9 @@ function LookbookHero() {
             <br />
             Spring 2026
           </h1>
-          <p className="supporting-copy mt-10 max-w-[430px] text-black/64">
-            Twelve frames moving between the northern coast, a concrete room,
-            and close studies of the current garments.
+          <p className="mt-10 max-w-[430px] text-[12px] uppercase leading-[1.78] tracking-[0.16em] text-black/58">
+            Washed black garments, coastal air, concrete rooms, and pieces cut
+            for regular wear.
           </p>
         </div>
 
@@ -471,5 +470,26 @@ function CtaPrelude() {
         Final campaign note / selected pieces are available online.
       </p>
     </div>
+  );
+}
+
+function LookbookNav() {
+  return (
+    <nav className="fixed left-0 right-0 top-0 z-30 grid min-h-[64px] grid-cols-[1fr_auto] items-start gap-6 border-b border-black/16 bg-[#e3e4de]/92 px-5 py-5 text-[9px] uppercase tracking-[0.18em] text-[#141311] backdrop-blur-sm md:grid-cols-[1fr_auto_1fr] lg:px-12">
+      <LogoMark />
+
+      <div className="hidden justify-center gap-14 md:flex">
+        <Link href="/">Home</Link>
+        <Link href="/collections">Collections</Link>
+        <Link className="border-b border-black pb-2" href="/lookbook">
+          Lookbook
+        </Link>
+        <Link href="/about">About</Link>
+      </div>
+
+      <div className="flex justify-end">
+        <CartCountLink />
+      </div>
+    </nav>
   );
 }

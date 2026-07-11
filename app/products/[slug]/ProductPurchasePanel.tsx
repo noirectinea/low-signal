@@ -144,7 +144,7 @@ export function ProductPurchasePanel({
           : added
             ? "Added to cart"
             : "Add to cart"}
-        <span aria-hidden="true">→</span>
+        <span aria-hidden="true">-&gt;</span>
       </button>
       <p className="mt-4 border-t border-black/12 pt-4 text-[9px] uppercase tracking-[0.14em] text-black/62">
         {totalStock > 0

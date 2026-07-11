@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { HomeSelectedPieces } from "@/components/HomeSelectedPieces";
-import { PublicNavigation } from "@/components/PublicNavigation";
+import { LogoMark } from "@/components/LogoMark";
 
 const heroImage = "/images/hero/ch1.png";
 const collectionImage = "/images/hero/ch3.png";
@@ -10,25 +10,39 @@ const garmentOne = "/images/low-signal/products/product-06.jpg";
 const garmentTwo = "/images/low-signal/selected-garments-detail.jpg";
 const materialStoryImage =
   "/images/low-signal/selected-collection/material-form-original.png";
+const journalImages = [
+  ["/images/low-signal/journal/fabric-detail.jpg", "Fabric detail"],
+  ["/images/low-signal/journal/road-coast.jpg", "Road / cloudy coast"],
+  ["/images/low-signal/journal/garment-chair.jpg", "Garment on chair"],
+  ["/images/low-signal/journal/hardware-detail.jpg", "Button / label detail"],
+  ["/images/low-signal/journal/studio-table.jpg", "Studio table note"],
+];
+
 const materialNotes = ["Washed cotton", "Dry wool", "Raw canvas", "Worn nylon"];
+const journalRows = [
+  ["01", "Field note"],
+  ["02", "Material log"],
+  ["03", "Coastal light"],
+  ["04", "Road note"],
+];
 const footerLinks = [
   ["Collections", "/collections"],
   ["Lookbook", "/lookbook"],
   ["About", "/about"],
-  ["Case study", "/case-study/low-signal"],
-  ["Contact", "mailto:contact@lowsignal.com"],
+  ["Contact", "#contact"],
+  ["Shipping", "#shipping"],
 ];
 
 export default function Home() {
   return (
     <main className="min-h-screen w-full overflow-x-hidden bg-[#e4e5df] text-[#111]">
-      <PublicNavigation />
       <section className="grid w-full overflow-hidden bg-[#e4e5df] md:h-[100svh] md:grid-rows-[65fr_35fr]">
         <HeroPanel />
         <EditorialGrid />
       </section>
       <MaterialForm />
       <HomeSelectedPieces />
+      <JournalSection />
       <FinalFooter />
     </main>
   );
@@ -50,10 +64,29 @@ function HeroPanel() {
         <div className="absolute inset-0 bg-[#d8cfc1]/10 mix-blend-screen" />
       </div>
 
+      <div className="absolute left-[18px] top-[48px] z-20 h-px w-[46.35vw] bg-black/40" />
+      <div className="absolute left-[75.15vw] right-[18px] top-[48px] z-20 h-px bg-black/40" />
+
+      <header className="absolute left-[18px] right-[18px] top-[16px] z-30 flex h-[32px] items-start text-[8px] uppercase tracking-[0.16em]">
+        <LogoMark className="relative -top-[3px] w-[18.1vw]" />
+        <nav className="hidden gap-[38px] md:flex">
+          <Link href="/">Home</Link>
+          <Link href="/collections">Collections</Link>
+          <Link href="/lookbook">Lookbook</Link>
+          <Link href="/about">About</Link>
+        </nav>
+        <div className="ml-auto flex items-start gap-[24px]">
+          <span>2026 / Issue 01</span>
+          <span className="-mt-1 grid size-[26px] place-items-center border border-black/40 text-[10px]">
+            ♧
+          </span>
+        </div>
+      </header>
+
       <div className="absolute left-[5.15vw] top-1/2 z-20 hidden w-[210px] -translate-y-1/2 flex-col items-start md:flex">
         <Kicker number="01" />
-        <p className="mt-[26px] max-w-[215px] text-[15px] leading-[1.5] text-black/76">
-          Quiet clothing for daily repetition.
+        <p className="mt-[26px] max-w-[205px] text-[12px] uppercase leading-[1.52] tracking-[0.19em]">
+          Washed black clothing for daily wear.
         </p>
         <div className="mt-[26px] grid w-full gap-[10px] border-y border-black/18 py-[14px] text-[8px] uppercase leading-[1.5] tracking-[0.17em] text-black/48">
           <span>Spring 2026 / Issue 01</span>
@@ -121,9 +154,9 @@ function EditorialGrid() {
           <p className="mt-[24px] text-[10px] uppercase leading-[1.5] tracking-[0.22em]">
             Spring 2026
           </p>
-          <p className="mt-[18px] max-w-[150px] text-[13px] leading-[1.5] text-black/66">
-            Outer layers, knitwear, shirts, and wide trousers in dark neutral
-            fabrics.
+          <p className="mt-[18px] max-w-[130px] text-[10px] uppercase leading-[1.55] tracking-[0.2em]">
+            A collection built on restraint, quiet structures, and small
+            interruptions.
           </p>
           <span className="mt-auto inline-flex w-fit gap-2 border-b border-black/65 pb-[4px] text-[9px] uppercase tracking-[0.16em] transition-opacity duration-300 group-hover:opacity-55">
             View collection
@@ -231,9 +264,14 @@ function MaterialForm() {
             <h2 className="mt-[42px] text-[11px] uppercase leading-[1.45] tracking-[0.22em]">
               Material & Form
             </h2>
-            <p className="mt-[34px] max-w-[300px] text-[17px] leading-[1.5] text-black/78 md:text-[19px]">
-              Washed cotton, dry wool, raw canvas, and worn nylon are selected
-              for how they soften, crease, and record use.
+            <p className="mt-[34px] text-[18px] uppercase leading-[1.48] tracking-[0.16em] md:text-[20px]">
+              We work with materials
+              <br />
+              that age quietly and
+              <br />
+              take on character
+              <br />
+              over time.
             </p>
             <div className="mt-[40px] grid max-w-[260px] border-y border-black/18 text-[9px] uppercase tracking-[0.17em] text-black/56">
               {materialNotes.map((item) => (
@@ -246,12 +284,12 @@ function MaterialForm() {
                 </div>
               ))}
             </div>
-            <Link
+            <a
               className="mt-[42px] inline-flex border-b border-black pb-[5px] text-[9px] uppercase tracking-[0.16em]"
               href="/about"
             >
-              Our approach →
-            </Link>
+              Our approach
+            </a>
           </div>
         </div>
       </div>
@@ -279,6 +317,109 @@ function MaterialForm() {
   );
 }
 
+function JournalSection() {
+  return (
+    <section id="journal" className="w-full overflow-hidden border-t border-black/18 bg-[#d4d5cf] px-[6vw] py-12 text-[#111] md:px-[4.5vw] md:py-[5vh]">
+      <div className="grid gap-9 lg:grid-cols-[28vw_1fr]">
+        <aside className="flex max-w-[360px] flex-col">
+          <Kicker number="07" />
+          <h2 className="mt-[34px] text-[11px] uppercase leading-[1.45] tracking-[0.22em]">
+            Journal
+          </h2>
+          <p className="mt-[32px] text-[22px] uppercase leading-[1.18] tracking-[0.15em] md:text-[26px]">
+            Notes kept
+            <br />
+            between weather
+            <br />
+            and cloth.
+          </p>
+          <p className="mt-[22px] max-w-[330px] text-[10px] uppercase leading-[1.72] tracking-[0.16em] text-black/52">
+            Garments, road light, studio notes, and fabric details from the
+            current season.
+          </p>
+          <a
+            href="#journal"
+            className="mt-[28px] inline-flex w-fit border-b border-black/55 pb-[6px] text-[9px] uppercase tracking-[0.18em] transition-opacity duration-300 hover:opacity-55"
+          >
+            Read journal →
+          </a>
+
+          <div className="mt-9 border-y border-black/18 py-4 text-[9px] uppercase leading-[1.65] tracking-[0.17em] text-black/50">
+            <p className="text-black/68">Current entry</p>
+            <p className="mt-4">Road note / 01</p>
+            <p className="mt-4 max-w-[275px]">
+              Coastal light, washed wool, empty roads.
+            </p>
+          </div>
+        </aside>
+
+        <div className="min-w-0">
+          <div className="relative h-[30svh] min-h-[230px] overflow-hidden border border-black/15 bg-[#bdc0b9] md:h-[34svh]">
+            <Image
+              src={lookbookImage}
+              alt="Man standing near the sea in a LOW SIGNAL editorial photograph"
+              fill
+              sizes="62vw"
+              className="editorial-image object-cover object-center brightness-[0.9] contrast-[1.05] saturate-[0.82]"
+            />
+            <div className="absolute inset-0 bg-[#171614]/10" />
+            <div className="absolute left-5 top-5 grid gap-2 text-[8px] uppercase tracking-[0.18em] text-[#f5f2ed]/68">
+              <span>Road note / 01</span>
+              <span>Field note / coastal light</span>
+            </div>
+          </div>
+
+          <div className="mt-6 grid gap-6 lg:grid-cols-[1fr_170px]">
+            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
+              {journalImages.map(([src, label], index) => (
+                <div key={label} className={index === 1 ? "sm:mt-7" : ""}>
+                  <div className="relative h-[92px] overflow-hidden border border-black/14 bg-[#151413]">
+                    <Image
+                      src={src}
+                      alt={label}
+                      fill
+                      sizes="20vw"
+                      className={`editorial-image object-cover brightness-[0.82] contrast-[1.05] saturate-[0.78] ${
+                        index === 1 ? "object-[48%_48%]" : "object-center"
+                      }`}
+                    />
+                  </div>
+                  <p className="mt-3 text-[8px] uppercase tracking-[0.17em] text-black/42">
+                    {label}
+                  </p>
+                </div>
+              ))}
+            </div>
+
+            <div className="border-y border-black/18 py-4 text-[9px] uppercase leading-[1.55] tracking-[0.16em] text-black/52 lg:mt-7">
+              <p className="text-black/70">Field note</p>
+              <p className="mt-2">Coastal light</p>
+              <p className="mt-5 text-black/70">Location</p>
+              <p className="mt-2">Northern coast</p>
+              <p className="mt-5 text-black/70">Condition</p>
+              <p className="mt-2">Wind / Overcast</p>
+            </div>
+          </div>
+
+          <div className="mt-7 border-t border-black/20 text-[9px] uppercase tracking-[0.17em] text-black/58">
+            {journalRows.map(([number, label]) => (
+              <a
+                key={number}
+                href="#journal"
+                className="grid grid-cols-[42px_1fr_auto] border-b border-black/16 py-4 transition-opacity duration-300 hover:opacity-55"
+              >
+                <span>{number}</span>
+                <span>{label}</span>
+                <span>Read -&gt;</span>
+              </a>
+            ))}
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
 function FinalFooter() {
   return (
     <footer className="grid w-full border-t border-black/20 bg-[#d8d9d3] text-[9px] uppercase tracking-[0.16em] md:grid-cols-[24vw_1fr_18vw]">
@@ -299,9 +440,9 @@ function FinalFooter() {
       </div>
 
       <div className="flex flex-col justify-between border-b border-black/18 px-[7vw] py-[28px] md:border-b-0 md:border-r md:px-[4vw] md:py-[30px]">
-        <p className="max-w-[620px] text-[15px] normal-case leading-[1.5] tracking-[0] md:text-[18px]">
-          LOW SIGNAL makes clothing that remains present without asking for
-          attention.
+        <p className="max-w-[620px] text-[15px] leading-[1.45] tracking-[0.15em] md:text-[18px]">
+          Low Signal works with washed cotton, dense knitwear, black canvas,
+          and garments made for repeat wear.
         </p>
         <div className="mt-[28px] flex flex-wrap gap-x-8 gap-y-3 border-t border-black/18 pt-4">
           {footerLinks.map(([label, href]) => (

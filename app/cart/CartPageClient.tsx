@@ -3,8 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { PublicFooter } from "@/components/PublicFooter";
-import { PublicNavigation } from "@/components/PublicNavigation";
+import { LogoMark } from "@/components/LogoMark";
 import { cartStorageKey, type CartItem } from "@/data/products";
 import { getAvailabilityLabel } from "@/lib/availability";
 
@@ -22,6 +21,7 @@ export function CartPageClient() {
   const [availabilityStatus, setAvailabilityStatus] = useState<
     "idle" | "loading"
   >("idle");
+  const cartCount = items.reduce((total, item) => total + item.quantity, 0);
   const subtotal = items.reduce(
     (total, item) => total + item.price * item.quantity,
     0,
@@ -138,7 +138,7 @@ export function CartPageClient() {
 
   return (
     <main className="min-h-screen overflow-x-hidden bg-[#f0ece4] text-[#141311]">
-      <PublicNavigation />
+      <CartNav cartCount={cartCount} />
 
       <section className="px-5 pb-16 pt-[104px] lg:px-12">
         <div className="mx-auto max-w-[1500px]">
@@ -195,7 +195,6 @@ export function CartPageClient() {
           )}
         </div>
       </section>
-      <PublicFooter />
     </main>
   );
 }
@@ -220,6 +219,25 @@ function writeCart(items: CartItem[]) {
 
   window.localStorage.setItem(cartStorageKey, JSON.stringify(items));
   window.dispatchEvent(new Event("low-signal-cart"));
+}
+
+function CartNav({ cartCount }: Readonly<{ cartCount: number }>) {
+  return (
+    <nav className="fixed left-0 right-0 top-0 z-30 grid min-h-[64px] grid-cols-[1fr_auto] items-start gap-6 border-b border-black/16 bg-[#ece8df]/92 px-5 py-5 text-[9px] uppercase tracking-[0.18em] text-[#141311] backdrop-blur-sm md:grid-cols-[1fr_auto_1fr] lg:px-12">
+      <LogoMark />
+
+      <div className="hidden justify-center gap-14 md:flex">
+        <Link href="/">Home</Link>
+        <Link href="/collections">Collections</Link>
+        <Link href="/lookbook">Lookbook</Link>
+        <Link href="/about">About</Link>
+      </div>
+
+      <div className="flex justify-end gap-8">
+        <span>Cart ({cartCount})</span>
+      </div>
+    </nav>
+  );
 }
 
 function CartLine({
@@ -335,10 +353,6 @@ function OrderSummary({
         <span>Total</span>
         <span>${subtotal}</span>
       </div>
-      <p className="supporting-copy mb-6 text-[12px] text-black/58">
-        Sign in at the next step to attach the order to your account and keep
-        delivery details secure.
-      </p>
       {hasBlockingWarnings ? (
         <p className="flex w-full items-center justify-center bg-[#171614] px-5 py-5 text-center text-[#f4f0e8]/80">
           Update unavailable items before checkout
@@ -351,7 +365,7 @@ function OrderSummary({
           href="/checkout"
         >
           {isChecking ? "Checking stock" : "Proceed to checkout"}
-          <span aria-hidden="true">→</span>
+          <span aria-hidden="true">-&gt;</span>
         </Link>
       )}
       <Link

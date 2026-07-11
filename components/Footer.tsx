@@ -67,17 +67,17 @@ export function Footer() {
             © 2026 LOW SIGNAL. All rights reserved.
           </p>
           <div className="hidden gap-6 sm:flex">
-            <Link
-              href="/case-study/low-signal"
-              className="text-xs text-low-muted transition-colors hover:text-low-fog"
-            >
-              Case study
-            </Link>
             <a
-              href="mailto:contact@lowsignal.com"
+              href="#"
               className="text-xs text-low-muted transition-colors hover:text-low-fog"
             >
-              Contact
+              Privacy
+            </a>
+            <a
+              href="#"
+              className="text-xs text-low-muted transition-colors hover:text-low-fog"
+            >
+              Shipping
             </a>
           </div>
         </div>
