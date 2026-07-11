@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import {
   Archivo,
-  Cormorant_Garamond,
+  Bodoni_Moda,
   Inter,
   Libre_Caslon_Display,
 } from "next/font/google";
@@ -27,11 +27,11 @@ const archivalDisplay = Libre_Caslon_Display({
   weight: "400",
 });
 
-const refinedDisplay = Cormorant_Garamond({
+const refinedDisplay = Bodoni_Moda({
   variable: "--font-display-refined",
   subsets: ["latin"],
   display: "swap",
-  weight: ["400", "500"],
+  weight: ["500", "600"],
 });
 
 export const metadata: Metadata = {

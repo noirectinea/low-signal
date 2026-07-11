@@ -110,23 +110,23 @@ a {
 
 .product-display-title {
   font-family: var(--font-display-refined), var(--font-display-archival), Georgia, serif;
-  font-weight: 500;
-  letter-spacing: -0.006em;
-  line-height: 0.92;
+  font-weight: 600;
+  letter-spacing: 0.004em;
+  line-height: 0.9;
 }
 
 .controlled-display-title {
   font-family: var(--font-display-refined), var(--font-display-archival), Georgia, serif;
-  font-weight: 400;
-  letter-spacing: -0.012em;
-  line-height: 0.88;
+  font-weight: 600;
+  letter-spacing: -0.004em;
+  line-height: 0.86;
 }
 
 .fashion-rail-title {
   font-family: var(--font-display-refined), var(--font-display-archival), Georgia, serif;
-  font-weight: 400;
-  letter-spacing: 0.012em;
-  line-height: 0.9;
+  font-weight: 600;
+  letter-spacing: 0.018em;
+  line-height: 0.88;
 }
 
 .add-to-cart-label {

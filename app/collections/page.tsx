@@ -53,9 +53,9 @@ export default function CollectionsPage() {
             05 — Collection / LOW SIGNAL
           </p>
 
-          <h1 className="controlled-display-title mt-8 max-w-[600px] text-[62px] uppercase text-black/92 sm:text-[82px] lg:text-[94px] xl:text-[106px]">
+          <h1 className="controlled-display-title mt-8 max-w-[600px] text-[62px] uppercase text-black/94 sm:text-[82px] lg:text-[94px] xl:text-[106px]">
             <span>SPRING</span>{" "}
-            <span className="ml-2 inline-block scale-[0.9] tracking-[0.035em] text-black/86 [font-feature-settings:'tnum']">
+            <span className="ml-2 inline-block scale-[0.94] tracking-[0.012em] text-black/90 [font-feature-settings:'tnum']">
               2026
             </span>
           </h1>
@@ -197,7 +197,7 @@ function CollectionEntryCard({
 
         <div className="grid grid-cols-[1fr_auto] items-end gap-4 border-b border-black/14 pb-5 pt-5 uppercase">
           <div>
-            <h2 className="fashion-rail-title text-[44px] uppercase text-black/90 sm:text-[54px] lg:text-[62px]">
+            <h2 className="fashion-rail-title text-[44px] uppercase text-black/94 sm:text-[54px] lg:text-[62px]">
               {label}
             </h2>
             <p className="mt-4 text-[9px] tracking-[0.18em] text-black/50">
