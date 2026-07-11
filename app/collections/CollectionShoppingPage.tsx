@@ -279,7 +279,7 @@ export function CollectionShoppingPage({
         >
           <div>
             <CollectionBreadcrumb gender={gender} genderLabel={genderLabel} />
-            <h1 className="fashion-rail-title mt-4 max-w-[480px] text-[48px] uppercase text-black/94 sm:text-[68px] lg:text-[82px] xl:text-[92px]">
+            <h1 className="fashion-rail-title mt-4 max-w-[480px] text-[46px] text-black/94 sm:text-[62px] lg:text-[76px] xl:text-[84px]">
               {genderLabel}
             </h1>
             <p className="mt-3 text-[10px] uppercase tracking-[0.18em] text-black/50">

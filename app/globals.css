@@ -109,24 +109,27 @@ a {
 }
 
 .product-display-title {
-  font-family: var(--font-display-refined), var(--font-display-archival), Georgia, serif;
-  font-weight: 600;
-  letter-spacing: 0.004em;
+  font-family: var(--font-archivo), Arial, sans-serif;
+  font-weight: 800;
+  letter-spacing: -0.034em;
   line-height: 0.9;
+  text-transform: uppercase;
 }
 
 .controlled-display-title {
-  font-family: var(--font-display-refined), var(--font-display-archival), Georgia, serif;
-  font-weight: 600;
-  letter-spacing: -0.004em;
-  line-height: 0.86;
+  font-family: var(--font-archivo), Arial, sans-serif;
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  line-height: 0.88;
+  text-transform: uppercase;
 }
 
 .fashion-rail-title {
-  font-family: var(--font-display-refined), var(--font-display-archival), Georgia, serif;
-  font-weight: 600;
-  letter-spacing: 0.018em;
-  line-height: 0.88;
+  font-family: var(--font-archivo), Arial, sans-serif;
+  font-weight: 800;
+  letter-spacing: -0.035em;
+  line-height: 0.9;
+  text-transform: uppercase;
 }
 
 .add-to-cart-label {

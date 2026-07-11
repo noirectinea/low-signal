@@ -115,7 +115,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
             </div>
 
             <div className="border-b border-black/16 py-10">
-              <h1 className="product-display-title max-w-[600px] text-[48px] uppercase text-black/94 sm:text-[68px] lg:text-[82px]">
+              <h1 className="product-display-title max-w-[600px] text-[44px] text-black/94 sm:text-[62px] lg:text-[76px]">
                 {product.name}
               </h1>
               <div className="mt-9 grid gap-4 text-[10px] uppercase tracking-[0.18em] sm:grid-cols-[1fr_auto] sm:items-end">

@@ -1,15 +1,8 @@
 import Image from "next/image";
-import { Cormorant_Garamond } from "next/font/google";
 import Link from "next/link";
 import type { ReactNode } from "react";
 import { CartCountLink } from "@/components/CartCountLink";
 import { LogoMark } from "@/components/LogoMark";
-
-const lookbookChapterDisplay = Cormorant_Garamond({
-  subsets: ["latin"],
-  weight: ["500", "600"],
-  display: "swap",
-});
 
 const coastalFrames = [
   {
@@ -132,7 +125,7 @@ function LookbookHero() {
           <p className="text-[10px] uppercase tracking-[0.2em] text-black/50">
             01-12 Frames / Spring 2026
           </p>
-          <h1 className="controlled-display-title mt-8 max-w-[560px] text-[54px] uppercase text-black/94 sm:text-[72px] lg:text-[88px]">
+          <h1 className="controlled-display-title mt-8 max-w-[560px] text-[50px] text-black/94 sm:text-[66px] lg:text-[80px]">
             Lookbook 01
             <br />
             Coastal Light
@@ -302,7 +295,7 @@ function ChapterShell({
         >
           <p>{eyebrow}</p>
           <h2
-            className={`${lookbookChapterDisplay.className} text-[36px] font-semibold uppercase leading-[0.85] tracking-[-0.03em] sm:text-[50px] lg:text-[66px] ${
+            className={`controlled-display-title text-[34px] sm:text-[46px] lg:text-[60px] ${
               isDark ? "text-[#e6e6de]" : "text-black/94"
             }`}
           >
