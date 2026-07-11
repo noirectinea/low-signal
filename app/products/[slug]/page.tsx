@@ -1,8 +1,8 @@
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { CartCountLink } from "@/components/CartCountLink";
-import { LogoMark } from "@/components/LogoMark";
+import { PublicFooter } from "@/components/PublicFooter";
+import { PublicNavigation } from "@/components/PublicNavigation";
 import {
   getProductBySlug,
   getProductSlugs,
@@ -69,7 +69,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
 
   return (
     <main className="min-h-screen overflow-x-hidden bg-[#e7e7e1] text-[#141311]">
-      <ProductNav />
+      <PublicNavigation />
 
       <section className="grid px-5 pb-16 pt-[92px] lg:min-h-screen lg:grid-cols-[58%_42%] lg:px-0 lg:pb-0 lg:pt-[64px]">
         <div className="grid gap-4 lg:grid-cols-[104px_1fr] lg:border-r lg:border-black/16 lg:p-8 xl:grid-cols-[124px_1fr] xl:p-10">
@@ -128,7 +128,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
             </div>
 
             <div className="border-b border-black/16 py-7">
-              <p className="max-w-[460px] text-[10px] uppercase leading-[1.8] tracking-[0.14em] text-black/66">
+              <p className="supporting-copy max-w-[460px] text-black/68">
                 {product.description}
               </p>
             </div>
@@ -136,30 +136,28 @@ export default async function ProductPage({ params }: ProductPageProps) {
             <ProductPurchasePanel product={product} />
 
             <div className="divide-y divide-black/16 border-b border-black/16">
-              <details className="group py-6 text-[9px] uppercase leading-[1.75] tracking-[0.15em] text-black/58">
+              <details className="group/details py-6 text-[10px] font-medium uppercase tracking-[0.12em] text-black/62">
                 <summary className="flex cursor-pointer list-none items-center justify-between text-black">
                   <span>Details</span>
-                  <span className="transition-transform duration-300 group-open:rotate-45">
-                    +
-                  </span>
+                  <span className="group-open/details:hidden">+</span>
+                  <span className="hidden group-open/details:inline">−</span>
                 </summary>
-                <div className="mt-5 grid max-w-[520px] gap-4">
+                <div className="supporting-copy mt-5 grid max-w-[520px] gap-4 font-normal text-black/66">
                   <p>{product.materials}</p>
                   <p>
-                    A quiet everyday shape with room for layering and a washed
-                    surface that softens through wear.
+                    {getProductFitNote(product.category)} The surface is
+                    intended to soften and develop visible wear over time.
                   </p>
                 </div>
               </details>
 
-              <details className="group py-6 text-[9px] uppercase leading-[1.75] tracking-[0.15em] text-black/58">
+              <details className="group/details py-6 text-[10px] font-medium uppercase tracking-[0.12em] text-black/62">
                 <summary className="flex cursor-pointer list-none items-center justify-between text-black">
                   <span>Shipping & Returns</span>
-                  <span className="transition-transform duration-300 group-open:rotate-45">
-                    +
-                  </span>
+                  <span className="group-open/details:hidden">+</span>
+                  <span className="hidden group-open/details:inline">−</span>
                 </summary>
-                <div className="mt-5 grid max-w-[520px] gap-4">
+                <div className="supporting-copy mt-5 grid max-w-[520px] gap-4 font-normal text-black/66">
                   <p>Ships in 2-4 days when available.</p>
                   <p>Returns accepted on unworn pieces within 14 days.</p>
                 </div>
@@ -173,6 +171,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
               className="w-fit border-b border-black/60 pb-1"
             >
               Back to {product.gender} collection
+              <span aria-hidden="true"> →</span>
             </Link>
             {relatedProduct && (
               <Link
@@ -180,31 +179,14 @@ export default async function ProductPage({ params }: ProductPageProps) {
                 className="w-fit border-b border-black/40 pb-1 text-black/54 sm:justify-self-end"
               >
                 Related piece / {relatedProduct.name}
+                <span aria-hidden="true"> →</span>
               </Link>
             )}
           </div>
         </div>
       </section>
+      <PublicFooter />
     </main>
-  );
-}
-
-function ProductNav() {
-  return (
-    <nav className="fixed left-0 right-0 top-0 z-30 grid min-h-[64px] grid-cols-[1fr_auto] items-start gap-6 border-b border-black/16 bg-[#e3e3dc]/92 px-5 py-5 text-[9px] uppercase tracking-[0.18em] text-[#141311] backdrop-blur-sm md:grid-cols-[1fr_auto_1fr] lg:px-12">
-      <LogoMark />
-
-      <div className="hidden justify-center gap-14 md:flex">
-        <Link href="/">Home</Link>
-        <Link href="/collections">Collections</Link>
-        <Link href="/lookbook">Lookbook</Link>
-        <Link href="/about">About</Link>
-      </div>
-
-      <div className="flex justify-end">
-        <CartCountLink />
-      </div>
-    </nav>
   );
 }
 
@@ -214,4 +196,20 @@ function getProductImageFit(product: { category: string }) {
   }
 
   return "object-cover";
+}
+
+function getProductFitNote(category: string) {
+  if (category === "Trousers") {
+    return "Cut with a relaxed rise and room through the leg.";
+  }
+
+  if (category === "Outerwear") {
+    return "Cut with room through the body for light layering.";
+  }
+
+  if (category === "Knitwear") {
+    return "Built with a relaxed shoulder and compact finishing at the edges.";
+  }
+
+  return "Cut in a relaxed shape with practical room through the body.";
 }

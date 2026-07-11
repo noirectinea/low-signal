@@ -3,6 +3,11 @@
 :root {
   --background: #e5e6e1;
   --foreground: #121211;
+  --surface-paper: #e5e6e1;
+  --surface-muted: #d8d9d3;
+  --line-soft: rgb(18 18 17 / 0.14);
+  --line-strong: rgb(18 18 17 / 0.28);
+  --transition-quiet: 280ms ease;
 }
 
 @theme inline {
@@ -111,7 +116,7 @@ a {
 .product-display-title {
   font-family: var(--font-archivo), Arial, sans-serif;
   font-weight: 500;
-  letter-spacing: -0.034em;
+  letter-spacing: -0.024em;
   line-height: 0.9;
   text-transform: uppercase;
 }
@@ -119,7 +124,7 @@ a {
 .controlled-display-title {
   font-family: var(--font-archivo), Arial, sans-serif;
   font-weight: 500;
-  letter-spacing: -0.04em;
+  letter-spacing: -0.028em;
   line-height: 0.88;
   text-transform: uppercase;
 }
@@ -127,7 +132,7 @@ a {
 .fashion-rail-title {
   font-family: var(--font-archivo), Arial, sans-serif;
   font-weight: 500;
-  letter-spacing: -0.035em;
+  letter-spacing: -0.024em;
   line-height: 0.9;
   text-transform: uppercase;
 }
@@ -156,11 +161,21 @@ a {
   }
 }
 
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  .animate-pulse {
+    animation: none;
+  }
+}
+
 .hero-printed-title {
-  font-family: var(--font-display-archival), Georgia, serif;
-  font-weight: 400;
-  letter-spacing: -0.052em;
-  line-height: 0.72;
+  font-family: var(--font-archivo), Arial, sans-serif;
+  font-weight: 500;
+  letter-spacing: -0.045em;
+  line-height: 0.75;
   color: rgb(244 241 233 / 0.78);
   mix-blend-mode: screen;
   text-shadow:
@@ -181,19 +196,67 @@ a {
   white-space: pre;
 }
 
-.hero-printed-title::after {
-  content: "";
+.micro-label {
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.13em;
+  line-height: 1.45;
+  text-transform: uppercase;
+}
+
+.supporting-copy {
+  font-size: 14px;
+  letter-spacing: 0;
+  line-height: 1.58;
+  text-transform: none;
+}
+
+.text-link {
+  border-bottom: 1px solid rgb(18 18 17 / 0.35);
+  padding-bottom: 4px;
+  transition: opacity var(--transition-quiet);
+}
+
+.text-link:hover {
+  opacity: 0.58;
+}
+
+.public-nav-link {
+  position: relative;
+  display: inline-flex;
+  min-height: 44px;
+  align-items: center;
+  transition: opacity var(--transition-quiet);
+}
+
+.public-nav-link::after {
   position: absolute;
-  inset: -0.02em;
-  background:
-    radial-gradient(circle at 18% 24%, rgb(17 17 17 / 0.34) 0 0.05em, transparent 0.065em),
-    radial-gradient(circle at 74% 42%, rgb(17 17 17 / 0.22) 0 0.04em, transparent 0.055em),
-    linear-gradient(92deg, transparent 0 12%, rgb(17 17 17 / 0.26) 12.3% 12.6%, transparent 12.9% 38%, rgb(17 17 17 / 0.16) 38.2% 38.6%, transparent 39% 100%),
-    repeating-linear-gradient(0deg, rgb(17 17 17 / 0.16) 0 1px, transparent 1px 5px);
-  background-size: 1.8em 1.8em, 2.3em 2.3em, 100% 100%, 100% 0.09em;
-  mix-blend-mode: multiply;
-  opacity: 0.24;
-  pointer-events: none;
+  right: 0;
+  bottom: 8px;
+  left: 0;
+  height: 1px;
+  background: currentColor;
+  content: "";
+  opacity: 0;
+  transform: scaleX(0.45);
+  transition: opacity var(--transition-quiet), transform var(--transition-quiet);
+}
+
+.public-nav-link:hover,
+.public-nav-link:focus-visible {
+  opacity: 0.62;
+}
+
+.public-nav-link:hover::after,
+.public-nav-link:focus-visible::after,
+.public-nav-link.is-active::after {
+  opacity: 1;
+  transform: scaleX(1);
+}
+
+:where(a, button, summary, input, select, textarea):focus-visible {
+  outline: 1px solid rgb(18 18 17 / 0.72);
+  outline-offset: 4px;
 }
 
 /* Quiet UI labels: a little less fragile without becoming loud. */

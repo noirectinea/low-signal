@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { Playfair_Display, Space_Grotesk } from "next/font/google";
+import { Space_Grotesk } from "next/font/google";
 import Link from "next/link";
 import {
   cartStorageKey,
@@ -15,13 +15,6 @@ const spaceGrotesk = Space_Grotesk({
   weight: ["400", "500"],
   display: "swap",
   variable: "--font-shop-selected",
-});
-
-const shopSelectedSerif = Playfair_Display({
-  subsets: ["latin"],
-  weight: "400",
-  display: "swap",
-  variable: "--font-shop-selected-serif",
 });
 
 const selectedPieces = [
@@ -116,7 +109,7 @@ export function HomeSelectedPieces() {
   return (
     <section
       id="selected-pieces"
-      className={`${spaceGrotesk.variable} ${shopSelectedSerif.variable} shop-selected-section w-full overflow-hidden border-y border-black/14 bg-[#dedfd9] px-5 py-10 text-[#11110f] sm:px-6 lg:px-[5vw] lg:py-14`}
+      className={`${spaceGrotesk.variable} shop-selected-section w-full overflow-hidden border-y border-black/14 bg-[#dedfd9] px-5 py-10 text-[#11110f] sm:px-6 lg:px-[5vw] lg:py-14`}
     >
       <div className="mx-auto grid max-w-[1780px] gap-4">
         <div className="grid gap-4 lg:grid-cols-[0.88fr_1.42fr]">
@@ -133,8 +126,6 @@ export function HomeSelectedPieces() {
             ))}
           </div>
         </div>
-
-        <BottomRailStrip />
       </div>
     </section>
   );
@@ -152,23 +143,23 @@ function ShopIntro() {
         <p className="font-[var(--font-shop-selected)] text-[11px] font-medium uppercase tracking-[0.12em] text-black/50">
           Spring selection
         </p>
-        <h2 className="mt-9 max-w-[520px] font-[var(--font-shop-selected-serif)] text-[54px] font-normal uppercase leading-[0.88] tracking-[-0.052em] text-black/94 sm:text-[72px] lg:text-[84px] xl:text-[96px]">
+        <h2 className="controlled-display-title mt-9 max-w-[520px] text-[50px] text-black/94 sm:text-[66px] lg:text-[76px] xl:text-[86px]">
           Shop
           <br />
           selected
           <br />
           pieces
         </h2>
-        <p className="mt-9 max-w-[390px] text-[12px] uppercase leading-[1.72] tracking-[0.18em] text-black/58">
-          Washed cotton, dense knitwear, black canvas and trousers from Spring
-          2026. Cut for regular wear and easy layering.
+        <p className="supporting-copy mt-9 max-w-[390px] text-black/64">
+          Three garments selected for their distinct weight, surface, and role
+          within the Spring 2026 rail.
         </p>
       </div>
 
       <div className="grid gap-6 border-t border-black/14 pt-6 sm:grid-cols-[1fr_auto] sm:items-end">
         <div className="grid gap-3 text-[10px] uppercase tracking-[0.18em] text-black/46">
           <span>Available online</span>
-          <span>Selected for daily repeat</span>
+          <span>Three seasonal pieces</span>
         </div>
         <Link
           className="w-fit border-b border-black/56 pb-[6px] font-[var(--font-shop-selected)] text-[10px] font-medium uppercase tracking-[0.12em] transition-opacity duration-300 hover:opacity-55"
@@ -214,7 +205,7 @@ function SelectedProductCard({
         }
         src={piece.image}
       />
-      <div className="absolute inset-0 bg-gradient-to-t from-black/52 via-black/8 to-black/10" />
+      <div className="absolute inset-0 bg-black/18" />
 
       <span className="absolute left-5 top-5 z-20 text-[10px] uppercase tracking-[0.18em] text-[#f4f0e8]/68">
         {String(index + 1).padStart(2, "0")}
@@ -250,34 +241,5 @@ function SelectedProductCard({
         </div>
       </div>
     </article>
-  );
-}
-
-function BottomRailStrip() {
-  return (
-    <div className="grid gap-6 border border-black/14 bg-[#e4e5df] px-6 py-7 uppercase tracking-[0.18em] text-black/58 sm:grid-cols-[1fr_auto] sm:items-center lg:px-9 lg:py-8">
-      <div>
-        <p className="font-[var(--font-shop-selected)] text-[11px] font-medium tracking-[0.12em] text-black/76">
-          Spring 2026 available online
-        </p>
-        <p className="mt-3 max-w-[430px] text-[10px] leading-[1.65]">
-          Enter the seasonal selection through men&apos;s or women&apos;s.
-        </p>
-      </div>
-      <div className="flex flex-wrap gap-x-8 gap-y-3 font-[var(--font-shop-selected)] text-[10px] font-medium tracking-[0.12em] text-black">
-        <Link
-          className="border-b border-black/50 pb-[6px] transition-opacity duration-300 hover:opacity-55"
-          href="/collections/men"
-        >
-          Shop men →
-        </Link>
-        <Link
-          className="border-b border-black/50 pb-[6px] transition-opacity duration-300 hover:opacity-55"
-          href="/collections/women"
-        >
-          Shop women →
-        </Link>
-      </div>
-    </div>
   );
 }

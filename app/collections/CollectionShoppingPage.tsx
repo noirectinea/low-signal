@@ -3,8 +3,8 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useMemo, useState, useSyncExternalStore } from "react";
-import { CartCountLink } from "@/components/CartCountLink";
-import { LogoMark } from "@/components/LogoMark";
+import { PublicFooter } from "@/components/PublicFooter";
+import { PublicNavigation } from "@/components/PublicNavigation";
 import {
   cartStorageKey,
   type CartItem,
@@ -129,7 +129,6 @@ export function CollectionShoppingPage({
     price: "all",
     size: "all",
   });
-  const [searchQuery, setSearchQuery] = useState("");
   const cartSnapshot = useSyncExternalStore(
     subscribeCartStore,
     readCartSnapshot,
@@ -142,7 +141,6 @@ export function CollectionShoppingPage({
     gender === "men"
       ? "Dark outerwear, knit layers, wide trousers, and daily uniforms."
       : "Soft structure, washed layers, quiet volume, and daily uniforms.";
-  const normalizedSearchQuery = searchQuery.trim().toLowerCase();
   const advancedFilterCount = Object.values(advancedFilters).filter(
     (value) => value !== "all",
   ).length;
@@ -181,25 +179,9 @@ export function CollectionShoppingPage({
         return false;
       }
 
-      if (!normalizedSearchQuery) {
-        return true;
-      }
-
-      const searchableText = [
-        product.name,
-        product.category,
-        product.color,
-        product.materials,
-        product.description,
-        String(product.price),
-      ]
-        .filter(Boolean)
-        .join(" ")
-        .toLowerCase();
-
-      return searchableText.includes(normalizedSearchQuery);
+      return true;
     });
-  }, [activeCategory, advancedFilters, normalizedSearchQuery, products]);
+  }, [activeCategory, advancedFilters, products]);
 
   function clearAdvancedFilters() {
     setAdvancedFilters({
@@ -269,11 +251,11 @@ export function CollectionShoppingPage({
 
   return (
     <main className="min-h-screen overflow-x-hidden bg-[#e5e6e1] text-[#121211]">
-      <ShoppingNav />
+      <PublicNavigation />
 
       <section className="mx-auto max-w-[1760px] px-4 pb-16 pt-[86px] sm:px-6 lg:px-10 lg:pt-[94px] xl:px-14">
         <header
-          className={`grid gap-6 border-b border-black/16 lg:grid-cols-[1fr_minmax(320px,560px)] lg:items-end ${
+          className={`grid gap-7 border-b border-black/16 lg:grid-cols-[1fr_minmax(300px,470px)] lg:items-end ${
             gender === "women" ? "pb-4" : "pb-5"
           }`}
         >
@@ -282,81 +264,39 @@ export function CollectionShoppingPage({
             <h1 className="fashion-rail-title mt-4 max-w-[480px] text-[46px] text-black/94 sm:text-[62px] lg:text-[76px] xl:text-[84px]">
               {genderLabel}
             </h1>
-            <p className="mt-3 text-[10px] uppercase tracking-[0.18em] text-black/50">
+            <p className="micro-label mt-3 text-black/58">
               Spring 2026 / {String(products.length).padStart(2, "0")} pieces
             </p>
           </div>
 
-          <div className="grid gap-4">
-            <ProductSearch
-              resultCount={visibleProducts.length}
-              searchQuery={searchQuery}
-              setSearchQuery={setSearchQuery}
-            />
-
-            <div className="grid gap-4 text-[9px] uppercase tracking-[0.18em] text-black/56 sm:grid-cols-[auto_auto_auto] sm:items-center lg:justify-end">
-              <span>
-                {String(visibleProducts.length).padStart(2, "0")} Items
-              </span>
-              <span>Newest first</span>
-              <ViewIcons />
-            </div>
-          </div>
+          <p className="supporting-copy max-w-[470px] text-black/64 lg:justify-self-end">
+            {collectionNote}
+          </p>
         </header>
 
-        <div className="lg:hidden">
-          <FilterIntro gender={gender} note={collectionNote} />
-          <MobileFilters
-            activeCategory={activeCategory}
-            advancedFilterCount={advancedFilterCount}
-            advancedFilters={advancedFilters}
-            allLabel={allLabel}
-            clearAdvancedFilters={clearAdvancedFilters}
-            products={products}
-            setAdvancedFilters={setAdvancedFilters}
-            setActiveCategory={setActiveCategory}
-          />
-        </div>
+        <MobileFilters
+          activeCategory={activeCategory}
+          advancedFilterCount={advancedFilterCount}
+          advancedFilters={advancedFilters}
+          allLabel={allLabel}
+          clearAdvancedFilters={clearAdvancedFilters}
+          products={products}
+          setAdvancedFilters={setAdvancedFilters}
+          setActiveCategory={setActiveCategory}
+        />
 
-        <div
-          className={`grid gap-8 lg:grid-cols-[220px_1fr] lg:gap-12 xl:grid-cols-[260px_1fr] xl:gap-16 ${
-            gender === "women" ? "pt-5 lg:pt-5" : "pt-8"
-          }`}
-        >
-          <aside className="hidden lg:block">
-            <div className="sticky top-[104px]">
-              <FilterIntro gender={gender} note={collectionNote} />
-              <CategoryFilters
-                activeCategory={activeCategory}
-                allLabel={allLabel}
-                products={products}
-                setActiveCategory={setActiveCategory}
-              />
-
-              <AdvancedFilterPanel
-                activeFilters={advancedFilters}
-                clearFilters={clearAdvancedFilters}
-                filterCount={advancedFilterCount}
-                products={products}
-                setActiveFilters={setAdvancedFilters}
-              />
-            </div>
-          </aside>
-
+        <div className={gender === "women" ? "pt-5" : "pt-8"}>
           <ProductGrid
-            collectionNote={collectionNote}
-            genderLabel={genderLabel}
             onAdd={addToCart}
             onQuantity={changeCartQuantity}
             products={visibleProducts}
             cartItems={cartItems}
-            searchQuery={searchQuery}
             title={genderLabel}
-            totalProductCount={products.length}
             gender={gender}
           />
         </div>
       </section>
+      <PublicFooter />
     </main>
   );
 }
@@ -408,85 +348,6 @@ function getCartItemId(product: Product, size: string) {
   return `${product.id}-${size.toLowerCase()}`;
 }
 
-function ProductSearch({
-  resultCount,
-  searchQuery,
-  setSearchQuery,
-}: Readonly<{
-  resultCount: number;
-  searchQuery: string;
-  setSearchQuery: (value: string) => void;
-}>) {
-  return (
-    <div className="border-y border-black/14 py-3 text-[9px] uppercase tracking-[0.16em] transition-colors duration-300 focus-within:border-black/28">
-      <label className="grid gap-2" htmlFor="collection-search">
-        <span className="flex items-center justify-between text-black/52">
-          <span>Search</span>
-          <span>{String(resultCount).padStart(2, "0")} found</span>
-        </span>
-
-        <span className="grid grid-cols-[1fr_auto] items-center gap-3 border-b border-transparent transition-colors duration-300 focus-within:border-black/28">
-          <input
-            autoComplete="off"
-            className="min-w-0 bg-transparent py-1.5 text-[11px] uppercase tracking-[0.16em] text-black outline-none placeholder:text-black/42"
-            id="collection-search"
-            placeholder="PRODUCT NAME..."
-            type="search"
-            value={searchQuery}
-            onChange={(event) => setSearchQuery(event.target.value)}
-          />
-          {searchQuery ? (
-            <button
-              className="border-b border-black/40 pb-1 text-black/58 transition-opacity duration-300 hover:opacity-55"
-              type="button"
-              onClick={() => setSearchQuery("")}
-            >
-              Clear
-            </button>
-          ) : (
-          <span className="text-black/50">Type</span>
-          )}
-        </span>
-      </label>
-    </div>
-  );
-}
-
-function FilterIntro({
-  gender,
-  note,
-}: Readonly<{
-  gender: ProductGender;
-  note: string;
-}>) {
-  return (
-    <div className="mb-6 border-y border-black/14 py-5 text-[9px] uppercase leading-[1.7] tracking-[0.18em] text-black/52 lg:mb-7">
-      <p className="text-black/78">Spring 2026 {gender}</p>
-      <p className="mt-4 max-w-[230px] text-black/50">{note}</p>
-    </div>
-  );
-}
-
-function ShoppingNav() {
-  return (
-    <nav className="fixed left-0 right-0 top-0 z-30 grid min-h-[64px] grid-cols-[1fr_auto] items-start gap-6 border-b border-black/14 bg-[#e0e1dc]/94 px-5 py-5 text-[9px] uppercase tracking-[0.18em] text-[#121211] backdrop-blur-sm md:grid-cols-[1fr_auto_1fr] lg:px-12">
-      <LogoMark />
-
-      <div className="hidden justify-center gap-14 md:flex">
-        <Link href="/">Home</Link>
-        <Link className="border-b border-black pb-2" href="/collections">
-          Collections
-        </Link>
-        <Link href="/lookbook">Lookbook</Link>
-        <Link href="/about">About</Link>
-      </div>
-
-      <div className="flex justify-end">
-        <CartCountLink />
-      </div>
-    </nav>
-  );
-}
 
 function CollectionBreadcrumb({
   gender,
@@ -554,15 +415,16 @@ function MobileFilters({
   setActiveCategory: (category: Category | "all") => void;
 }>) {
   return (
-    <details className="border-b border-black/16 py-5 text-[9px] uppercase tracking-[0.18em]">
+    <details className="group/filters border-b border-black/16 py-5 text-[10px] font-medium uppercase tracking-[0.12em]">
       <summary className="flex cursor-pointer list-none items-center justify-between text-black/62">
         <span>
           Filters
           {advancedFilterCount > 0 ? ` / ${advancedFilterCount}` : ""}
         </span>
-        <span className="text-[13px] leading-none">+</span>
+        <span className="text-[13px] leading-none group-open/filters:hidden">+</span>
+        <span className="hidden text-[13px] leading-none group-open/filters:inline">−</span>
       </summary>
-      <div className="mt-5">
+      <div className="mt-6 grid gap-7 lg:grid-cols-[minmax(220px,0.7fr)_1.3fr]">
         <CategoryFilters
           activeCategory={activeCategory}
           allLabel={allLabel}
@@ -609,6 +471,7 @@ function CategoryFilters({
       label: category,
     })),
   ];
+  const visibleFilters = filters.filter((filter) => filter.count > 0);
 
   return (
     <div className="text-[9px] uppercase tracking-[0.18em]">
@@ -618,7 +481,7 @@ function CategoryFilters({
       </div>
 
       <div className="divide-y divide-black/12 border-y border-black/12 transition-colors duration-300 hover:border-black/18">
-        {filters.map((filter) => (
+        {visibleFilters.map((filter) => (
           <button
             className={`flex w-full items-center justify-between py-4 text-left transition-all duration-300 hover:bg-black/[0.025] hover:px-2 hover:opacity-70 ${
               activeCategory === filter.key
@@ -667,31 +530,28 @@ function AdvancedFilterPanel({
   }
 
   return (
-    <details className="group mt-7 border-y border-black/12 text-[8px] uppercase tracking-[0.16em] transition-colors duration-300 hover:border-black/18">
+    <details className="group/advanced mt-7 border-y border-black/12 text-[8px] uppercase tracking-[0.16em] transition-colors duration-300 hover:border-black/18">
       <summary className="flex cursor-pointer list-none items-center justify-between py-4 text-black/58 transition-all duration-300 hover:px-2 hover:text-black">
         <span>
-          Filter +
+          More filters
           {filterCount > 0 ? ` / ${filterCount}` : ""}
         </span>
-        {filterCount > 0 ? (
-          <button
-            className="relative z-10 border-b border-black/40 pb-1 text-black/62 transition-opacity duration-300 hover:opacity-55"
-            type="button"
-            onClick={(event) => {
-              event.preventDefault();
-              clearFilters();
-            }}
-          >
-            Clear
-          </button>
-        ) : (
-          <span className="text-[12px] leading-none transition-transform duration-300 group-open:rotate-45">
-            +
-          </span>
-        )}
+        <span className="text-[12px] leading-none group-open/advanced:hidden">+</span>
+        <span className="hidden text-[12px] leading-none group-open/advanced:inline">−</span>
       </summary>
 
-      <div className="divide-y divide-black/12 border-t border-black/12">
+      <div className="border-t border-black/12">
+        {filterCount > 0 ? (
+          <button
+            className="my-4 border-b border-black/40 pb-1 text-black/62 transition-opacity duration-300 hover:opacity-55"
+            type="button"
+            onClick={clearFilters}
+          >
+            Clear filters
+          </button>
+        ) : null}
+
+        <div className="divide-y divide-black/12">
         <OptionDisclosure
           activeValue={activeFilters.size}
           label="Size"
@@ -736,6 +596,7 @@ function AdvancedFilterPanel({
           }))}
           onSelect={(value) => updateFilter("price", value)}
         />
+        </div>
       </div>
     </details>
   );
@@ -761,15 +622,14 @@ function OptionDisclosure<Value extends string>({
   const visibleOptions = options.filter((option) => option.count > 0);
 
   return (
-    <details className="group">
+    <details className="group/option">
       <summary className="flex cursor-pointer list-none items-center justify-between py-4 text-black/58 transition-all duration-300 hover:bg-black/[0.02] hover:px-2 hover:text-black">
         <span>
           {label}
           {activeLabel ? ` — ${activeLabel}` : ""}
         </span>
-        <span className="text-[12px] leading-none transition-transform duration-300 group-open:rotate-45">
-          +
-        </span>
+        <span className="text-[12px] leading-none group-open/option:hidden">+</span>
+        <span className="hidden text-[12px] leading-none group-open/option:inline">−</span>
       </summary>
       <div className="grid pb-4">
         {visibleOptions.map((option) => (
@@ -794,35 +654,21 @@ function OptionDisclosure<Value extends string>({
 
 function ProductGrid({
   cartItems,
-  collectionNote,
   gender,
-  genderLabel,
   onAdd,
   onQuantity,
   products,
-  searchQuery,
   title,
-  totalProductCount,
 }: Readonly<{
   cartItems: CartItem[];
-  collectionNote: string;
   gender: ProductGender;
-  genderLabel: string;
   onAdd: (product: Product, size: string) => void;
   onQuantity: (product: Product, size: string, delta: number) => void;
   products: Product[];
-  searchQuery: string;
   title: string;
-  totalProductCount: number;
 }>) {
   return (
     <section aria-label={`${title} product grid`}>
-      <CollectionRailHeader
-        gender={gender}
-        genderLabel={genderLabel}
-        note={collectionNote}
-        productCount={totalProductCount}
-      />
       <CampaignRail gender={gender} />
 
       {products.length > 0 ? (
@@ -845,51 +691,10 @@ function ProductGrid({
         </div>
       ) : (
         <div className="border-y border-black/14 py-12 text-[9px] uppercase leading-[1.8] tracking-[0.18em] text-black/52">
-          No garments found
-          {searchQuery.trim() ? ` for "${searchQuery.trim()}".` : "."}
+          No garments match the selected filters.
         </div>
       )}
     </section>
-  );
-}
-
-function CollectionRailHeader({
-  gender,
-  genderLabel,
-  note,
-  productCount,
-}: Readonly<{
-  gender: ProductGender;
-  genderLabel: string;
-  note: string;
-  productCount: number;
-}>) {
-  const isWomen = gender === "women";
-
-  return (
-    <div
-      className={`grid gap-3 border-b border-black/14 text-[9px] uppercase tracking-[0.18em] sm:grid-cols-[1fr_auto] sm:items-end ${
-        isWomen ? "mb-3 pb-3" : "mb-4 pb-4"
-      }`}
-    >
-      <div>
-        <p
-          className={
-            isWomen
-              ? "text-[10px] tracking-[0.2em] text-black/68"
-              : "text-[18px] tracking-[0.08em] text-black sm:text-[22px]"
-          }
-        >
-          {genderLabel}
-        </p>
-        <p className="mt-2 text-black/54">
-          Spring 2026 / {String(productCount).padStart(2, "0")} pieces
-        </p>
-      </div>
-      <p className="max-w-[360px] leading-[1.65] text-black/52 sm:text-right">
-        {note}
-      </p>
-    </div>
   );
 }
 
@@ -918,7 +723,7 @@ function CampaignRail({
         sizes="(min-width: 1024px) 72vw, 100vw"
         src={railImage}
       />
-      <div className="absolute inset-0 bg-gradient-to-r from-black/42 via-black/10 to-black/16" />
+      <div className="absolute inset-0 bg-black/18" />
       <div className="absolute inset-x-4 bottom-4 flex items-end justify-between gap-4 text-[8px] uppercase tracking-[0.18em] text-[#eceee8]/82 sm:inset-x-5">
         <span>Spring 2026 rail</span>
         <span>Available online</span>
@@ -998,7 +803,7 @@ function ProductCard({
           {String(index + 1).padStart(2, "0")}
         </span>
         <span className="absolute bottom-3 left-3 translate-y-2 border-b border-[#eceee8]/60 pb-1 text-[8px] uppercase tracking-[0.18em] text-[#eceee8]/0 transition duration-500 group-hover:translate-y-0 group-hover:text-[#eceee8]/86">
-          Open product →
+          View →
         </span>
       </div>
 
@@ -1090,22 +895,5 @@ function ProductCard({
         )}
       </div>
     </article>
-  );
-}
-
-function ViewIcons() {
-  return (
-    <span className="flex items-center gap-4 text-black/58">
-      <span className="grid grid-cols-2 gap-[3px]" aria-label="Grid view">
-        <span className="size-[5px] border border-black/62" />
-        <span className="size-[5px] border border-black/62" />
-        <span className="size-[5px] border border-black/62" />
-        <span className="size-[5px] border border-black/62" />
-      </span>
-      <span className="grid gap-[3px]" aria-label="List view">
-        <span className="h-[5px] w-[15px] border border-black/42" />
-        <span className="h-[5px] w-[15px] border border-black/42" />
-      </span>
-    </span>
   );
 }
