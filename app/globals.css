@@ -154,12 +154,12 @@ a {
   transition: border-color 240ms ease, opacity 240ms ease;
 }
 
-.selected-catalog-card:hover .selected-rail-link {
+.selected-campaign-card:hover .selected-rail-link {
   border-color: currentColor;
   opacity: 0.62;
 }
 
-.selected-catalog-card:focus-visible,
+.selected-campaign-card:focus-visible,
 .selected-rail-control:focus-visible {
   outline: 1px solid rgb(18 18 17 / 0.8);
   outline-offset: 5px;
