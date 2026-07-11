@@ -16,7 +16,7 @@ const archivo = Archivo({
   variable: "--font-archivo",
   subsets: ["latin"],
   display: "swap",
-  weight: ["400", "500", "600", "700", "800", "900"],
+  weight: "variable",
 });
 
 const archivalDisplay = Libre_Caslon_Display({
