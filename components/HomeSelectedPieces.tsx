@@ -1,283 +1,403 @@
 "use client";
 
 import Image from "next/image";
-import { Playfair_Display, Space_Grotesk } from "next/font/google";
 import Link from "next/link";
 import {
-  cartStorageKey,
-  type CartItem,
-  type Product,
-  products,
-} from "@/data/products";
+  type KeyboardEvent,
+  type MouseEvent,
+  type PointerEvent,
+  type WheelEvent,
+  useRef,
+  useState,
+} from "react";
+import { type Product, products } from "@/data/products";
 
-const spaceGrotesk = Space_Grotesk({
-  subsets: ["latin"],
-  weight: ["400", "500"],
-  display: "swap",
-  variable: "--font-shop-selected",
-});
+type ProductFormat = "large" | "medium" | "object";
 
-const shopSelectedSerif = Playfair_Display({
-  subsets: ["latin"],
-  weight: "400",
-  display: "swap",
-  variable: "--font-shop-selected-serif",
-});
+type RailProduct = {
+  format: ProductFormat;
+  kind: "product";
+  product: Product;
+};
 
-const selectedPieces = [
-  {
-    category: "Outerwear",
-    image: "/images/low-signal/products/product-01.jpg",
-    imageClass: "object-[50%_42%]",
-    label: "Field Jacket",
-    productId: "field-jacket",
-  },
-  {
-    category: "Knitwear",
-    image: "/images/low-signal/selected-collection/material-detail.png",
-    imageClass: "object-[50%_50%]",
-    label: "Rib Cardigan",
-    productId: "rib-cardigan",
-  },
-  {
-    category: "Bottoms",
-    image: "/images/low-signal/selected-collection/trousers.jpg",
-    imageClass: "object-[50%_54%]",
-    label: "Double Pleat Trouser",
-    productId: "pleated-pant",
-  },
-] as const;
+type RailEditorial = {
+  gender: "men" | "women";
+  image: string;
+  kind: "editorial";
+};
 
-const selectedProducts = selectedPieces
-  .map((piece) => {
-    const product = products.find((item) => item.id === piece.productId);
+type RailSeason = {
+  kind: "season";
+};
 
-    return product
-      ? {
-          ...piece,
-          product,
-        }
-      : null;
-  })
-  .filter(
-    (piece): piece is (typeof selectedPieces)[number] & { product: Product } =>
-      Boolean(piece),
-  );
+type RailItem = RailProduct | RailEditorial | RailSeason;
 
-function readCartSnapshot() {
-  if (typeof window === "undefined") {
-    return "[]";
+const productById = new Map(products.map((product) => [product.id, product]));
+
+function railProduct(id: string, format: ProductFormat): RailProduct {
+  const product = productById.get(id);
+
+  if (!product) {
+    throw new Error(`Missing selected product: ${id}`);
   }
 
-  return window.localStorage.getItem(cartStorageKey) ?? "[]";
+  return { format, kind: "product", product };
 }
 
-function parseCart(snapshot: string): CartItem[] {
-  try {
-    return JSON.parse(snapshot) as CartItem[];
-  } catch {
-    return [];
-  }
-}
+const railItems: RailItem[] = [
+  railProduct("field-jacket", "large"),
+  railProduct("rib-cardigan", "medium"),
+  railProduct("washed-longsleeve", "object"),
+  {
+    gender: "men",
+    image: "/images/low-signal/collections/spring-2026-rail.png",
+    kind: "editorial",
+  },
+  railProduct("pleated-pant", "medium"),
+  railProduct("storm-parka", "large"),
+  railProduct("wide-trouser", "object"),
+  {
+    gender: "women",
+    image: "/images/low-signal/collections/spring-2026-women-rail.png",
+    kind: "editorial",
+  },
+  railProduct("double-face-coat", "medium"),
+  railProduct("cotton-crewneck", "object"),
+  { kind: "season" },
+];
 
-function writeCart(items: CartItem[]) {
-  if (typeof window === "undefined") {
-    return;
-  }
-
-  window.localStorage.setItem(cartStorageKey, JSON.stringify(items));
-  window.dispatchEvent(new Event("low-signal-cart"));
-}
+const productCount = products.length;
 
 export function HomeSelectedPieces() {
-  function addToCart(product: Product) {
-    const items = parseCart(readCartSnapshot());
-    const current = items.find((item) => item.id === product.id);
+  const railRef = useRef<HTMLDivElement>(null);
+  const dragState = useRef({ active: false, moved: false, startScroll: 0, startX: 0 });
+  const draggedUntil = useRef(0);
+  const [progress, setProgress] = useState(0);
+  const [activeItem, setActiveItem] = useState(1);
 
-    const nextItems = current
-      ? items.map((item) =>
-          item.id === product.id
-            ? { ...item, quantity: item.quantity + 1 }
-            : item,
-        )
-      : [
-          ...items,
-          {
-            ...product,
-            productId: product.id,
-            quantity: 1,
-            size: product.size,
-          },
-        ];
+  function updateProgress() {
+    const rail = railRef.current;
 
-    writeCart(nextItems);
+    if (!rail) {
+      return;
+    }
+
+    const maxScroll = rail.scrollWidth - rail.clientWidth;
+    const nextProgress = maxScroll > 0 ? rail.scrollLeft / maxScroll : 0;
+    setProgress(nextProgress);
+    setActiveItem(Math.min(railItems.length, Math.round(nextProgress * (railItems.length - 1)) + 1));
+  }
+
+  function moveRail(direction: -1 | 1) {
+    const rail = railRef.current;
+
+    if (!rail) {
+      return;
+    }
+
+    rail.scrollBy({ behavior: "smooth", left: direction * Math.min(rail.clientWidth * 0.72, 640) });
+  }
+
+  function handleWheel(event: WheelEvent<HTMLDivElement>) {
+    const rail = railRef.current;
+
+    if (!rail || Math.abs(event.deltaY) <= Math.abs(event.deltaX)) {
+      return;
+    }
+
+    const delta = event.deltaY;
+    const canMoveForward = delta > 0 && rail.scrollLeft < rail.scrollWidth - rail.clientWidth - 1;
+    const canMoveBack = delta < 0 && rail.scrollLeft > 1;
+
+    if (canMoveForward || canMoveBack) {
+      event.preventDefault();
+      rail.scrollLeft += delta;
+    }
+  }
+
+  function handlePointerDown(event: PointerEvent<HTMLDivElement>) {
+    if (event.pointerType !== "mouse") {
+      return;
+    }
+
+    const rail = railRef.current;
+
+    if (!rail) {
+      return;
+    }
+
+    dragState.current = {
+      active: true,
+      moved: false,
+      startScroll: rail.scrollLeft,
+      startX: event.clientX,
+    };
+    rail.setPointerCapture(event.pointerId);
+  }
+
+  function handlePointerMove(event: PointerEvent<HTMLDivElement>) {
+    const rail = railRef.current;
+    const drag = dragState.current;
+
+    if (!rail || !drag.active) {
+      return;
+    }
+
+    const distance = event.clientX - drag.startX;
+
+    if (Math.abs(distance) > 3) {
+      drag.moved = true;
+    }
+
+    rail.scrollLeft = drag.startScroll - distance;
+  }
+
+  function finishDrag(event: PointerEvent<HTMLDivElement>) {
+    const rail = railRef.current;
+
+    if (rail?.hasPointerCapture(event.pointerId)) {
+      rail.releasePointerCapture(event.pointerId);
+    }
+
+    if (dragState.current.moved) {
+      draggedUntil.current = Date.now() + 120;
+    }
+
+    dragState.current.active = false;
+  }
+
+  function handleRailKeyDown(event: KeyboardEvent<HTMLDivElement>) {
+    if (event.key === "ArrowRight") {
+      event.preventDefault();
+      moveRail(1);
+    }
+
+    if (event.key === "ArrowLeft") {
+      event.preventDefault();
+      moveRail(-1);
+    }
+  }
+
+  function preventClickAfterDrag(event: MouseEvent<HTMLAnchorElement>) {
+    if (Date.now() < draggedUntil.current) {
+      event.preventDefault();
+    }
   }
 
   return (
     <section
+      aria-labelledby="selected-garments-title"
+      className="selected-garments-section w-full overflow-hidden border-y border-black/14 bg-[#dedfd9] py-10 text-[#11110f] sm:py-12 lg:py-16"
       id="selected-pieces"
-      className={`${spaceGrotesk.variable} ${shopSelectedSerif.variable} shop-selected-section w-full overflow-hidden border-y border-black/14 bg-[#dedfd9] px-5 py-10 text-[#11110f] sm:px-6 lg:px-[5vw] lg:py-14`}
     >
-      <div className="mx-auto grid max-w-[1780px] gap-4">
-        <div className="grid gap-4 lg:grid-cols-[0.88fr_1.42fr]">
-          <ShopIntro />
+      <header className="mx-auto grid max-w-[1680px] gap-8 px-5 sm:px-6 lg:grid-cols-[minmax(280px,0.75fr)_1fr_auto] lg:items-end lg:px-12">
+        <div>
+          <p className="text-[10px] font-medium uppercase tracking-[0.13em] text-black/62">
+            04 — Selected garments
+          </p>
+          <h2
+            className="mt-5 font-[var(--font-archivo)] text-[42px] font-medium uppercase leading-[0.9] tracking-[-0.025em] text-black/94 sm:text-[56px] lg:text-[68px]"
+            id="selected-garments-title"
+          >
+            Pieces in motion
+          </h2>
+        </div>
 
-          <div className="grid gap-4 lg:grid-cols-[0.92fr_1fr] lg:grid-rows-2">
-            {selectedProducts.map((piece, index) => (
-              <SelectedProductCard
-                index={index}
-                key={piece.product.id}
-                onAdd={addToCart}
-                piece={piece}
-              />
-            ))}
+        <div className="max-w-[460px] lg:pb-1">
+          <p className="text-[14px] leading-[1.55] text-black/68">
+            Washed cotton, dense knitwear and relaxed tailoring from Spring
+            2026.
+          </p>
+          <div className="mt-6 flex flex-wrap gap-x-6 gap-y-3 text-[10px] font-medium uppercase tracking-[0.12em] text-black/64">
+            <span>{String(productCount).padStart(2, "0")} garments</span>
+            <span>Drag to explore →</span>
           </div>
         </div>
 
-        <BottomRailStrip />
+        <nav className="flex flex-wrap gap-x-7 gap-y-3 text-[10px] font-medium uppercase tracking-[0.12em] lg:justify-end" aria-label="Selected garment collections">
+          <Link className="selected-rail-link" href="/collections/men">
+            Shop men →
+          </Link>
+          <Link className="selected-rail-link" href="/collections/women">
+            Shop women →
+          </Link>
+        </nav>
+      </header>
+
+      <div className="mt-9 lg:mt-12">
+        <div
+          aria-label="Selected garment rail. Use left and right arrow keys to browse."
+          className="selected-rail flex snap-x snap-proximity gap-4 overflow-x-auto overscroll-x-contain px-5 pb-3 pr-9 [-ms-overflow-style:none] [scrollbar-width:none] sm:gap-5 sm:px-6 sm:pr-12 lg:gap-6 lg:pl-[max(3rem,calc((100vw-1680px)/2))] lg:pr-20 [&::-webkit-scrollbar]:hidden"
+          onKeyDown={handleRailKeyDown}
+          onPointerDown={handlePointerDown}
+          onPointerMove={handlePointerMove}
+          onPointerUp={finishDrag}
+          onPointerCancel={finishDrag}
+          onScroll={updateProgress}
+          onWheel={handleWheel}
+          ref={railRef}
+          tabIndex={0}
+        >
+          {railItems.map((item, index) => {
+            if (item.kind === "editorial") {
+              return <EditorialRailCard item={item} key={`${item.gender}-${index}`} />;
+            }
+
+            if (item.kind === "season") {
+              return <SeasonRailCard key="full-season" />;
+            }
+
+            return (
+              <ProductRailCard
+                index={index + 1}
+                item={item}
+                key={item.product.id}
+                onClick={preventClickAfterDrag}
+              />
+            );
+          })}
+        </div>
+      </div>
+
+      <div className="mx-auto mt-7 grid max-w-[1680px] grid-cols-[auto_1fr_auto] items-center gap-4 px-5 text-[10px] font-medium uppercase tracking-[0.12em] text-black/62 sm:px-6 lg:px-12">
+        <span>{String(activeItem).padStart(2, "0")} / {String(railItems.length).padStart(2, "0")}</span>
+        <div aria-hidden="true" className="h-px bg-black/18">
+          <div className="h-px bg-black/70 transition-[width] duration-200" style={{ width: `${Math.max(8, progress * 100)}%` }} />
+        </div>
+        <div className="flex items-center gap-5 text-[15px] leading-none text-black">
+          <button aria-label="Previous selected garment" className="selected-rail-control" onClick={() => moveRail(-1)} type="button">←</button>
+          <button aria-label="Next selected garment" className="selected-rail-control" onClick={() => moveRail(1)} type="button">→</button>
+        </div>
       </div>
     </section>
   );
 }
 
-function ShopIntro() {
-  return (
-    <div className="flex min-h-[520px] flex-col border border-black/12 bg-[#e7e8e2] px-6 py-7 sm:px-8 lg:min-h-[620px] lg:px-10 lg:py-9">
-      <div className="flex items-start justify-between gap-6 border-b border-black/14 pb-6 text-[10px] uppercase leading-[1.5] tracking-[0.22em] text-black/48">
-        <span>Shop / Spring 2026</span>
-        <span>{String(products.length).padStart(2, "0")} Garments</span>
-      </div>
-
-      <div className="my-auto py-10">
-        <p className="font-[var(--font-shop-selected)] text-[11px] font-medium uppercase tracking-[0.12em] text-black/50">
-          Spring selection
-        </p>
-        <h2 className="mt-9 max-w-[520px] font-[var(--font-shop-selected-serif)] text-[54px] font-normal uppercase leading-[0.88] tracking-[-0.052em] text-black/94 sm:text-[72px] lg:text-[84px] xl:text-[96px]">
-          Shop
-          <br />
-          selected
-          <br />
-          pieces
-        </h2>
-        <p className="mt-9 max-w-[390px] text-[12px] uppercase leading-[1.72] tracking-[0.18em] text-black/58">
-          Washed cotton, dense knitwear, black canvas and trousers from Spring
-          2026. Cut for regular wear and easy layering.
-        </p>
-      </div>
-
-      <div className="grid gap-6 border-t border-black/14 pt-6 sm:grid-cols-[1fr_auto] sm:items-end">
-        <div className="grid gap-3 text-[10px] uppercase tracking-[0.18em] text-black/46">
-          <span>Available online</span>
-          <span>Selected for daily repeat</span>
-        </div>
-        <Link
-          className="w-fit border-b border-black/56 pb-[6px] font-[var(--font-shop-selected)] text-[10px] font-medium uppercase tracking-[0.12em] transition-opacity duration-300 hover:opacity-55"
-          href="/collections"
-        >
-          View all garments →
-        </Link>
-      </div>
-    </div>
-  );
-}
-
-function SelectedProductCard({
+function ProductRailCard({
   index,
-  onAdd,
-  piece,
+  item,
+  onClick,
 }: Readonly<{
   index: number;
-  onAdd: (product: Product) => void;
-  piece: (typeof selectedPieces)[number] & { product: Product };
+  item: RailProduct;
+  onClick: (event: MouseEvent<HTMLAnchorElement>) => void;
 }>) {
-  const isPrimary = index === 0;
+  const { format, product } = item;
+  const size = product.size ?? "M";
+  const formatClass =
+    format === "large"
+      ? "w-[84vw] sm:w-[62vw] lg:w-[42vw] xl:w-[39vw]"
+      : format === "medium"
+        ? "w-[78vw] sm:w-[48vw] lg:w-[30vw] xl:w-[29vw]"
+        : "w-[72vw] sm:w-[38vw] lg:w-[23vw] xl:w-[22vw]";
+  const imageClass =
+    format === "large"
+      ? "aspect-[4/5]"
+      : format === "medium"
+        ? "aspect-[5/6]"
+        : "aspect-[3/4]";
 
   return (
-    <article
-      className={`group relative min-h-[280px] overflow-hidden border border-black/14 bg-[#161614] ${
-        isPrimary ? "lg:row-span-2 lg:min-h-[650px]" : "lg:min-h-0"
+    <Link
+      aria-label={`View product ${product.name}`}
+      className={`selected-rail-product group relative shrink-0 snap-start ${formatClass} ${
+        format === "medium" ? "pt-8 lg:pt-12" : format === "object" ? "pt-16 lg:pt-24" : ""
       }`}
+      href={`/products/${product.slug}`}
+      onClick={onClick}
     >
-      <Link
-        aria-label={`Open ${piece.label}`}
-        className="absolute inset-0 z-10 focus:outline-none focus-visible:ring-1 focus-visible:ring-[#f4f0e8]"
-        href={`/products/${piece.product.slug}`}
-      />
-      <Image
-        alt={piece.label}
-        className={`object-cover brightness-[0.82] contrast-[1.06] saturate-[0.68] transition duration-700 group-hover:brightness-[0.9] ${piece.imageClass}`}
-        fill
-        sizes={
-          isPrimary
-            ? "(min-width: 1024px) 31vw, 92vw"
-            : "(min-width: 1024px) 34vw, 92vw"
-        }
-        src={piece.image}
-      />
-      <div className="absolute inset-0 bg-gradient-to-t from-black/52 via-black/8 to-black/10" />
-
-      <span className="absolute left-5 top-5 z-20 text-[10px] uppercase tracking-[0.18em] text-[#f4f0e8]/68">
-        {String(index + 1).padStart(2, "0")}
-      </span>
-
-      <div className="absolute inset-x-0 bottom-0 z-20 grid gap-3 px-5 py-5 uppercase text-[#f4f0e8] sm:px-6 sm:py-6">
-        <div className="grid grid-cols-[1fr_auto] items-start gap-4">
-          <div className="min-w-0">
-            <h3 className="font-[var(--font-shop-selected)] text-[12px] font-medium tracking-[0.12em]">
-              {piece.label}
-            </h3>
-            <p className="mt-2 text-[9px] tracking-[0.18em] text-[#f4f0e8]/58">
-              {piece.category}
-            </p>
-          </div>
-          <p className="text-[10px] tracking-[0.18em] text-[#f4f0e8]/82">
-            ${piece.product.price}
-          </p>
+      <div className={`relative overflow-hidden bg-[#cfd0ca] ${format === "object" ? "border border-black/12 p-5 sm:p-7" : "border border-black/14"}`}>
+        <div className={`relative overflow-hidden ${imageClass}`}>
+          <Image
+            alt={product.name}
+            className={`object-cover brightness-[0.88] contrast-[1.05] saturate-[0.68] transition-transform duration-700 group-hover:scale-[1.02] ${
+              product.objectPosition ?? "object-center"
+            }`}
+            fill
+            sizes={format === "large" ? "(min-width: 1024px) 42vw, 84vw" : format === "medium" ? "(min-width: 1024px) 30vw, 78vw" : "(min-width: 1024px) 23vw, 72vw"}
+            src={product.image}
+          />
         </div>
-
-        <div className="flex items-end justify-between font-[var(--font-shop-selected)] text-[10px] font-medium tracking-[0.12em] text-[#f4f0e8]/72">
-          <span className="border-b border-[#f4f0e8]/48 pb-[5px]">
-            Shop →
-          </span>
-          <button
-            aria-label={`Add ${piece.label} to cart`}
-            className="relative z-30 px-1 font-[var(--font-shop-selected)] text-[22px] font-normal leading-none text-[#f4f0e8]/86 opacity-100 transition-opacity duration-300 hover:opacity-50 md:opacity-0 md:group-hover:opacity-100 md:focus-visible:opacity-100"
-            type="button"
-            onClick={() => onAdd(piece.product)}
-          >
-            +
-          </button>
-        </div>
+        <span className="absolute left-4 top-4 text-[10px] font-medium uppercase tracking-[0.12em] text-[#eceee8]/84 mix-blend-difference sm:left-5 sm:top-5">
+          {String(index).padStart(2, "0")}
+        </span>
       </div>
-    </article>
+
+      <div className="grid gap-4 border-b border-black/16 py-5 sm:grid-cols-[1fr_auto] sm:items-end">
+        <div>
+          <p className="text-[10px] font-medium uppercase tracking-[0.12em] text-black/54">
+            {product.category} / Size {size}
+          </p>
+          <h3 className="mt-3 text-[16px] font-medium uppercase tracking-[0.04em] text-black sm:text-[18px]">
+            {product.name}
+          </h3>
+          <p className="mt-3 text-[14px] text-black/82">${product.price}</p>
+        </div>
+        <span className="selected-rail-link w-fit text-[10px] font-medium uppercase tracking-[0.11em]">
+          View product →
+        </span>
+      </div>
+    </Link>
   );
 }
 
-function BottomRailStrip() {
+function EditorialRailCard({ item }: Readonly<{ item: RailEditorial }>) {
+  const isMen = item.gender === "men";
+  const count = products.filter((product) => product.gender === item.gender).length;
+  const label = isMen ? "Men's Spring 2026" : "Women's Spring 2026";
+
   return (
-    <div className="grid gap-6 border border-black/14 bg-[#e4e5df] px-6 py-7 uppercase tracking-[0.18em] text-black/58 sm:grid-cols-[1fr_auto] sm:items-center lg:px-9 lg:py-8">
+    <Link
+      className="selected-rail-editorial group relative mt-10 flex h-[min(66vw,620px)] w-[84vw] shrink-0 snap-start overflow-hidden border border-black/14 bg-[#171614] text-[#eceee8] sm:mt-16 sm:w-[64vw] lg:mt-20 lg:h-[min(53vw,680px)] lg:w-[54vw]"
+      href={`/collections/${item.gender}`}
+    >
+      <Image
+        alt={`${label} collection detail`}
+        className="object-cover brightness-[0.62] contrast-[1.08] saturate-[0.58] transition-transform duration-700 group-hover:scale-[1.02]"
+        fill
+        sizes="(min-width: 1024px) 54vw, 84vw"
+        src={item.image}
+      />
+      <div className="relative z-10 flex w-full flex-col justify-between p-5 sm:p-7 lg:p-9">
+        <span className="text-[10px] font-medium uppercase tracking-[0.13em] text-[#eceee8]/72">
+          {isMen ? "04" : "08"} / Collection rail
+        </span>
+        <div>
+          <h3 className="font-[var(--font-archivo)] text-[42px] font-medium uppercase leading-[0.9] tracking-[-0.025em] sm:text-[58px] lg:text-[72px]">
+            {label}
+          </h3>
+          <div className="mt-6 flex flex-wrap items-center gap-x-6 gap-y-3 text-[10px] font-medium uppercase tracking-[0.12em] text-[#eceee8]/82">
+            <span>{String(count).padStart(2, "0")} pieces</span>
+            <span className="selected-rail-link border-[#eceee8]/48">Enter the collection →</span>
+          </div>
+        </div>
+      </div>
+    </Link>
+  );
+}
+
+function SeasonRailCard() {
+  return (
+    <Link
+      className="selected-rail-season group mt-5 flex h-[min(61vw,560px)] w-[78vw] shrink-0 snap-start flex-col justify-between border border-black/16 bg-[#e7e8e2] p-5 sm:mt-10 sm:w-[58vw] sm:p-7 lg:mt-14 lg:h-[min(48vw,620px)] lg:w-[46vw] lg:p-9"
+      href="/collections"
+    >
+      <span className="text-[10px] font-medium uppercase tracking-[0.13em] text-black/58">
+        11 / Full season
+      </span>
       <div>
-        <p className="font-[var(--font-shop-selected)] text-[11px] font-medium tracking-[0.12em] text-black/76">
-          Spring 2026 available online
+        <h3 className="font-[var(--font-archivo)] text-[42px] font-medium uppercase leading-[0.9] tracking-[-0.025em] text-black sm:text-[58px] lg:text-[72px]">
+          The full
+          <br />
+          season
+        </h3>
+        <p className="mt-6 max-w-[300px] text-[14px] leading-[1.55] text-black/68">
+          Sixteen garments across men&apos;s and women&apos;s Spring 2026.
         </p>
-        <p className="mt-3 max-w-[430px] text-[10px] leading-[1.65]">
-          Enter the seasonal selection through men&apos;s or women&apos;s.
-        </p>
+        <span className="selected-rail-link mt-7 inline-flex text-[10px] font-medium uppercase tracking-[0.12em]">
+          View Spring 2026 →
+        </span>
       </div>
-      <div className="flex flex-wrap gap-x-8 gap-y-3 font-[var(--font-shop-selected)] text-[10px] font-medium tracking-[0.12em] text-black">
-        <Link
-          className="border-b border-black/50 pb-[6px] transition-opacity duration-300 hover:opacity-55"
-          href="/collections/men"
-        >
-          Shop men →
-        </Link>
-        <Link
-          className="border-b border-black/50 pb-[6px] transition-opacity duration-300 hover:opacity-55"
-          href="/collections/women"
-        >
-          Shop women →
-        </Link>
-      </div>
-    </div>
+    </Link>
   );
 }

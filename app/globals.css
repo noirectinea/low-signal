@@ -138,6 +138,47 @@ a {
   letter-spacing: 0.12em;
 }
 
+/* Home selected garments rail: native horizontal browsing without a carousel dependency. */
+.selected-rail {
+  cursor: grab;
+  touch-action: pan-y;
+}
+
+.selected-rail:active {
+  cursor: grabbing;
+}
+
+.selected-rail-link {
+  border-bottom: 1px solid rgb(18 18 17 / 0.42);
+  padding-bottom: 4px;
+  transition: border-color 240ms ease, opacity 240ms ease;
+}
+
+.selected-rail-product:hover .selected-rail-link,
+.selected-rail-editorial:hover .selected-rail-link,
+.selected-rail-season:hover .selected-rail-link {
+  border-color: currentColor;
+  opacity: 0.62;
+}
+
+.selected-rail-product:focus-visible,
+.selected-rail-editorial:focus-visible,
+.selected-rail-season:focus-visible,
+.selected-rail-control:focus-visible {
+  outline: 1px solid rgb(18 18 17 / 0.8);
+  outline-offset: 5px;
+}
+
+.selected-rail-control {
+  min-height: 32px;
+  min-width: 20px;
+  transition: opacity 240ms ease;
+}
+
+.selected-rail-control:hover {
+  opacity: 0.55;
+}
+
 @media (prefers-reduced-motion: no-preference) {
   .quiet-reveal {
     animation: quiet-reveal 700ms ease-out both;
