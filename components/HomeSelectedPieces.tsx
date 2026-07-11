@@ -11,42 +11,32 @@ import {
 } from "react";
 import { type Product, products } from "@/data/products";
 
-type CardFormat = "vertical" | "wide";
-
 type ProductRailItem = {
-  format: CardFormat;
   kind: "product";
   product: Product;
 };
 
-type DividerRailItem = {
-  kind: "divider";
-};
-
-type RailItem = ProductRailItem | DividerRailItem;
-
 const productsById = new Map(products.map((product) => [product.id, product]));
 
-function productItem(id: string, format: CardFormat): ProductRailItem {
+function productItem(id: string): ProductRailItem {
   const product = productsById.get(id);
 
   if (!product) {
     throw new Error(`Missing selected product: ${id}`);
   }
 
-  return { format, kind: "product", product };
+  return { kind: "product", product };
 }
 
-const railItems: RailItem[] = [
-  productItem("field-jacket", "vertical"),
-  productItem("rib-cardigan", "wide"),
-  productItem("washed-longsleeve", "vertical"),
-  productItem("storm-parka", "vertical"),
-  { kind: "divider" },
-  productItem("pleated-pant", "wide"),
-  productItem("double-face-coat", "vertical"),
-  productItem("cotton-crewneck", "vertical"),
-  productItem("drawstring-trouser", "wide"),
+const railItems: ProductRailItem[] = [
+  productItem("field-jacket"),
+  productItem("rib-cardigan"),
+  productItem("washed-longsleeve"),
+  productItem("storm-parka"),
+  productItem("pleated-pant"),
+  productItem("double-face-coat"),
+  productItem("cotton-crewneck"),
+  productItem("drawstring-trouser"),
 ];
 
 export function HomeSelectedPieces() {
@@ -205,18 +195,14 @@ export function HomeSelectedPieces() {
             ref={railRef}
             tabIndex={0}
           >
-            {railItems.map((item, index) =>
-              item.kind === "divider" ? (
-                <CollectionDivider key="season-divider" />
-              ) : (
-                <ProductCard
-                  index={index + 1}
-                  item={item}
-                  key={item.product.id}
-                  onClick={preventClickAfterDrag}
-                />
-              ),
-            )}
+            {railItems.map((item, index) => (
+              <ProductCard
+                index={index + 1}
+                item={item}
+                key={item.product.id}
+                onClick={preventClickAfterDrag}
+              />
+            ))}
           </div>
 
           <div className="mt-6 grid grid-cols-[auto_1fr_auto] items-center gap-4 text-[10px] font-medium uppercase tracking-[0.12em] text-black/56">
@@ -263,28 +249,23 @@ function ProductCard({
   item: ProductRailItem;
   onClick: (event: MouseEvent<HTMLAnchorElement>) => void;
 }>) {
-  const { format, product } = item;
-  const wide = format === "wide";
+  const { product } = item;
 
   return (
     <Link
       aria-label={`View piece ${product.name}`}
-      className={`selected-catalog-card group shrink-0 snap-start ${
-        wide
-          ? "w-[86vw] sm:w-[62vw] lg:w-[38vw]"
-          : "w-[84vw] sm:w-[52vw] lg:w-[31vw]"
-      }`}
+      className="selected-catalog-card group shrink-0 snap-start w-[86vw] sm:w-[48vw] lg:w-[31vw]"
       href={`/products/${product.slug}`}
       onClick={onClick}
     >
-      <div className={`relative overflow-hidden border border-black/14 bg-[#ccd0c9] ${wide ? "aspect-[5/4]" : "aspect-[3/4]"}`}>
+      <div className="relative aspect-[4/5] overflow-hidden border border-black/14 bg-[#ccd0c9]">
         <Image
           alt={product.name}
           className={`object-cover brightness-[0.88] contrast-[1.05] saturate-[0.68] transition-transform duration-700 group-hover:scale-[1.015] ${
             product.objectPosition ?? "object-center"
           }`}
           fill
-          sizes={wide ? "(min-width: 1024px) 38vw, 86vw" : "(min-width: 1024px) 31vw, 84vw"}
+          sizes="(min-width: 1024px) 31vw, (min-width: 640px) 48vw, 86vw"
           src={product.image}
         />
       </div>
@@ -305,40 +286,6 @@ function ProductCard({
         <span className="selected-rail-link mt-5 inline-flex text-[10px] font-medium uppercase tracking-[0.12em]">
           View piece →
         </span>
-      </div>
-    </Link>
-  );
-}
-
-function CollectionDivider() {
-  return (
-    <Link
-      aria-label="View the full Spring 2026 collection"
-      className="selected-catalog-divider group relative flex aspect-[5/4] w-[86vw] shrink-0 snap-start overflow-hidden border border-black/14 bg-[#151413] text-[#eceee8] sm:w-[62vw] lg:w-[38vw]"
-      href="/collections"
-    >
-      <Image
-        alt="Spring 2026 campaign garment detail"
-        className="object-cover brightness-[0.55] contrast-[1.08] saturate-[0.56] transition-transform duration-700 group-hover:scale-[1.015]"
-        fill
-        sizes="(min-width: 1024px) 38vw, 86vw"
-        src="/images/low-signal/collections/spring-2026-rail.png"
-      />
-      <div className="relative z-10 flex min-h-full w-full flex-col justify-between p-5 sm:p-6">
-        <span className="text-[10px] font-medium uppercase tracking-[0.13em] text-[#eceee8]/76">
-          Spring 2026
-        </span>
-        <div>
-          <h3 className="font-[var(--font-archivo)] text-[34px] font-medium uppercase leading-[0.92] tracking-[-0.02em] sm:text-[46px]">
-            Men / women
-          </h3>
-          <p className="mt-4 text-[10px] font-medium uppercase tracking-[0.12em] text-[#eceee8]/78">
-            16 garments
-          </p>
-          <span className="selected-rail-link mt-6 inline-flex border-[#eceee8]/48 text-[10px] font-medium uppercase tracking-[0.12em]">
-            View full collection →
-          </span>
-        </div>
       </div>
     </Link>
   );
