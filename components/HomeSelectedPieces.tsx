@@ -151,7 +151,7 @@ export function HomeSelectedPieces() {
           <h2 className="text-[10px] font-medium uppercase tracking-[0.13em]" id="selected-garments-title">
             04 / Selected garments
           </h2>
-          <p className="text-black/52">Selected pieces from Spring 2026.</p>
+          <p className="text-black/52">Selected pieces available online.</p>
           <nav
             aria-label="Selected garment collections"
             className="flex flex-wrap gap-x-6 gap-y-2 md:justify-end"
@@ -176,19 +176,15 @@ export function HomeSelectedPieces() {
               <div className="relative h-[58vh] min-h-[370px] max-h-[620px] overflow-hidden border border-black/14 bg-[#c8cbc5] lg:h-[60vh]">
                 <Image
                   alt="LOW SIGNAL men's Spring 2026 campaign"
-                  className="object-cover object-[50%_50%] brightness-[0.84] contrast-[1.05] saturate-[0.64] transition-transform duration-700 group-hover:scale-[1.012]"
+                  className="object-cover object-[48%_52%] brightness-[0.82] contrast-[1.06] saturate-[0.62] transition-transform duration-700 group-hover:scale-[1.012]"
                   fill
                   sizes="(min-width: 1024px) 36vw, 100vw"
-                  src="/images/low-signal/collections/spring-2026-rail.png"
+                  src="/images/low-signal/selected-collection/material-form-original.png"
                 />
                 <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/42 via-black/16 to-transparent p-5 text-[#f1f1ea] sm:p-6">
-                  <div className="grid gap-3 text-[10px] font-medium uppercase tracking-[0.13em] text-white/78">
-                    <span>Men&apos;s Spring 2026</span>
-                    <span>08 garments</span>
-                    <span className="selected-cover-link w-fit border-b border-white/62 pb-1 transition-opacity duration-300 group-hover:opacity-65">
-                      View collection →
-                    </span>
-                  </div>
+                  <p className="font-[var(--font-archivo)] text-[38px] font-medium uppercase leading-[0.9] tracking-[-0.02em] text-white/90 sm:text-[48px] lg:text-[58px]">
+                    SPRING 2026
+                  </p>
                 </div>
               </div>
             </Link>
@@ -197,7 +193,7 @@ export function HomeSelectedPieces() {
           <div className="min-w-0">
             <div
               aria-label="Selected garments. Use left and right arrow keys to browse."
-              className="selected-rail flex snap-x snap-proximity gap-4 overflow-x-auto overscroll-x-contain pb-2 pr-[16vw] [-ms-overflow-style:none] [scrollbar-width:none] sm:gap-5 sm:pr-[18vw] lg:gap-6 lg:pr-[7vw] [&::-webkit-scrollbar]:hidden"
+              className="selected-rail flex snap-x snap-proximity gap-4 overflow-x-auto overscroll-x-contain pb-2 pr-[8vw] [-ms-overflow-style:none] [scrollbar-width:none] sm:gap-5 sm:pr-[10vw] lg:gap-6 lg:pr-0 [&::-webkit-scrollbar]:hidden"
               onKeyDown={handleKeyDown}
               onPointerCancel={finishPointerDrag}
               onPointerDown={handlePointerDown}
