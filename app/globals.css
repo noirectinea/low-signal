@@ -110,7 +110,7 @@ a {
 
 .product-display-title {
   font-family: var(--font-archivo), Arial, sans-serif;
-  font-weight: 550;
+  font-weight: 500;
   letter-spacing: -0.034em;
   line-height: 0.9;
   text-transform: uppercase;
@@ -118,7 +118,7 @@ a {
 
 .controlled-display-title {
   font-family: var(--font-archivo), Arial, sans-serif;
-  font-weight: 550;
+  font-weight: 500;
   letter-spacing: -0.04em;
   line-height: 0.88;
   text-transform: uppercase;
@@ -126,7 +126,7 @@ a {
 
 .fashion-rail-title {
   font-family: var(--font-archivo), Arial, sans-serif;
-  font-weight: 550;
+  font-weight: 500;
   letter-spacing: -0.035em;
   line-height: 0.9;
   text-transform: uppercase;
