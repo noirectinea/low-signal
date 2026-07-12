@@ -53,7 +53,7 @@ export function MobileNavMenu() {
       <button
         aria-controls="mobile-site-menu"
         aria-expanded={open}
-        className="min-h-10 border border-current px-3 text-[12px] uppercase tracking-[0.14em]"
+        className="min-h-11 px-1 text-[12px] uppercase tracking-[0.12em]"
         type="button"
         onClick={() => setOpen((value) => !value)}
       >

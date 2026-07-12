@@ -64,7 +64,13 @@ function MobileHome() {
           <div className="absolute left-5 top-24 border-l border-white/38 pl-3 text-[11px] uppercase tracking-[0.13em] text-white/78">Spring 2026 / Issue 01</div>
           <div className="absolute inset-x-5 bottom-8"><h1 className="controlled-display-title text-[clamp(5.4rem,24vw,7.3rem)] leading-[0.72] tracking-[-0.055em]">Low<br />Signal</h1><div className="mt-7 flex items-end justify-between gap-5 border-t border-white/38 pt-4"><p className="max-w-[180px] text-[14px] leading-5 text-white/84">Washed black clothing for daily wear.</p><div className="grid justify-items-end gap-4 text-[12px] uppercase tracking-[0.12em]"><Link className="min-h-11 border-b border-white/80 pb-2" href="/collections">Shop Spring 2026 →</Link><Link className="border-b border-white/36 pb-1 text-white/78" href="/lookbook">View Lookbook</Link></div></div></div>
         </section>
-        <section className="overflow-hidden bg-[#d8d9d3] py-12" aria-labelledby="mobile-collection-title"><p id="mobile-collection-title" className="px-5 text-[11px] uppercase tracking-[0.13em] text-black/58">01 / Spring 2026 / Collections</p><div className="mt-7"><MobileCollectionCard href="/collections/men" image="/images/low-signal/collections/product-01.jpg" label="Men" number="01" className="w-[86vw]" /><MobileCollectionCard href="/collections/women" image="/images/low-signal/collections/women-storm-parka-full-body.png" label="Women" number="02" className="ml-auto mt-12 w-[72vw]" /></div></section>
+        <section className="overflow-hidden bg-[#d8d9d3] py-12" aria-labelledby="mobile-collection-title">
+          <p id="mobile-collection-title" className="px-5 text-[11px] uppercase tracking-[0.13em] text-black/58">01 / Spring 2026 / Collections</p>
+          <div className="mt-7 grid h-[min(116vw,530px)] grid-cols-[58fr_42fr] gap-px bg-black/24">
+            <MobileCollectionCard href="/collections/men" image="/images/low-signal/collections/product-01.jpg" label="Men" number="01" className="h-full" />
+            <MobileCollectionCard href="/collections/women" image="/images/low-signal/collections/women-storm-parka-full-body.png" label="Women" number="02" className="mt-[14vw] h-[calc(100%-14vw)]" />
+          </div>
+        </section>
 
         <HomeSelectedPieces />
 
@@ -101,9 +107,9 @@ function MobileHome() {
 }
 
 function MobileCollectionCard({ className, href, image, label, number }: Readonly<{ className: string; href: string; image: string; label: string; number: string }>) {
-  return <Link className={`group relative block aspect-[3/4] overflow-hidden bg-[#20201d] ${className}`} href={href}>
+  return <Link className={`group relative block min-h-11 overflow-hidden bg-[#20201d] ${className}`} href={href}>
     <Image alt={`${label} Spring 2026 collection`} className="object-cover brightness-[0.8] contrast-[1.04]" fill sizes="86vw" src={image} />
-    <span className="absolute inset-x-4 bottom-4 flex items-center justify-between border-t border-white/42 pt-3 text-[15px] uppercase tracking-[0.1em] text-white"><span>{number} / {label}</span><span>08 pieces / →</span></span>
+    <span className="absolute inset-x-3 bottom-3 border-t border-white/42 pt-2 text-[11px] uppercase tracking-[0.08em] text-white"><span>{number} / {label}</span><span className="hidden sm:inline"> / 08 pieces</span><span> →</span></span>
   </Link>;
 }
 
