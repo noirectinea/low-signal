@@ -138,7 +138,7 @@ export function ProductPurchasePanel({
       </div>
 
       <button
-        className="add-to-cart-label mt-6 flex w-full items-center justify-center gap-4 bg-[#171614] px-6 py-5 text-[12px] uppercase text-[#ecece5] transition-opacity duration-300 hover:opacity-82 disabled:cursor-not-allowed disabled:opacity-45"
+        className="add-to-cart-label fixed inset-x-0 bottom-0 z-40 flex min-h-14 items-center justify-center gap-4 bg-[#171614] px-6 py-5 text-[14px] uppercase text-[#ecece5] transition-opacity duration-300 hover:opacity-82 disabled:cursor-not-allowed disabled:opacity-45 md:static md:mt-6 md:text-[12px]"
         disabled={!selectedSize || selectedStock <= 0}
         type="button"
         onClick={addToCart}
@@ -168,7 +168,7 @@ export function ProductPurchasePanel({
         </p>
       ) : null}
       {added ? (
-        <div aria-live="polite" className="mt-4 grid gap-3 border-t border-black/12 pt-4 text-[12px] uppercase tracking-[0.14em]">
+        <div aria-live="polite" className="fixed inset-x-4 bottom-[76px] z-40 grid gap-3 border border-black/16 bg-[#e7e7e1] p-4 text-[12px] uppercase tracking-[0.14em] shadow-lg md:static md:mt-4 md:border-x-0 md:border-b-0 md:p-0 md:pt-4 md:shadow-none">
           <p>Added to your cart.</p>
           <div className="flex flex-wrap gap-5">
             <Link className="border-b border-black/60 pb-1" href="/cart">View cart →</Link>

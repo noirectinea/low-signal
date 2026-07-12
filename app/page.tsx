@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { HomeSelectedPieces } from "@/components/HomeSelectedPieces";
+import { CartCountLink } from "@/components/CartCountLink";
 import { LogoMark } from "@/components/LogoMark";
 import { MobileNavMenu } from "@/components/MobileNavMenu";
 
@@ -37,16 +38,97 @@ const footerLinks = [
 export default function Home() {
   return (
     <main className="min-h-screen w-full overflow-x-hidden bg-[#e4e5df] text-[#111]">
-      <section className="grid w-full overflow-hidden bg-[#e4e5df] md:h-[100svh] md:grid-rows-[65fr_35fr]">
-        <HeroPanel />
-        <EditorialGrid />
-      </section>
-      <MaterialForm />
-      <HomeSelectedPieces />
-      <JournalSection />
-      <FinalFooter />
+      <MobileHome />
+      <div className="hidden md:block">
+        <section className="grid w-full overflow-hidden bg-[#e4e5df] md:h-[100svh] md:grid-rows-[65fr_35fr]">
+          <HeroPanel />
+          <EditorialGrid />
+        </section>
+        <MaterialForm />
+        <HomeSelectedPieces />
+        <JournalSection />
+        <FinalFooter />
+      </div>
     </main>
   );
+}
+
+function MobileHome() {
+  return (
+    <div className="bg-[#e4e5df] md:hidden">
+      <header className="fixed inset-x-0 top-0 z-50 flex h-16 items-center justify-between border-b border-black/16 bg-[#e4e5df]/94 px-5 backdrop-blur-md">
+        <LogoMark className="text-[12px]" />
+        <div className="flex items-center gap-3">
+          <CartCountLink className="min-h-11 border-b border-black/50 py-3 text-[12px] uppercase tracking-[0.12em]" />
+          <MobileNavMenu />
+        </div>
+      </header>
+
+      <main className="pt-16">
+        <section className="px-4 pt-4">
+          <div className="relative aspect-[4/5] overflow-hidden bg-[#1b1a18]">
+            <Image alt="LOW SIGNAL editorial portrait in a black coat" className="object-cover object-[50%_20%] brightness-[0.74] contrast-[1.05]" fill priority sizes="100vw" src={heroImage} />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/72 via-black/12 to-black/18" />
+            <div className="absolute inset-x-5 bottom-5 text-[#f5f2ed]">
+              <p className="text-[12px] uppercase tracking-[0.14em] text-white/76">Spring 2026 / Issue 01</p>
+              <h1 className="controlled-display-title mt-3 text-[clamp(4rem,18vw,5.6rem)] leading-[0.8]">Low<br />Signal</h1>
+              <p className="mt-5 max-w-[260px] text-[14px] leading-5 text-white/84">Washed black clothing for daily wear.</p>
+              <Link className="mt-6 flex min-h-12 w-full items-center justify-center bg-[#f3f0e8] px-5 text-[14px] uppercase tracking-[0.12em] text-[#151413]" href="/collections">Shop Spring 2026 →</Link>
+              <Link className="mx-auto mt-4 block w-fit border-b border-white/60 pb-1 text-[12px] uppercase tracking-[0.12em]" href="/lookbook">View Lookbook</Link>
+            </div>
+          </div>
+        </section>
+
+        <section className="px-4 py-10" aria-labelledby="mobile-collection-title">
+          <div className="flex items-baseline justify-between border-b border-black/16 pb-4">
+            <h2 id="mobile-collection-title" className="text-[22px] uppercase tracking-[-0.02em]">Shop the collection</h2>
+            <span className="text-[12px] uppercase tracking-[0.12em] text-black/52">Spring 2026</span>
+          </div>
+          <div className="mt-4 grid grid-cols-2 gap-3">
+            <MobileCollectionCard href="/collections/men" image="/images/low-signal/collections/product-01.jpg" label="Men" />
+            <MobileCollectionCard href="/collections/women" image="/images/low-signal/collections/women-storm-parka-full-body.png" label="Women" />
+          </div>
+        </section>
+
+        <HomeSelectedPieces />
+
+        <section className="border-t border-black/16 px-4 py-10" aria-labelledby="material-mobile-title">
+          <div className="relative aspect-[4/3] overflow-hidden bg-[#bfc0b8]">
+            <Image alt="Close black washed fabric, rib texture, and shadow" className="object-cover brightness-[0.78]" fill sizes="100vw" src={materialStoryImage} />
+          </div>
+          <h2 id="material-mobile-title" className="mt-5 text-[26px] uppercase tracking-[-0.02em]">Material &amp; form</h2>
+          <p className="mt-3 max-w-[34ch] text-[14px] leading-6 text-black/68">Materials that age quietly, take on character, and hold their shape through repeat wear.</p>
+          <div className="mt-5 flex flex-wrap gap-2 text-[12px] uppercase tracking-[0.1em] text-black/66">
+            {materialNotes.map((note) => <span className="border border-black/18 px-3 py-2" key={note}>{note}</span>)}
+          </div>
+          <Link className="mt-6 inline-flex min-h-11 items-center border-b border-black/60 text-[13px] uppercase tracking-[0.12em]" href="/about">Our approach →</Link>
+        </section>
+
+        <section className="border-t border-black/16 px-4 py-10" aria-labelledby="lookbook-mobile-title">
+          <div className="relative aspect-[4/3] overflow-hidden bg-[#181715]">
+            <Image alt="Model standing near the sea in LOW SIGNAL lookbook" className="object-cover brightness-[0.8]" fill sizes="100vw" src={lookbookImage} />
+          </div>
+          <h2 id="lookbook-mobile-title" className="mt-5 text-[26px] uppercase tracking-[-0.02em]">Lookbook</h2>
+          <p className="mt-3 text-[14px] leading-6 text-black/68">Spring layers, coastal light, and garments made for daily repetition.</p>
+          <Link className="mt-6 inline-flex min-h-11 items-center border-b border-black/60 text-[13px] uppercase tracking-[0.12em]" href="/lookbook">View Lookbook →</Link>
+        </section>
+      </main>
+
+      <footer className="border-t border-black/16 px-4 py-8">
+        <p className="text-[20px] uppercase tracking-[-0.02em]">Low Signal / Spring 2026</p>
+        <nav aria-label="Footer navigation" className="mt-6 grid grid-cols-2 gap-x-5 border-y border-black/16">
+          {[["Collections", "/collections"], ["Lookbook", "/lookbook"], ["About", "/about"], ["Contact", "mailto:studio@lowsignal.com"], ["Instagram", "https://instagram.com"], ["Cart", "/cart"]].map(([label, href]) => <Link className="min-h-12 border-b border-black/12 py-4 text-[14px] uppercase tracking-[0.12em]" href={href} key={label}>{label}</Link>)}
+        </nav>
+      </footer>
+    </div>
+  );
+}
+
+function MobileCollectionCard({ href, image, label }: Readonly<{ href: string; image: string; label: string }>) {
+  return <Link className="group relative aspect-[3/4] overflow-hidden bg-[#20201d]" href={href}>
+    <Image alt={`${label} Spring 2026 collection`} className="object-cover brightness-[0.76]" fill sizes="48vw" src={image} />
+    <span className="absolute inset-x-3 bottom-3 flex items-center justify-between border-t border-white/42 pt-3 text-[14px] uppercase tracking-[0.12em] text-white"><span>{label}</span><span>08 / →</span></span>
+  </Link>;
 }
 
 function HeroPanel() {

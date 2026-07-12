@@ -5,8 +5,9 @@ import { useEffect, useRef, useState } from "react";
 import { CartCountLink } from "./CartCountLink";
 
 const links = [
-  ["Home", "/"],
-  ["Collections", "/collections"],
+  ["Shop", "/collections"],
+  ["Men", "/collections/men"],
+  ["Women", "/collections/women"],
   ["Lookbook", "/lookbook"],
   ["About", "/about"],
 ] as const;
@@ -62,9 +63,12 @@ export function MobileNavMenu() {
         <div
           aria-label="Site menu"
           aria-modal="true"
-          className="absolute left-0 right-0 top-full border-b border-current bg-[#e4e5df] p-5 text-[#121211] shadow-[0_14px_30px_rgb(0_0_0_/_0.12)]"
+          className="fixed inset-x-0 bottom-0 top-16 overflow-y-auto border-b border-current bg-[#e4e5df] p-5 text-[#121211] shadow-[0_14px_30px_rgb(0_0_0_/_0.12)]"
           id="mobile-site-menu"
           role="dialog"
+          onPointerDown={(event) => {
+            if (event.target === event.currentTarget) setOpen(false);
+          }}
         >
           <nav aria-label="Mobile navigation" className="grid divide-y divide-black/16 border-y border-black/16">
             {links.map(([label, href], index) => (
@@ -82,6 +86,15 @@ export function MobileNavMenu() {
               className="py-4 text-[14px] uppercase tracking-[0.14em]"
               onClick={() => setOpen(false)}
             />
+          </nav>
+          <Link className="mt-6 flex min-h-12 items-center justify-center bg-[#171614] px-5 text-[14px] uppercase tracking-[0.12em] text-[#f4f0e8]" href="/collections" onClick={() => setOpen(false)}>
+            Shop Spring 2026 →
+          </Link>
+          <nav aria-label="Secondary navigation" className="mt-6 grid grid-cols-2 gap-4 text-[12px] uppercase tracking-[0.12em] text-black/62">
+            <Link href="/collections" onClick={() => setOpen(false)}>Search</Link>
+            <Link href="/account" onClick={() => setOpen(false)}>Account</Link>
+            <a href="https://instagram.com">Instagram</a>
+            <a href="mailto:studio@lowsignal.com">Contact</a>
           </nav>
         </div>
       ) : null}

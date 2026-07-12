@@ -72,7 +72,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
     <main className="min-h-screen overflow-x-hidden bg-[#e7e7e1] text-[#141311]">
       <ProductNav />
 
-      <section className="grid px-5 pb-16 pt-[92px] lg:min-h-screen lg:grid-cols-[58%_42%] lg:px-0 lg:pb-0 lg:pt-[64px]">
+      <section className="grid px-5 pb-28 pt-[92px] lg:min-h-screen lg:grid-cols-[58%_42%] lg:px-0 lg:pb-0 lg:pt-[64px]">
         <div className="grid gap-4 lg:grid-cols-[104px_1fr] lg:border-r lg:border-black/16 lg:p-8 xl:grid-cols-[124px_1fr] xl:p-10">
           <div className="order-2 grid grid-cols-3 gap-3 lg:order-1 lg:grid-cols-1">
             {gallery.map((image) => (
@@ -103,6 +103,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
               }`}
             />
             <div className="absolute inset-0 bg-[#171614]/[0.03]" />
+            <span className="absolute bottom-4 right-4 bg-black/62 px-3 py-2 text-[12px] uppercase tracking-[0.12em] text-white lg:hidden">01 / {String(gallery.length).padStart(2, "0")}</span>
           </div>
         </div>
 
