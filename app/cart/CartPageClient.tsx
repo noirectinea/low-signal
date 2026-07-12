@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { LogoMark } from "@/components/LogoMark";
+import { MobileNavMenu } from "@/components/MobileNavMenu";
 import { cartStorageKey, type CartItem } from "@/data/products";
 import { getAvailabilityLabel } from "@/lib/availability";
 
@@ -144,7 +145,7 @@ export function CartPageClient() {
         <div className="mx-auto max-w-[1500px]">
           <div className="grid border-b border-black/16 pb-8 lg:grid-cols-[1fr_auto]">
             <div>
-              <p className="text-[9px] uppercase tracking-[0.2em] text-black/50">
+              <p className="text-[12px] uppercase tracking-[0.14em] text-black/50">
                 Cart / Current rail
               </p>
               <h1 className="controlled-display-title mt-8 text-[56px] uppercase text-black/92 sm:text-[76px] lg:text-[96px]">
@@ -181,12 +182,12 @@ export function CartPageClient() {
           ) : (
             <div className="grid min-h-[420px] place-items-center border-b border-black/16 py-16 text-center">
               <div>
-                <p className="text-[9px] uppercase tracking-[0.18em] text-black/50">
+                <p className="text-[12px] uppercase tracking-[0.14em] text-black/50">
                   Cart is empty
                 </p>
                 <Link
                   href="/collections"
-                  className="mt-8 inline-flex border-b border-black/60 pb-[5px] text-[9px] uppercase tracking-[0.18em]"
+                  className="mt-8 inline-flex border-b border-black/60 pb-[5px] text-[12px] uppercase tracking-[0.14em]"
                 >
                   View collection →
                 </Link>
@@ -223,18 +224,19 @@ function writeCart(items: CartItem[]) {
 
 function CartNav({ cartCount }: Readonly<{ cartCount: number }>) {
   return (
-    <nav className="fixed left-0 right-0 top-0 z-30 grid min-h-[64px] grid-cols-[1fr_auto] items-start gap-6 border-b border-black/16 bg-[#ece8df]/92 px-5 py-5 text-[9px] uppercase tracking-[0.18em] text-[#141311] backdrop-blur-sm md:grid-cols-[1fr_auto_1fr] lg:px-12">
+    <nav className="fixed left-0 right-0 top-0 z-30 grid min-h-[64px] grid-cols-[1fr_auto] items-start gap-6 border-b border-black/16 bg-[#ece8df]/92 px-5 py-5 text-[12px] uppercase tracking-[0.16em] text-[#141311] backdrop-blur-sm lg:grid-cols-[1fr_auto_1fr] lg:px-12">
       <LogoMark />
 
-      <div className="hidden justify-center gap-14 md:flex">
+      <div className="hidden justify-center gap-14 lg:flex">
         <Link href="/">Home</Link>
         <Link href="/collections">Collections</Link>
         <Link href="/lookbook">Lookbook</Link>
         <Link href="/about">About</Link>
       </div>
 
-      <div className="flex justify-end gap-8">
-        <span>Cart ({cartCount})</span>
+      <div className="flex justify-end gap-4">
+        <span className="hidden lg:block">Cart ({cartCount})</span>
+        <MobileNavMenu />
       </div>
     </nav>
   );
@@ -257,7 +259,7 @@ function CartLine({
   const plusDisabled = typeof stock === "number" && item.quantity >= stock;
 
   return (
-    <article className="grid gap-6 border-b border-black/16 py-7 text-[9px] uppercase leading-[1.55] tracking-[0.14em] sm:grid-cols-[132px_1fr_auto] lg:grid-cols-[160px_1fr_auto]">
+    <article className="grid gap-6 border-b border-black/16 py-7 text-[12px] uppercase leading-[1.55] tracking-[0.14em] sm:grid-cols-[132px_1fr_auto] lg:grid-cols-[160px_1fr_auto]">
       <div className="relative aspect-[4/5] overflow-hidden bg-[#d8d3c8]">
         <Image
           src={item.image}
@@ -272,7 +274,7 @@ function CartLine({
 
       <div className="grid gap-6 sm:grid-cols-[1fr_auto]">
         <div>
-          <h2 className="max-w-[240px] text-[10px] text-black">{item.name}</h2>
+          <h2 className="max-w-[240px] text-[12px] text-black">{item.name}</h2>
           <div className="mt-5 grid gap-1 text-black/50">
             <p>Category: {item.category}</p>
             <p>Color: {item.color ?? "Black"}</p>
@@ -335,7 +337,7 @@ function OrderSummary({
   subtotal: number;
 }>) {
   return (
-    <aside className="h-fit border border-black/16 bg-[#ebe6dc] p-6 text-[9px] uppercase tracking-[0.16em] lg:sticky lg:top-[96px]">
+    <aside className="h-fit border border-black/16 bg-[#ebe6dc] p-6 text-[12px] uppercase tracking-[0.14em] lg:sticky lg:top-[96px]">
       <p className="border-b border-black/16 pb-5 text-black/58">
         Order summary
       </p>

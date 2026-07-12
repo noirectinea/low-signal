@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { HomeSelectedPieces } from "@/components/HomeSelectedPieces";
 import { LogoMark } from "@/components/LogoMark";
+import { MobileNavMenu } from "@/components/MobileNavMenu";
 
 const heroImage = "/images/hero/ch1.png";
 const collectionImage = "/images/hero/ch3.png";
@@ -67,7 +68,7 @@ function HeroPanel() {
       <div className="absolute left-[18px] top-[48px] z-20 h-px w-[46.35vw] bg-black/40" />
       <div className="absolute left-[75.15vw] right-[18px] top-[48px] z-20 h-px bg-black/40" />
 
-      <header className="absolute left-[18px] right-[18px] top-[16px] z-30 flex h-[32px] items-start text-[8px] uppercase tracking-[0.16em]">
+      <header className="absolute left-[18px] right-[18px] top-[16px] z-30 flex h-[32px] items-start text-[12px] uppercase tracking-[0.16em]">
         <LogoMark className="relative -top-[3px] w-[18.1vw]" />
         <nav className="hidden gap-[38px] md:flex">
           <Link href="/">Home</Link>
@@ -77,9 +78,8 @@ function HeroPanel() {
         </nav>
         <div className="ml-auto flex items-start gap-[24px]">
           <span>2026 / Issue 01</span>
-          <span className="-mt-1 grid size-[26px] place-items-center border border-black/40 text-[10px]">
-            ♧
-          </span>
+          <Link aria-label="Open cart" className="-mt-1 border border-black/40 px-3 py-1 text-[12px]" href="/cart">Cart</Link>
+          <MobileNavMenu />
         </div>
       </header>
 
@@ -134,6 +134,15 @@ function HeroPanel() {
         <br />
         SIGNAL
       </h1>
+
+      <div className="absolute bottom-8 left-5 z-30 grid gap-3 md:hidden">
+        <Link className="border-b border-black/70 pb-2 text-[13px] uppercase tracking-[0.14em]" href="/collections">
+          Shop Spring 2026 →
+        </Link>
+        <Link className="w-fit border-b border-black/35 pb-1 text-[12px] uppercase tracking-[0.14em] text-black/66" href="/lookbook">
+          Lookbook
+        </Link>
+      </div>
 
       <p className="absolute bottom-[34px] right-[232px] z-30 hidden max-w-[245px] text-center text-[9px] uppercase leading-[1.45] tracking-[0.19em] text-[#f5f2ed]/78 md:block">
         Washed cotton, dense knitwear, black canvas, wide trousers.

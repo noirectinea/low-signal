@@ -300,9 +300,12 @@ export function HomeSelectedPieces() {
           </aside>
 
           <div className="min-w-0">
+            <p className="mb-3 text-[12px] uppercase tracking-[0.12em] text-black/56 lg:hidden">
+              Swipe to browse selected pieces →
+            </p>
             <div
               aria-label="Selected garments. Use left and right arrow keys to browse."
-              className="selected-rail flex snap-x snap-proximity gap-[14px] overflow-x-auto overscroll-x-contain pb-2 pr-[16vw] [-ms-overflow-style:none] [scrollbar-width:none] sm:pr-[48vw] lg:pr-[36vw] [&::-webkit-scrollbar]:hidden"
+              className="selected-rail flex snap-x snap-proximity gap-[14px] overflow-x-auto overscroll-x-contain pb-2 pr-[24vw] [-ms-overflow-style:none] [scrollbar-width:none] sm:pr-[52vw] lg:pr-[40vw] [&::-webkit-scrollbar]:hidden"
               onBlurCapture={(event) => {
                 if (!event.currentTarget.contains(event.relatedTarget)) {
                   scheduleAutoAdvance();
@@ -392,7 +395,7 @@ function RailCard({
     return (
       <div
         aria-hidden="true"
-        className="selected-campaign-card pointer-events-none shrink-0 snap-start w-[84vw] sm:w-[46vw] lg:w-[28vw]"
+        className="selected-campaign-card pointer-events-none shrink-0 snap-start w-[76vw] sm:w-[42vw] lg:w-[25vw]"
         data-rail-index="0"
       >
         <div className="relative h-[55vh] min-h-[360px] max-h-[680px] overflow-hidden border border-black/14 bg-[#ccd0c9]">
@@ -400,7 +403,7 @@ function RailCard({
             alt=""
             className={`object-cover brightness-[0.88] contrast-[1.05] saturate-[0.68] ${product.objectPosition ?? "object-center"}`}
             fill
-            sizes="(min-width: 1024px) 28vw, (min-width: 640px) 46vw, 84vw"
+            sizes="(min-width: 1024px) 25vw, (min-width: 640px) 42vw, 76vw"
             src={product.image}
           />
         </div>
@@ -425,7 +428,7 @@ function RailCard({
   return (
     <Link
       aria-label={`View piece ${product.name}`}
-      className="selected-campaign-card group shrink-0 snap-start w-[84vw] sm:w-[46vw] lg:w-[28vw]"
+      className="selected-campaign-card group shrink-0 snap-start w-[76vw] sm:w-[42vw] lg:w-[25vw]"
       data-rail-index={index - 1}
       href={`/products/${product.slug}`}
       onClick={onClick}
@@ -440,7 +443,7 @@ function RailCard({
             product.objectPosition ?? "object-center"
           }`}
           fill
-          sizes="(min-width: 1024px) 28vw, (min-width: 640px) 46vw, 84vw"
+          sizes="(min-width: 1024px) 25vw, (min-width: 640px) 42vw, 76vw"
           src={product.image}
         />
       </div>

@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useMemo, useState, useSyncExternalStore } from "react";
 import { CartCountLink } from "@/components/CartCountLink";
 import { LogoMark } from "@/components/LogoMark";
+import { MobileNavMenu } from "@/components/MobileNavMenu";
 import {
   cartStorageKey,
   type CartItem,
@@ -67,6 +68,7 @@ const sizeOrder = ["XS", "S", "M", "L", "XL"] as const;
 type Category = (typeof categories)[number];
 type MaterialFilter = (typeof materialOptions)[number]["key"];
 type PriceFilter = (typeof priceOptions)[number]["key"];
+type SortOrder = "newest" | "price-asc" | "price-desc";
 
 type AdvancedFilters = {
   color: string;
@@ -130,6 +132,7 @@ export function CollectionShoppingPage({
     size: "all",
   });
   const [searchQuery, setSearchQuery] = useState("");
+  const [sortOrder, setSortOrder] = useState<SortOrder>("newest");
   const cartSnapshot = useSyncExternalStore(
     subscribeCartStore,
     readCartSnapshot,
@@ -152,7 +155,7 @@ export function CollectionShoppingPage({
         ? products
         : products.filter((product) => product.category === activeCategory);
 
-    return categoryProducts.filter((product) => {
+    const filtered = categoryProducts.filter((product) => {
       if (
         advancedFilters.size !== "all" &&
         product.size !== advancedFilters.size
@@ -199,7 +202,13 @@ export function CollectionShoppingPage({
 
       return searchableText.includes(normalizedSearchQuery);
     });
-  }, [activeCategory, advancedFilters, normalizedSearchQuery, products]);
+
+    return [...filtered].sort((first, second) => {
+      if (sortOrder === "price-asc") return first.price - second.price;
+      if (sortOrder === "price-desc") return second.price - first.price;
+      return 0;
+    });
+  }, [activeCategory, advancedFilters, normalizedSearchQuery, products, sortOrder]);
 
   function clearAdvancedFilters() {
     setAdvancedFilters({
@@ -208,6 +217,12 @@ export function CollectionShoppingPage({
       price: "all",
       size: "all",
     });
+  }
+
+  function clearAllFilters() {
+    setActiveCategory("all");
+    clearAdvancedFilters();
+    setSearchQuery("");
   }
 
   function addToCart(product: Product, size: string) {
@@ -306,6 +321,7 @@ export function CollectionShoppingPage({
 
         <div className="lg:hidden">
           <FilterIntro gender={gender} note={collectionNote} />
+          <div className="sticky top-[64px] z-20 -mx-4 border-y border-black/16 bg-[#e5e6e1]/95 px-4 backdrop-blur-sm sm:-mx-6 sm:px-6">
           <MobileFilters
             activeCategory={activeCategory}
             advancedFilterCount={advancedFilterCount}
@@ -316,6 +332,8 @@ export function CollectionShoppingPage({
             setAdvancedFilters={setAdvancedFilters}
             setActiveCategory={setActiveCategory}
           />
+          <MobileSort sortOrder={sortOrder} setSortOrder={setSortOrder} />
+          </div>
         </div>
 
         <div
@@ -340,6 +358,9 @@ export function CollectionShoppingPage({
                 products={products}
                 setActiveFilters={setAdvancedFilters}
               />
+              {(advancedFilterCount > 0 || activeCategory !== "all" || searchQuery) ? (
+                <button className="mt-5 border-b border-black/50 pb-1 text-[12px] uppercase tracking-[0.14em]" type="button" onClick={clearAllFilters}>Clear all</button>
+              ) : null}
             </div>
           </aside>
 
@@ -354,10 +375,26 @@ export function CollectionShoppingPage({
             title={genderLabel}
             totalProductCount={products.length}
             gender={gender}
+            onClearAll={clearAllFilters}
           />
         </div>
       </section>
     </main>
+  );
+}
+
+function MobileSort({ sortOrder, setSortOrder }: Readonly<{ sortOrder: SortOrder; setSortOrder: (value: SortOrder) => void }>) {
+  return (
+    <details className="border-b border-black/16 py-4 text-[12px] uppercase tracking-[0.14em]">
+      <summary className="flex cursor-pointer list-none items-center justify-between"><span>Sort / {sortOrder === "newest" ? "Newest" : sortOrder === "price-asc" ? "Price low" : "Price high"}</span><span>+</span></summary>
+      <div className="mt-4 grid gap-2">
+        {(["newest", "price-asc", "price-desc"] as const).map((value) => (
+          <button className={`py-2 text-left ${sortOrder === value ? "text-black" : "text-black/54"}`} key={value} type="button" onClick={() => setSortOrder(value)}>
+            {value === "newest" ? "Newest first" : value === "price-asc" ? "Price: low to high" : "Price: high to low"}
+          </button>
+        ))}
+      </div>
+    </details>
   );
 }
 
@@ -469,10 +506,10 @@ function FilterIntro({
 
 function ShoppingNav() {
   return (
-    <nav className="fixed left-0 right-0 top-0 z-30 grid min-h-[64px] grid-cols-[1fr_auto] items-start gap-6 border-b border-black/14 bg-[#e0e1dc]/94 px-5 py-5 text-[9px] uppercase tracking-[0.18em] text-[#121211] backdrop-blur-sm md:grid-cols-[1fr_auto_1fr] lg:px-12">
+    <nav className="fixed left-0 right-0 top-0 z-30 grid min-h-[64px] grid-cols-[1fr_auto] items-start gap-6 border-b border-black/14 bg-[#e0e1dc]/94 px-5 py-5 text-[12px] uppercase tracking-[0.16em] text-[#121211] backdrop-blur-sm lg:grid-cols-[1fr_auto_1fr] lg:px-12">
       <LogoMark />
 
-      <div className="hidden justify-center gap-14 md:flex">
+      <div className="hidden justify-center gap-14 lg:flex">
         <Link href="/">Home</Link>
         <Link className="border-b border-black pb-2" href="/collections">
           Collections
@@ -481,8 +518,9 @@ function ShoppingNav() {
         <Link href="/about">About</Link>
       </div>
 
-      <div className="flex justify-end">
-        <CartCountLink />
+      <div className="flex justify-end gap-4">
+        <CartCountLink className="hidden lg:block" />
+        <MobileNavMenu />
       </div>
     </nav>
   );
@@ -554,7 +592,7 @@ function MobileFilters({
   setActiveCategory: (category: Category | "all") => void;
 }>) {
   return (
-    <details className="border-b border-black/16 py-5 text-[9px] uppercase tracking-[0.18em]">
+    <details className="py-4 text-[12px] uppercase tracking-[0.14em]">
       <summary className="flex cursor-pointer list-none items-center justify-between text-black/62">
         <span>
           Filters
@@ -803,6 +841,7 @@ function ProductGrid({
   searchQuery,
   title,
   totalProductCount,
+  onClearAll,
 }: Readonly<{
   cartItems: CartItem[];
   collectionNote: string;
@@ -814,6 +853,7 @@ function ProductGrid({
   searchQuery: string;
   title: string;
   totalProductCount: number;
+  onClearAll: () => void;
 }>) {
   return (
     <section aria-label={`${title} product grid`}>
@@ -844,9 +884,11 @@ function ProductGrid({
           ))}
         </div>
       ) : (
-        <div className="border-y border-black/14 py-12 text-[9px] uppercase leading-[1.8] tracking-[0.18em] text-black/52">
-          No garments found
+        <div className="border-y border-black/14 py-12 text-[12px] uppercase leading-[1.8] tracking-[0.14em] text-black/60">
+          <p>No garments found
           {searchQuery.trim() ? ` for "${searchQuery.trim()}".` : "."}
+          </p>
+          <button className="mt-5 border-b border-black/50 pb-1 text-black" type="button" onClick={onClearAll}>Clear filters and search</button>
         </div>
       )}
     </section>

@@ -3,6 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { CartCountLink } from "@/components/CartCountLink";
 import { LogoMark } from "@/components/LogoMark";
+import { MobileNavMenu } from "@/components/MobileNavMenu";
 import {
   getProductBySlug,
   getProductSlugs,
@@ -191,18 +192,19 @@ export default async function ProductPage({ params }: ProductPageProps) {
 
 function ProductNav() {
   return (
-    <nav className="fixed left-0 right-0 top-0 z-30 grid min-h-[64px] grid-cols-[1fr_auto] items-start gap-6 border-b border-black/16 bg-[#e3e3dc]/92 px-5 py-5 text-[9px] uppercase tracking-[0.18em] text-[#141311] backdrop-blur-sm md:grid-cols-[1fr_auto_1fr] lg:px-12">
+    <nav className="fixed left-0 right-0 top-0 z-30 grid min-h-[64px] grid-cols-[1fr_auto] items-start gap-6 border-b border-black/16 bg-[#e3e3dc]/92 px-5 py-5 text-[12px] uppercase tracking-[0.16em] text-[#141311] backdrop-blur-sm lg:grid-cols-[1fr_auto_1fr] lg:px-12">
       <LogoMark />
 
-      <div className="hidden justify-center gap-14 md:flex">
+      <div className="hidden justify-center gap-14 lg:flex">
         <Link href="/">Home</Link>
         <Link href="/collections">Collections</Link>
         <Link href="/lookbook">Lookbook</Link>
         <Link href="/about">About</Link>
       </div>
 
-      <div className="flex justify-end">
-        <CartCountLink />
+      <div className="flex justify-end gap-4">
+        <CartCountLink className="hidden lg:block" />
+        <MobileNavMenu />
       </div>
     </nav>
   );

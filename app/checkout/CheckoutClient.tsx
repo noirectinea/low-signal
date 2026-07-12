@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { FormEvent, useEffect, useState } from "react";
 import { LogoMark } from "@/components/LogoMark";
+import { MobileNavMenu } from "@/components/MobileNavMenu";
 import { cartStorageKey, type CartItem } from "@/data/products";
 import {
   buildOrderPayloadFromCart,
@@ -172,7 +173,7 @@ export function CheckoutClient() {
 
       <section className="mx-auto grid max-w-[1320px] gap-10 px-5 pb-16 pt-[104px] lg:grid-cols-[1fr_380px] lg:px-12">
         <div>
-          <p className="text-[9px] uppercase tracking-[0.16em] text-black/64">
+          <p className="text-[12px] uppercase tracking-[0.14em] text-black/64">
             Checkout / Spring 2026
           </p>
           <h1 className="controlled-display-title mt-8 text-[52px] uppercase sm:text-[74px]">
@@ -189,10 +190,15 @@ export function CheckoutClient() {
               onSubmit={submitOrder}
             >
               {profile ? (
-                <p className="text-[9px] uppercase leading-[1.7] tracking-[0.16em] text-black/54">
+                <p className="text-[12px] uppercase leading-[1.7] tracking-[0.14em] text-black/54">
                   Account details loaded for {profile.email}.
                 </p>
-              ) : null}
+              ) : (
+                <p className="text-[12px] uppercase leading-[1.7] tracking-[0.14em] text-black/60">
+                  <Link className="border-b border-black/50 pb-1 text-black" href="/account/login">Sign in</Link>{" "}
+                  to save your details and view previous orders. Guest checkout is available.
+                </p>
+              )}
               <CheckoutField
                 defaultValue={profile?.email ?? ""}
                 label="Email"
@@ -254,7 +260,7 @@ export function CheckoutClient() {
               <CheckoutField label="Notes" name="notes" />
 
               <button
-                className="add-to-cart-label mt-3 w-full border border-black bg-[#171614] px-6 py-5 text-[9px] uppercase text-[#ecece5] transition-opacity duration-300 hover:opacity-82 disabled:cursor-not-allowed disabled:opacity-50 sm:w-fit"
+                className="add-to-cart-label mt-3 w-full border border-black bg-[#171614] px-6 py-5 text-[12px] uppercase text-[#ecece5] transition-opacity duration-300 hover:opacity-82 disabled:cursor-not-allowed disabled:opacity-50 sm:w-fit"
                 disabled={status === "loading"}
                 type="submit"
               >
@@ -282,7 +288,7 @@ export function CheckoutClient() {
           )}
         </div>
 
-        <aside className="h-fit border border-black/16 p-6 text-[9px] uppercase tracking-[0.16em] lg:sticky lg:top-[96px]">
+        <aside className="h-fit border border-black/16 p-6 text-[12px] uppercase tracking-[0.14em] lg:sticky lg:top-[96px]">
           <p className="border-b border-black/16 pb-5 text-black/72">
             Order summary
           </p>
@@ -319,10 +325,10 @@ function logCheckoutDebug(label: string, value: unknown) {
 
 function CheckoutNav() {
   return (
-    <nav className="fixed left-0 right-0 top-0 z-30 grid min-h-[64px] grid-cols-[1fr_auto] items-start gap-6 border-b border-black/16 bg-[#e3e3dc]/92 px-5 py-5 text-[9px] uppercase tracking-[0.16em] text-[#141311] backdrop-blur-sm md:grid-cols-[1fr_auto_1fr] lg:px-12">
+    <nav className="fixed left-0 right-0 top-0 z-30 grid min-h-[64px] grid-cols-[1fr_auto] items-start gap-6 border-b border-black/16 bg-[#e3e3dc]/92 px-5 py-5 text-[12px] uppercase tracking-[0.16em] text-[#141311] backdrop-blur-sm lg:grid-cols-[1fr_auto_1fr] lg:px-12">
       <LogoMark />
 
-      <div className="hidden justify-center gap-14 md:flex">
+      <div className="hidden justify-center gap-14 lg:flex">
         <Link href="/">Home</Link>
         <Link href="/collections">Collections</Link>
         <Link href="/lookbook">Lookbook</Link>
@@ -330,7 +336,8 @@ function CheckoutNav() {
       </div>
 
       <div className="flex justify-end">
-        <Link href="/cart">Cart</Link>
+        <span className="hidden lg:block"><Link href="/cart">Cart</Link></span>
+        <MobileNavMenu />
       </div>
     </nav>
   );
@@ -350,7 +357,7 @@ function CheckoutField({
   type?: string;
 }>) {
   return (
-    <label className="grid gap-3 border-b border-black/16 pb-3 text-[9px] uppercase tracking-[0.16em] text-black/64 focus-within:border-black/42">
+    <label className="grid gap-3 border-b border-black/16 pb-3 text-[12px] uppercase tracking-[0.14em] text-black/64 focus-within:border-black/42">
       <span>{label}</span>
       <input
         className="bg-transparent py-1 text-[12px] uppercase tracking-[0.12em] text-black outline-none placeholder:text-black/42"

@@ -40,8 +40,10 @@ function parseCart(snapshot: string): CartItem[] {
 
 export function CartCountLink({
   className,
+  onClick,
 }: Readonly<{
   className?: string;
+  onClick?: () => void;
 }>) {
   const cartSnapshot = useSyncExternalStore(
     subscribeCartStore,
@@ -51,7 +53,7 @@ export function CartCountLink({
   const cartItems = useMemo(() => parseCart(cartSnapshot), [cartSnapshot]);
   const cartCount = cartItems.reduce((total, item) => total + item.quantity, 0);
   return (
-    <Link className={className} href="/cart">
+    <Link aria-label={`Cart, ${cartCount} items`} className={className} href="/cart" onClick={onClick}>
       Cart ({cartCount})
     </Link>
   );
