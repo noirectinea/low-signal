@@ -6,6 +6,8 @@ import {
   type KeyboardEvent,
   type MouseEvent,
   type PointerEvent,
+  useCallback,
+  useEffect,
   useRef,
   useState,
 } from "react";
@@ -40,10 +42,29 @@ export function HomeSelectedPieces() {
   const railRef = useRef<HTMLDivElement>(null);
   const drag = useRef({ active: false, moved: false, startScroll: 0, startX: 0 });
   const suppressClickUntil = useRef(0);
+  const autoTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const autoTransitionTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const isAutoScrolling = useRef(false);
+  const scheduleAutoAdvanceRef = useRef<(delay?: number) => void>(() => undefined);
   const [progress, setProgress] = useState(0);
   const [activeIndex, setActiveIndex] = useState(1);
 
-  function updateNavigation() {
+  const clearAutoTimer = useCallback(() => {
+    if (autoTimer.current) {
+      window.clearTimeout(autoTimer.current);
+      autoTimer.current = null;
+    }
+  }, []);
+
+  const getRailCards = useCallback(() => {
+    const rail = railRef.current;
+
+    return rail
+      ? Array.from(rail.querySelectorAll<HTMLElement>("[data-rail-index]"))
+      : [];
+  }, []);
+
+  const updateNavigation = useCallback(() => {
     const rail = railRef.current;
 
     if (!rail) {
@@ -52,27 +73,102 @@ export function HomeSelectedPieces() {
 
     const maxScroll = rail.scrollWidth - rail.clientWidth;
     const nextProgress = maxScroll > 0 ? rail.scrollLeft / maxScroll : 0;
-    setProgress(nextProgress);
-    setActiveIndex(
-      Math.min(railItems.length, Math.round(nextProgress * (railItems.length - 1)) + 1),
-    );
-  }
+    const cards = getRailCards();
+    const closestCard = cards.reduce<HTMLElement | null>((closest, card) => {
+      if (!closest) {
+        return card;
+      }
 
-  function scrollRail(direction: -1 | 1) {
+      return Math.abs(card.offsetLeft - rail.scrollLeft) <
+        Math.abs(closest.offsetLeft - rail.scrollLeft)
+        ? card
+        : closest;
+    }, null);
+
+    setProgress(nextProgress);
+    setActiveIndex(Number(closestCard?.dataset.railIndex ?? 0) + 1);
+  }, [getRailCards]);
+
+  const scrollRail = useCallback((direction: -1 | 1) => {
     const rail = railRef.current;
 
     if (!rail) {
       return;
     }
 
+    const cards = getRailCards();
+    const currentIndex = cards.findIndex(
+      (card) => Math.abs(card.offsetLeft - rail.scrollLeft) < card.offsetWidth / 2,
+    );
+    const nextIndex = Math.max(0, Math.min(cards.length - 1, currentIndex + direction));
     const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    rail.scrollBy({
+    rail.scrollTo({
       behavior: reducedMotion ? "auto" : "smooth",
-      left: direction * Math.min(rail.clientWidth * 0.78, 620),
+      left: cards[nextIndex]?.offsetLeft ?? 0,
     });
-  }
+  }, [getRailCards]);
+
+  const scheduleAutoAdvance = useCallback((delay = 7000) => {
+    clearAutoTimer();
+
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      return;
+    }
+
+    autoTimer.current = window.setTimeout(() => {
+      const rail = railRef.current;
+      const cards = getRailCards();
+
+      if (!rail || cards.length === 0) {
+        return;
+      }
+
+      const currentIndex = cards.findIndex(
+        (card) => Math.abs(card.offsetLeft - rail.scrollLeft) < card.offsetWidth / 2,
+      );
+      const nextIndex = currentIndex >= railItems.length - 1 ? railItems.length : currentIndex + 1;
+
+      isAutoScrolling.current = true;
+      rail.scrollTo({ behavior: "smooth", left: cards[nextIndex]?.offsetLeft ?? 0 });
+
+      if (autoTransitionTimer.current) {
+        window.clearTimeout(autoTransitionTimer.current);
+      }
+
+      autoTransitionTimer.current = window.setTimeout(() => {
+        if (nextIndex === railItems.length) {
+          rail.scrollTo({ behavior: "auto", left: 0 });
+          updateNavigation();
+        }
+
+        isAutoScrolling.current = false;
+        scheduleAutoAdvanceRef.current(4000);
+      }, 700);
+    }, delay);
+  }, [clearAutoTimer, getRailCards, updateNavigation]);
+
+  const pauseAutoAdvance = useCallback(() => {
+    clearAutoTimer();
+  }, [clearAutoTimer]);
+
+  useEffect(() => {
+    scheduleAutoAdvanceRef.current = scheduleAutoAdvance;
+  }, [scheduleAutoAdvance]);
+
+  useEffect(() => {
+    scheduleAutoAdvance(4000);
+
+    return () => {
+      clearAutoTimer();
+      if (autoTransitionTimer.current) {
+        window.clearTimeout(autoTransitionTimer.current);
+      }
+    };
+  }, [clearAutoTimer, scheduleAutoAdvance]);
 
   function handlePointerDown(event: PointerEvent<HTMLDivElement>) {
+    pauseAutoAdvance();
+
     if (event.pointerType !== "mouse") {
       return;
     }
@@ -120,17 +216,30 @@ export function HomeSelectedPieces() {
     }
 
     drag.current.active = false;
+    scheduleAutoAdvance();
   }
 
   function handleKeyDown(event: KeyboardEvent<HTMLDivElement>) {
     if (event.key === "ArrowLeft") {
       event.preventDefault();
+      pauseAutoAdvance();
       scrollRail(-1);
+      scheduleAutoAdvance();
     }
 
     if (event.key === "ArrowRight") {
       event.preventDefault();
+      pauseAutoAdvance();
       scrollRail(1);
+      scheduleAutoAdvance();
+    }
+  }
+
+  function handleScroll() {
+    updateNavigation();
+
+    if (!isAutoScrolling.current && !drag.current.active) {
+      scheduleAutoAdvance();
     }
   }
 
@@ -173,7 +282,7 @@ export function HomeSelectedPieces() {
               href="/collections/men"
               onClick={preventClickAfterDrag}
             >
-              <div className="relative h-[58vh] min-h-[370px] max-h-[620px] overflow-hidden border border-black/14 bg-[#c8cbc5] lg:h-[60vh]">
+              <div className="relative h-[63vh] min-h-[400px] max-h-[675px] overflow-hidden border border-black/14 bg-[#c8cbc5] lg:h-[65vh]">
                 <Image
                   alt="LOW SIGNAL men's Spring 2026 campaign"
                   className="object-cover object-[48%_52%] brightness-[0.82] contrast-[1.06] saturate-[0.62] transition-transform duration-700 group-hover:scale-[1.012]"
@@ -193,13 +302,21 @@ export function HomeSelectedPieces() {
           <div className="min-w-0">
             <div
               aria-label="Selected garments. Use left and right arrow keys to browse."
-              className="selected-rail flex snap-x snap-proximity gap-4 overflow-x-auto overscroll-x-contain pb-2 pr-[8vw] [-ms-overflow-style:none] [scrollbar-width:none] sm:gap-5 sm:pr-[10vw] lg:gap-6 lg:pr-0 [&::-webkit-scrollbar]:hidden"
+              className="selected-rail flex snap-x snap-proximity gap-[14px] overflow-x-auto overscroll-x-contain pb-2 pr-[16vw] [-ms-overflow-style:none] [scrollbar-width:none] sm:pr-[48vw] lg:pr-[36vw] [&::-webkit-scrollbar]:hidden"
+              onBlurCapture={(event) => {
+                if (!event.currentTarget.contains(event.relatedTarget)) {
+                  scheduleAutoAdvance();
+                }
+              }}
+              onFocusCapture={pauseAutoAdvance}
               onKeyDown={handleKeyDown}
+              onMouseEnter={pauseAutoAdvance}
+              onMouseLeave={() => scheduleAutoAdvance()}
               onPointerCancel={finishPointerDrag}
               onPointerDown={handlePointerDown}
               onPointerMove={handlePointerMove}
               onPointerUp={finishPointerDrag}
-              onScroll={updateNavigation}
+              onScroll={handleScroll}
               ref={railRef}
               tabIndex={0}
             >
@@ -211,6 +328,7 @@ export function HomeSelectedPieces() {
                   onClick={preventClickAfterDrag}
                 />
               ))}
+              <RailCard ariaHidden index={1} item={railItems[0]} key="loop-start" />
             </div>
 
             <div className="mt-5 grid grid-cols-[auto_1fr_auto] items-center gap-4 text-[10px] font-medium uppercase tracking-[0.12em] text-black/56">
@@ -227,7 +345,11 @@ export function HomeSelectedPieces() {
                 <button
                   aria-label="Previous selected garment"
                   className="selected-rail-control"
-                  onClick={() => scrollRail(-1)}
+                  onClick={() => {
+                    pauseAutoAdvance();
+                    scrollRail(-1);
+                    scheduleAutoAdvance();
+                  }}
                   type="button"
                 >
                   ←
@@ -235,7 +357,11 @@ export function HomeSelectedPieces() {
                 <button
                   aria-label="Next selected garment"
                   className="selected-rail-control"
-                  onClick={() => scrollRail(1)}
+                  onClick={() => {
+                    pauseAutoAdvance();
+                    scrollRail(1);
+                    scheduleAutoAdvance();
+                  }}
                   type="button"
                 >
                   →
@@ -253,21 +379,58 @@ function RailCard({
   index,
   item,
   onClick,
+  ariaHidden = false,
 }: Readonly<{
   index: number;
   item: ProductRailItem;
-  onClick: (event: MouseEvent<HTMLAnchorElement>) => void;
+  onClick?: (event: MouseEvent<HTMLAnchorElement>) => void;
+  ariaHidden?: boolean;
 }>) {
   const { product } = item;
+
+  if (ariaHidden) {
+    return (
+      <div
+        aria-hidden="true"
+        className="selected-campaign-card pointer-events-none shrink-0 snap-start w-[84vw] sm:w-[46vw] lg:w-[28vw]"
+        data-rail-index="0"
+      >
+        <div className="relative h-[55vh] min-h-[360px] max-h-[680px] overflow-hidden border border-black/14 bg-[#ccd0c9]">
+          <Image
+            alt=""
+            className={`object-cover brightness-[0.88] contrast-[1.05] saturate-[0.68] ${product.objectPosition ?? "object-center"}`}
+            fill
+            sizes="(min-width: 1024px) 28vw, (min-width: 640px) 46vw, 84vw"
+            src={product.image}
+          />
+        </div>
+        <div className="grid min-h-[104px] grid-rows-[auto_1fr_auto] border-b border-black/16 py-4">
+          <div className="grid grid-cols-[1fr_auto] items-baseline gap-4">
+            <span className="text-[15px] font-medium uppercase tracking-[0.04em] text-black sm:text-[16px]">
+              {product.name}
+            </span>
+            <span className="text-[14px] font-medium text-black/84">${product.price}</span>
+          </div>
+          <span className="mt-2 text-[12px] leading-[1.35] text-black/56">
+            {getProductCaption(product)}
+          </span>
+          <span className="mt-4 text-[10px] font-medium uppercase tracking-[0.12em]">
+            <span className="selected-rail-link whitespace-nowrap">View product ↗</span>
+          </span>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <Link
       aria-label={`View piece ${product.name}`}
-      className="selected-campaign-card group shrink-0 snap-start w-[82vw] sm:w-[44vw] lg:w-[27vw]"
+      className="selected-campaign-card group shrink-0 snap-start w-[84vw] sm:w-[46vw] lg:w-[28vw]"
+      data-rail-index={index - 1}
       href={`/products/${product.slug}`}
       onClick={onClick}
     >
-      <div className="relative aspect-[4/5] max-h-[50vh] min-h-[330px] overflow-hidden border border-black/14 bg-[#ccd0c9]">
+      <div className="relative h-[55vh] min-h-[360px] max-h-[680px] overflow-hidden border border-black/14 bg-[#ccd0c9]">
         <span className="absolute left-4 top-4 z-10 text-[9px] font-medium uppercase tracking-[0.13em] text-white/70">
           {String(index).padStart(2, "0")}
         </span>
@@ -277,7 +440,7 @@ function RailCard({
             product.objectPosition ?? "object-center"
           }`}
           fill
-          sizes="(min-width: 1024px) 27vw, (min-width: 640px) 44vw, 82vw"
+          sizes="(min-width: 1024px) 28vw, (min-width: 640px) 46vw, 84vw"
           src={product.image}
         />
       </div>
