@@ -42,8 +42,8 @@ export function HomeSelectedPieces() {
   const railRef = useRef<HTMLDivElement>(null);
   const drag = useRef({ active: false, moved: false, startScroll: 0, startX: 0 });
   const suppressClickUntil = useRef(0);
-  const autoTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const autoTransitionTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const autoTimer = useRef<number | null>(null);
+  const autoTransitionTimer = useRef<number | null>(null);
   const isAutoScrolling = useRef(false);
   const scheduleAutoAdvanceRef = useRef<(delay?: number) => void>(() => undefined);
   const [progress, setProgress] = useState(0);
