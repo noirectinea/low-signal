@@ -147,7 +147,7 @@ a {
 /* Home selected garments rail: native horizontal browsing without a carousel dependency. */
 .selected-rail {
   cursor: grab;
-  touch-action: pan-y;
+  touch-action: auto;
 }
 
 .selected-rail:active {

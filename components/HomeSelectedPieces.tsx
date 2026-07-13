@@ -252,18 +252,18 @@ export function HomeSelectedPieces() {
   return (
     <section
       aria-labelledby="selected-garments-title"
-      className="selected-garments-section border-y border-black/14 bg-[#dedfd9] py-7 text-[#11110f] sm:py-8 lg:py-9"
+      className="selected-garments-section order-2 border-y border-black/14 bg-[#dedfd9] py-6 text-[#11110f] sm:py-7 lg:order-none lg:py-9"
       id="selected-pieces"
     >
       <div className="mx-auto max-w-[1680px] px-5 sm:px-6 lg:px-12">
-        <header className="mb-5 grid gap-3 border-b border-black/14 pb-4 text-[10px] font-medium uppercase tracking-[0.13em] text-black/58 md:grid-cols-[minmax(190px,0.34fr)_1fr_auto] md:items-center lg:mb-6">
+        <header className="mb-3 grid grid-cols-[1fr_auto] items-start gap-3 border-b border-black/14 pb-3 text-[10px] font-medium uppercase tracking-[0.13em] text-black/58 lg:mb-6 lg:grid-cols-[minmax(190px,0.34fr)_1fr_auto] lg:items-center lg:pb-4">
           <h2 className="text-[10px] font-medium uppercase tracking-[0.13em]" id="selected-garments-title">
             04 / Selected garments
           </h2>
-          <p className="text-black/52">Selected pieces available online.</p>
+          <p className="hidden text-black/52 lg:block">Selected pieces available online.</p>
           <nav
             aria-label="Selected garment collections"
-            className="flex flex-wrap gap-x-6 gap-y-2 md:justify-end"
+            className="flex flex-wrap justify-end gap-x-4 gap-y-2 lg:gap-x-6"
           >
             <Link className="selected-rail-link" href="/collections/men">
               Shop men →
@@ -300,7 +300,7 @@ export function HomeSelectedPieces() {
           </aside>
 
           <div className="min-w-0">
-            <p className="mb-3 text-[10px] uppercase tracking-[0.12em] text-black/56 lg:hidden">
+            <p className="mb-2 text-[9px] uppercase tracking-[0.12em] text-black/56 lg:hidden">
               Swipe to browse selected pieces →
             </p>
             <div
@@ -383,24 +383,24 @@ function CampaignRailCard() {
   return (
     <Link
       aria-label="Open men's Spring 2026 collection"
-      className="group w-[72vw] shrink-0 snap-start sm:w-[40vw] lg:hidden"
+      className="group w-[36vw] shrink-0 snap-start sm:w-[22vw] lg:hidden"
       href="/collections/men"
     >
-      <div className="relative h-[55vh] min-h-[360px] max-h-[680px] overflow-hidden border border-black/14 bg-[#c8cbc5]">
+      <div className="relative h-[48svh] min-h-[300px] max-h-[480px] overflow-hidden border border-black/14 bg-[#c8cbc5]">
         <Image
           alt="LOW SIGNAL men's Spring 2026 campaign"
           className="object-cover object-[48%_52%] brightness-[0.82] contrast-[1.06] saturate-[0.62] transition-transform duration-700 group-hover:scale-[1.012]"
           fill
-          sizes="(min-width: 640px) 40vw, 72vw"
+          sizes="(min-width: 640px) 22vw, 36vw"
           src="/images/low-signal/selected-collection/material-form-original.png"
         />
         <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/42 via-black/16 to-transparent p-5 text-[#f1f1ea]">
-          <p className="font-[var(--font-archivo)] text-[38px] font-medium uppercase leading-[0.9] tracking-[-0.02em] text-white/90 sm:text-[44px]">
-            SPRING 2026
+          <p className="font-[var(--font-archivo)] text-[20px] font-medium uppercase leading-[0.92] tracking-[-0.02em] text-white/90 sm:text-[26px]">
+            SPRING<br />2026
           </p>
         </div>
       </div>
-      <div className="grid min-h-[104px] content-start border-b border-black/16 py-4 text-[10px] font-medium uppercase tracking-[0.12em]">
+      <div className="grid min-h-[58px] content-start border-b border-black/16 py-3 text-[9px] font-medium uppercase tracking-[0.12em]">
         <span className="selected-rail-link w-fit whitespace-nowrap">Shop collection ↗</span>
       </div>
     </Link>
@@ -424,19 +424,19 @@ function RailCard({
     return (
       <div
         aria-hidden="true"
-        className="selected-campaign-card pointer-events-none w-[72vw] shrink-0 snap-start sm:w-[40vw] lg:w-[25vw]"
+        className="selected-campaign-card pointer-events-none w-[68vw] shrink-0 snap-start sm:w-[40vw] lg:w-[25vw]"
         data-rail-index="0"
       >
-        <div className="relative h-[55vh] min-h-[360px] max-h-[680px] overflow-hidden border border-black/14 bg-[#ccd0c9]">
+        <div className="relative h-[48svh] min-h-[300px] max-h-[480px] overflow-hidden border border-black/14 bg-[#ccd0c9] lg:h-[55vh] lg:min-h-[360px] lg:max-h-[680px]">
           <Image
             alt=""
             className={`object-cover brightness-[0.88] contrast-[1.05] saturate-[0.68] ${product.objectPosition ?? "object-center"}`}
             fill
-            sizes="(min-width: 1024px) 25vw, (min-width: 640px) 40vw, 72vw"
+            sizes="(min-width: 1024px) 25vw, (min-width: 640px) 40vw, 68vw"
             src={product.image}
           />
         </div>
-        <div className="grid min-h-[104px] grid-rows-[auto_1fr_auto] border-b border-black/16 py-4">
+        <div className="hidden min-h-[104px] grid-rows-[auto_1fr_auto] border-b border-black/16 py-4 lg:grid">
           <div className="grid grid-cols-[1fr_auto] items-baseline gap-4">
             <span className="text-[15px] font-medium uppercase tracking-[0.04em] text-black sm:text-[16px]">
               {product.name}
@@ -457,12 +457,12 @@ function RailCard({
   return (
     <Link
       aria-label={`View piece ${product.name}`}
-      className="selected-campaign-card group w-[72vw] shrink-0 snap-start sm:w-[40vw] lg:w-[25vw]"
+      className="selected-campaign-card group w-[68vw] shrink-0 snap-start sm:w-[40vw] lg:w-[25vw]"
       data-rail-index={index - 1}
       href={`/products/${product.slug}`}
       onClick={onClick}
     >
-      <div className="relative h-[55vh] min-h-[360px] max-h-[680px] overflow-hidden border border-black/14 bg-[#ccd0c9]">
+      <div className="relative h-[48svh] min-h-[300px] max-h-[480px] overflow-hidden border border-black/14 bg-[#ccd0c9] lg:h-[55vh] lg:min-h-[360px] lg:max-h-[680px]">
         <span className="absolute left-4 top-4 z-10 text-[9px] font-medium uppercase tracking-[0.13em] text-white/70">
           {String(index).padStart(2, "0")}
         </span>
@@ -472,12 +472,19 @@ function RailCard({
             product.objectPosition ?? "object-center"
           }`}
           fill
-          sizes="(min-width: 1024px) 25vw, (min-width: 640px) 40vw, 72vw"
+          sizes="(min-width: 1024px) 25vw, (min-width: 640px) 40vw, 68vw"
           src={product.image}
         />
+        <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/62 via-black/18 to-transparent p-4 pt-16 text-white lg:hidden">
+          <div className="grid grid-cols-[1fr_auto] items-end gap-3">
+            <h3 className="text-[11px] font-medium uppercase tracking-[0.12em]">{product.name}</h3>
+            <span className="text-[11px] font-medium">${product.price}</span>
+          </div>
+          <span className="mt-3 inline-block h-px w-8 bg-white/58" />
+        </div>
       </div>
 
-      <div className="grid min-h-[104px] grid-rows-[auto_1fr_auto] border-b border-black/16 py-4">
+      <div className="hidden min-h-[104px] grid-rows-[auto_1fr_auto] border-b border-black/16 py-4 lg:grid">
         <div className="grid grid-cols-[1fr_auto] items-baseline gap-4">
           <h3 className="text-[15px] font-medium uppercase tracking-[0.04em] text-black sm:text-[16px]">
             {product.name}
