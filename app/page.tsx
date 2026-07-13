@@ -2,8 +2,6 @@ import Image from "next/image";
 import Link from "next/link";
 import { HomeSelectedPieces } from "@/components/HomeSelectedPieces";
 import { MobileHomeHeader } from "@/components/MobileHomeHeader";
-import { LogoMark } from "@/components/LogoMark";
-import { MobileNavMenu } from "@/components/MobileNavMenu";
 
 const heroImage = "/images/hero/ch1.png";
 const collectionImage = "/images/hero/ch3.png";
@@ -37,115 +35,38 @@ const footerLinks = [
 
 export default function Home() {
   return (
-    <main className="min-h-screen w-full overflow-x-hidden bg-[#e4e5df] text-[#111]">
-      <MobileHome />
-      <div className="hidden md:block">
-        <section className="grid w-full overflow-hidden bg-[#e4e5df] md:h-[100svh] md:grid-rows-[65fr_35fr]">
-          <HeroPanel />
-          <EditorialGrid />
-        </section>
-        <MaterialForm />
-        <HomeSelectedPieces />
-        <JournalSection />
-        <FinalFooter />
-      </div>
+    <main className="min-h-screen w-full bg-[#e4e5df] text-[#111]">
+      <MobileHomeHeader />
+      <section className="grid w-full bg-[#e4e5df] md:h-[100svh] md:grid-rows-[65fr_35fr]">
+        <HeroPanel />
+        <EditorialGrid />
+      </section>
+      <MaterialForm />
+      <HomeSelectedPieces />
+      <JournalSection />
+      <FinalFooter />
     </main>
   );
 }
 
-function MobileHome() {
-  return (
-    <div className="bg-[#d8d9d3] md:hidden">
-      <MobileHomeHeader />
-      <main>
-        <section className="relative min-h-[100svh] overflow-hidden bg-[#161513] text-[#f5f2ed]">
-          <Image alt="LOW SIGNAL editorial portrait in a black coat" className="object-cover object-[52%_24%] brightness-[0.82] contrast-[1.06]" fill priority sizes="100vw" src={heroImage} />
-          <div className="absolute inset-x-0 bottom-0 h-[58%] bg-gradient-to-t from-black/76 via-black/24 to-transparent" />
-          <div className="absolute left-5 top-24 border-l border-white/38 pl-3 text-[11px] uppercase tracking-[0.13em] text-white/78">Spring 2026 / Issue 01</div>
-          <div className="absolute inset-x-5 bottom-8"><h1 className="controlled-display-title text-[clamp(5.4rem,24vw,7.3rem)] leading-[0.72] tracking-[-0.055em]">Low<br />Signal</h1><div className="mt-7 flex items-end justify-between gap-5 border-t border-white/38 pt-4"><p className="max-w-[180px] text-[14px] leading-5 text-white/84">Washed black clothing for daily wear.</p><div className="grid justify-items-end gap-4 text-[12px] uppercase tracking-[0.12em]"><Link className="min-h-11 border-b border-white/80 pb-2" href="/collections">Shop Spring 2026 →</Link><Link className="border-b border-white/36 pb-1 text-white/78" href="/lookbook">View Lookbook</Link></div></div></div>
-        </section>
-        <section className="overflow-hidden bg-[#d8d9d3] py-12" aria-labelledby="mobile-collection-title">
-          <p id="mobile-collection-title" className="px-5 text-[11px] uppercase tracking-[0.13em] text-black/58">01 / Spring 2026 / Collections</p>
-          <div className="mt-7 grid h-[min(116vw,530px)] grid-cols-[58fr_42fr] gap-px bg-black/24">
-            <MobileCollectionCard href="/collections/men" image="/images/low-signal/collections/product-01.jpg" label="Men" number="01" className="h-full" />
-            <MobileCollectionCard href="/collections/women" image="/images/low-signal/collections/women-storm-parka-full-body.png" label="Women" number="02" className="mt-[14vw] h-[calc(100%-14vw)]" />
-          </div>
-        </section>
-
-        <HomeSelectedPieces />
-
-        <section className="border-t border-black/16 px-4 py-10" aria-labelledby="material-mobile-title">
-          <div className="relative aspect-[4/3] overflow-hidden bg-[#bfc0b8]">
-            <Image alt="Close black washed fabric, rib texture, and shadow" className="object-cover brightness-[0.78]" fill sizes="100vw" src={materialStoryImage} />
-          </div>
-          <h2 id="material-mobile-title" className="mt-5 text-[26px] uppercase tracking-[-0.02em]">Material &amp; form</h2>
-          <p className="mt-3 max-w-[34ch] text-[14px] leading-6 text-black/68">Materials that age quietly, take on character, and hold their shape through repeat wear.</p>
-          <div className="mt-5 flex flex-wrap gap-2 text-[12px] uppercase tracking-[0.1em] text-black/66">
-            {materialNotes.map((note) => <span className="border border-black/18 px-3 py-2" key={note}>{note}</span>)}
-          </div>
-          <Link className="mt-6 inline-flex min-h-11 items-center border-b border-black/60 text-[13px] uppercase tracking-[0.12em]" href="/about">Our approach →</Link>
-        </section>
-
-        <section className="border-t border-black/16 px-4 py-10" aria-labelledby="lookbook-mobile-title">
-          <div className="relative aspect-[4/3] overflow-hidden bg-[#181715]">
-            <Image alt="Model standing near the sea in LOW SIGNAL lookbook" className="object-cover brightness-[0.8]" fill sizes="100vw" src={lookbookImage} />
-          </div>
-          <h2 id="lookbook-mobile-title" className="mt-5 text-[26px] uppercase tracking-[-0.02em]">Lookbook</h2>
-          <p className="mt-3 text-[14px] leading-6 text-black/68">Spring layers, coastal light, and garments made for daily repetition.</p>
-          <Link className="mt-6 inline-flex min-h-11 items-center border-b border-black/60 text-[13px] uppercase tracking-[0.12em]" href="/lookbook">View Lookbook →</Link>
-        </section>
-      </main>
-
-      <footer className="border-t border-black/16 px-4 py-8">
-        <p className="text-[20px] uppercase tracking-[-0.02em]">Low Signal / Spring 2026</p>
-        <nav aria-label="Footer navigation" className="mt-6 grid grid-cols-2 gap-x-5 border-y border-black/16">
-          {[["Collections", "/collections"], ["Lookbook", "/lookbook"], ["About", "/about"], ["Contact", "mailto:studio@lowsignal.com"], ["Instagram", "https://instagram.com"], ["Cart", "/cart"]].map(([label, href]) => <Link className="min-h-12 border-b border-black/12 py-4 text-[14px] uppercase tracking-[0.12em]" href={href} key={label}>{label}</Link>)}
-        </nav>
-      </footer>
-    </div>
-  );
-}
-
-function MobileCollectionCard({ className, href, image, label, number }: Readonly<{ className: string; href: string; image: string; label: string; number: string }>) {
-  return <Link className={`group relative block min-h-11 overflow-hidden bg-[#20201d] ${className}`} href={href}>
-    <Image alt={`${label} Spring 2026 collection`} className="object-cover brightness-[0.8] contrast-[1.04]" fill sizes="86vw" src={image} />
-    <span className="absolute inset-x-3 bottom-3 border-t border-white/42 pt-2 text-[11px] uppercase tracking-[0.08em] text-white"><span>{number} / {label}</span><span className="hidden sm:inline"> / 08 pieces</span><span> →</span></span>
-  </Link>;
-}
-
 function HeroPanel() {
   return (
-    <section className="relative min-h-[620px] overflow-hidden border-b border-black/20 bg-[#e4e5df] md:h-full md:min-h-0">
-      <div className="absolute inset-y-0 left-0 w-[29.5vw] bg-[#e4e5df]" />
-      <div className="absolute inset-y-0 left-[29.5vw] right-0">
+    <section className="relative min-h-[100svh] overflow-hidden border-b border-black/20 bg-[#e4e5df] md:h-full md:min-h-0">
+      <div className="absolute inset-y-0 left-0 w-[18%] bg-[#e4e5df] md:w-[29.5vw]" />
+      <div className="absolute inset-y-0 left-[18%] right-0 md:left-[29.5vw]">
         <Image
           src={heroImage}
           alt="LOW SIGNAL editorial portrait in a black coat"
           fill
           priority
-          sizes="70vw"
-          className="hero-image object-cover object-[50%_20%]"
+          sizes="(min-width: 768px) 70vw, 82vw"
+          className="hero-image object-cover object-[54%_24%] min-[390px]:object-[52%_23%] min-[430px]:object-[50%_22%] md:object-[50%_20%]"
         />
         <div className="absolute inset-0 bg-[#d8cfc1]/10 mix-blend-screen" />
       </div>
 
-      <div className="absolute left-[18px] top-[48px] z-20 h-px w-[46.35vw] bg-black/40" />
-      <div className="absolute left-[75.15vw] right-[18px] top-[48px] z-20 h-px bg-black/40" />
-
-      <header className="absolute left-[18px] right-[18px] top-[16px] z-30 flex h-[32px] items-start text-[12px] uppercase tracking-[0.16em]">
-        <LogoMark className="relative -top-[3px] w-[18.1vw]" />
-        <nav className="hidden gap-[38px] md:flex">
-          <Link href="/">Home</Link>
-          <Link href="/collections">Collections</Link>
-          <Link href="/lookbook">Lookbook</Link>
-          <Link href="/about">About</Link>
-        </nav>
-        <div className="ml-auto flex items-start gap-[24px]">
-          <span>2026 / Issue 01</span>
-          <Link aria-label="Open cart" className="-mt-1 border border-black/40 px-3 py-1 text-[12px]" href="/cart">Cart</Link>
-          <MobileNavMenu />
-        </div>
-      </header>
+      <div className="absolute left-5 right-5 top-[84px] z-20 h-px bg-black/30 md:left-[18px] md:right-auto md:top-[48px] md:w-[46.35vw] md:bg-black/40" />
+      <div className="absolute left-[75.15vw] right-[18px] top-[48px] z-20 hidden h-px bg-black/40 md:block" />
 
       <div className="absolute left-[5.15vw] top-1/2 z-20 hidden w-[210px] -translate-y-1/2 flex-col items-start md:flex">
         <Kicker number="01" />
@@ -187,25 +108,24 @@ function HeroPanel() {
         <span>Low signal</span>
       </div>
 
-      <p className="absolute right-[74px] top-[104px] z-30 max-w-[74px] text-[9px] uppercase leading-[1.34] tracking-[0.18em] text-black/68">
+      <p className="absolute left-5 top-[104px] z-30 max-w-[92px] text-[9px] uppercase leading-[1.45] tracking-[0.18em] text-black/68 md:left-auto md:right-[74px] md:max-w-[74px] md:leading-[1.34]">
         Spring 2026 / Washed black.
       </p>
 
       <h1
-        className="hero-printed-title absolute left-[42.2vw] top-[25.8%] z-30 text-[13.4vw] uppercase sm:text-[13vw]"
+        className="hero-printed-title absolute left-[8%] top-[30%] z-30 text-[clamp(5.1rem,25vw,7.4rem)] uppercase md:left-[42.2vw] md:top-[25.8%] md:text-[13.4vw]"
       >
         LOW
         <br />
         SIGNAL
       </h1>
 
-      <div className="absolute bottom-8 left-5 z-30 grid gap-3 md:hidden">
-        <Link className="border-b border-black/70 pb-2 text-[13px] uppercase tracking-[0.14em]" href="/collections">
-          Shop Spring 2026 →
-        </Link>
-        <Link className="w-fit border-b border-black/35 pb-1 text-[12px] uppercase tracking-[0.14em] text-black/66" href="/lookbook">
-          Lookbook
-        </Link>
+      <div className="absolute inset-x-5 bottom-6 z-30 grid grid-cols-[minmax(0,1fr)_minmax(142px,auto)] gap-5 border-t border-black/34 pt-4 md:hidden">
+        <p className="min-w-0 text-[11px] uppercase leading-[1.55] tracking-[0.12em] text-black/72">Washed black clothing for daily wear.</p>
+        <div className="grid min-w-0 gap-3 text-[10px] uppercase tracking-[0.12em]">
+          <Link className="whitespace-nowrap border-b border-black/70 pb-2" href="/collections">Shop Spring 2026 →</Link>
+          <Link className="w-fit border-b border-black/35 pb-1 text-black/66" href="/lookbook">View Lookbook</Link>
+        </div>
       </div>
 
       <p className="absolute bottom-[34px] right-[232px] z-30 hidden max-w-[245px] text-center text-[9px] uppercase leading-[1.45] tracking-[0.19em] text-[#f5f2ed]/78 md:block">
@@ -220,9 +140,9 @@ function EditorialGrid() {
     <section className="grid border-b border-black/20 md:h-full md:grid-cols-[32.5vw_24vw_1fr]">
       <Link
         href="/collections"
-        className="group relative grid border-b border-black/20 transition-colors duration-300 hover:bg-black/[0.025] md:grid-cols-[47.96%_52.04%] md:border-b-0 md:border-r"
+        className="group relative grid min-h-[76svh] grid-cols-[44%_56%] border-b border-black/20 transition-colors duration-300 hover:bg-black/[0.025] md:min-h-0 md:grid-cols-[47.96%_52.04%] md:border-b-0 md:border-r"
       >
-        <div className="flex h-full flex-col bg-[#e8e9e3] px-[27px] py-[34px]">
+        <div className="flex h-full min-w-0 flex-col bg-[#e8e9e3] px-5 py-9 md:px-[27px] md:py-[34px]">
           <Kicker number="02" />
           <p className="mt-[24px] text-[10px] uppercase leading-[1.5] tracking-[0.22em]">
             Spring 2026
@@ -238,12 +158,12 @@ function EditorialGrid() {
             </span>
           </span>
         </div>
-        <div className="relative h-[260px] overflow-hidden md:h-full">
+        <div className="relative h-full min-w-0 overflow-hidden">
           <Image
             src={collectionImage}
             alt="LOW SIGNAL collection preview"
             fill
-            sizes="17vw"
+            sizes="(min-width: 768px) 17vw, 56vw"
             className="editorial-image object-cover object-[50%_18%]"
           />
         </div>
@@ -254,13 +174,13 @@ function EditorialGrid() {
 
       <Link
         href="/lookbook"
-        className="group flex h-full flex-col border-b border-black/20 bg-[#ebece6] px-[46px] py-[34px] transition-colors duration-300 hover:bg-[#e4e5df] md:border-b-0 md:border-r"
+        className="group grid min-h-[52svh] grid-cols-[1fr_58%] grid-rows-[auto_1fr_auto] border-b border-black/20 bg-[#ebece6] px-5 py-8 transition-colors duration-300 hover:bg-[#e4e5df] md:flex md:h-full md:min-h-0 md:flex-col md:border-b-0 md:border-r md:px-[46px] md:py-[34px]"
       >
         <Kicker number="03" />
-        <p className="mt-[23px] text-[10px] uppercase tracking-[0.2em]">
+        <p className="mt-[23px] text-[10px] uppercase tracking-[0.2em] md:block">
           Lookbook
         </p>
-        <div className="relative mt-[14px] h-[96px] w-[200px] overflow-hidden md:h-[clamp(92px,12vh,122px)] md:w-[min(240px,72%)]">
+        <div className="relative col-start-2 row-span-3 row-start-1 ml-4 h-full min-h-[36svh] w-full overflow-hidden md:col-auto md:row-auto md:ml-0 md:mt-[14px] md:h-[clamp(92px,12vh,122px)] md:min-h-0 md:w-[min(240px,72%)]">
           <Image
             src={lookbookImage}
             alt="LOW SIGNAL lookbook photograph"
@@ -269,7 +189,7 @@ function EditorialGrid() {
             className="editorial-image object-cover object-[58%_54%]"
           />
         </div>
-        <span className="mt-auto inline-flex w-fit gap-2 border-b border-black/65 pb-[4px] text-[9px] uppercase tracking-[0.16em] transition-opacity duration-300 group-hover:opacity-55">
+        <span className="mt-auto inline-flex w-fit gap-2 self-end border-b border-black/65 pb-[4px] text-[9px] uppercase tracking-[0.16em] transition-opacity duration-300 group-hover:opacity-55">
           View lookbook
           <span className="transition-transform duration-300 group-hover:translate-x-1">
             →
@@ -279,9 +199,9 @@ function EditorialGrid() {
 
       <Link
         href="#selected-pieces"
-        className="group relative grid min-h-[320px] bg-[#151413] text-[#f5f2ed] transition-colors duration-300 hover:bg-[#1c1b19] md:min-h-0 md:grid-cols-[30%_44%_26%]"
+        className="group relative grid min-h-[70svh] grid-cols-[38%_62%] bg-[#151413] text-[#f5f2ed] transition-colors duration-300 hover:bg-[#1c1b19] md:min-h-0 md:grid-cols-[30%_44%_26%]"
       >
-        <div className="flex h-full flex-col px-[30px] py-[34px]">
+        <div className="flex h-full min-w-0 flex-col px-5 py-9 md:px-[30px] md:py-[34px]">
           <Kicker number="04" light />
           <p className="mt-[24px] max-w-[92px] text-[10px] uppercase leading-[1.62] tracking-[0.2em]">
             Selected garments
@@ -293,8 +213,8 @@ function EditorialGrid() {
             </span>
           </span>
         </div>
-        <div className="flex h-full flex-col justify-center px-[30px] pb-[28px] md:px-0 md:py-[26px]">
-          <div className="relative h-[150px] w-full overflow-hidden border border-[#f5f2ed]/10 bg-[#211f1c] md:h-[clamp(148px,18vh,196px)] md:w-[84%]">
+        <div className="flex h-full min-w-0 flex-col justify-center py-8 pr-5 md:px-0 md:py-[26px]">
+          <div className="relative h-[44svh] w-full overflow-hidden border border-[#f5f2ed]/10 bg-[#211f1c] md:h-[clamp(148px,18vh,196px)] md:w-[84%]">
             <Image
               src={garmentOne}
               alt="LOW SIGNAL outer layer detail"
@@ -307,7 +227,7 @@ function EditorialGrid() {
             Outer layer / 01
           </p>
         </div>
-        <div className="flex h-full flex-col justify-end px-[30px] pb-[34px] md:pl-0 md:pr-[28px] md:pt-[26px]">
+        <div className="hidden h-full flex-col justify-end px-[30px] pb-[34px] md:flex md:pl-0 md:pr-[28px] md:pt-[26px]">
           <div className="relative h-[104px] w-full overflow-hidden border border-[#f5f2ed]/10 bg-[#211f1c] md:h-[clamp(104px,14vh,152px)]">
             <Image
               src={garmentTwo}

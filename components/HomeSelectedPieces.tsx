@@ -274,8 +274,8 @@ export function HomeSelectedPieces() {
           </nav>
         </header>
 
-        <div className="grid gap-5 lg:grid-cols-[minmax(300px,36%)_minmax(0,1fr)] lg:gap-6">
-          <aside className="selected-static-frame">
+        <div className="grid min-w-0 gap-5 lg:grid-cols-[minmax(300px,36%)_minmax(0,1fr)] lg:gap-6">
+          <aside className="selected-static-frame hidden lg:block">
             <Link
               aria-label="Open men's Spring 2026 collection"
               className="group block"
@@ -300,12 +300,12 @@ export function HomeSelectedPieces() {
           </aside>
 
           <div className="min-w-0">
-            <p className="mb-3 text-[12px] uppercase tracking-[0.12em] text-black/56 lg:hidden">
+            <p className="mb-3 text-[10px] uppercase tracking-[0.12em] text-black/56 lg:hidden">
               Swipe to browse selected pieces →
             </p>
             <div
               aria-label="Selected garments. Use left and right arrow keys to browse."
-              className="selected-rail flex min-w-0 max-w-full snap-x snap-proximity gap-[14px] overflow-x-auto overscroll-x-contain pb-2 pr-[12vw] [-ms-overflow-style:none] [scrollbar-width:none] sm:pr-[52vw] lg:pr-[40vw] [&::-webkit-scrollbar]:hidden"
+              className="selected-rail flex min-w-0 max-w-full snap-x snap-proximity gap-[14px] overflow-x-auto overscroll-x-contain pb-2 pr-5 [-ms-overflow-style:none] [scrollbar-width:none] sm:pr-6 lg:pr-[40vw] [&::-webkit-scrollbar]:hidden"
               onBlurCapture={(event) => {
                 if (!event.currentTarget.contains(event.relatedTarget)) {
                   scheduleAutoAdvance();
@@ -323,6 +323,7 @@ export function HomeSelectedPieces() {
               ref={railRef}
               tabIndex={0}
             >
+              <CampaignRailCard />
               {railItems.map((item, index) => (
                 <RailCard
                   index={index + 1}
@@ -378,6 +379,34 @@ export function HomeSelectedPieces() {
   );
 }
 
+function CampaignRailCard() {
+  return (
+    <Link
+      aria-label="Open men's Spring 2026 collection"
+      className="group w-[72vw] shrink-0 snap-start sm:w-[40vw] lg:hidden"
+      href="/collections/men"
+    >
+      <div className="relative h-[55vh] min-h-[360px] max-h-[680px] overflow-hidden border border-black/14 bg-[#c8cbc5]">
+        <Image
+          alt="LOW SIGNAL men's Spring 2026 campaign"
+          className="object-cover object-[48%_52%] brightness-[0.82] contrast-[1.06] saturate-[0.62] transition-transform duration-700 group-hover:scale-[1.012]"
+          fill
+          sizes="(min-width: 640px) 40vw, 72vw"
+          src="/images/low-signal/selected-collection/material-form-original.png"
+        />
+        <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/42 via-black/16 to-transparent p-5 text-[#f1f1ea]">
+          <p className="font-[var(--font-archivo)] text-[38px] font-medium uppercase leading-[0.9] tracking-[-0.02em] text-white/90 sm:text-[44px]">
+            SPRING 2026
+          </p>
+        </div>
+      </div>
+      <div className="grid min-h-[104px] content-start border-b border-black/16 py-4 text-[10px] font-medium uppercase tracking-[0.12em]">
+        <span className="selected-rail-link w-fit whitespace-nowrap">Shop collection ↗</span>
+      </div>
+    </Link>
+  );
+}
+
 function RailCard({
   index,
   item,
@@ -395,7 +424,7 @@ function RailCard({
     return (
       <div
         aria-hidden="true"
-        className="selected-campaign-card pointer-events-none shrink-0 snap-start w-[76vw] sm:w-[42vw] lg:w-[25vw]"
+        className="selected-campaign-card pointer-events-none w-[72vw] shrink-0 snap-start sm:w-[40vw] lg:w-[25vw]"
         data-rail-index="0"
       >
         <div className="relative h-[55vh] min-h-[360px] max-h-[680px] overflow-hidden border border-black/14 bg-[#ccd0c9]">
@@ -403,7 +432,7 @@ function RailCard({
             alt=""
             className={`object-cover brightness-[0.88] contrast-[1.05] saturate-[0.68] ${product.objectPosition ?? "object-center"}`}
             fill
-            sizes="(min-width: 1024px) 25vw, (min-width: 640px) 42vw, 76vw"
+            sizes="(min-width: 1024px) 25vw, (min-width: 640px) 40vw, 72vw"
             src={product.image}
           />
         </div>
@@ -428,7 +457,7 @@ function RailCard({
   return (
     <Link
       aria-label={`View piece ${product.name}`}
-      className="selected-campaign-card group shrink-0 snap-start w-[76vw] sm:w-[42vw] lg:w-[25vw]"
+      className="selected-campaign-card group w-[72vw] shrink-0 snap-start sm:w-[40vw] lg:w-[25vw]"
       data-rail-index={index - 1}
       href={`/products/${product.slug}`}
       onClick={onClick}
@@ -443,7 +472,7 @@ function RailCard({
             product.objectPosition ?? "object-center"
           }`}
           fill
-          sizes="(min-width: 1024px) 25vw, (min-width: 640px) 42vw, 76vw"
+          sizes="(min-width: 1024px) 25vw, (min-width: 640px) 40vw, 72vw"
           src={product.image}
         />
       </div>

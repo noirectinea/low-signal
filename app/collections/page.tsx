@@ -1,7 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { CartCountLink } from "@/components/CartCountLink";
-import { LogoMark } from "@/components/LogoMark";
+import { MobileHomeHeader } from "@/components/MobileHomeHeader";
 import { getProductsByGender, type ProductGender } from "@/data/products";
 
 const entryCards: Array<{
@@ -44,8 +43,8 @@ export const metadata = {
 
 export default function CollectionsPage() {
   return (
-    <main className="min-h-screen overflow-x-hidden bg-[#e6e7e2] text-[#121211]">
-      <CollectionsNav />
+    <main className="min-h-screen bg-[#e6e7e2] text-[#121211]">
+      <MobileHomeHeader mode="paper" />
 
       <section className="mx-auto grid min-h-[88svh] w-full max-w-[1680px] px-5 pb-12 pt-[96px] sm:px-6 lg:grid-cols-[minmax(320px,480px)_1fr] lg:gap-14 lg:px-12 lg:pb-14 lg:pt-[112px] xl:gap-20 xl:px-14">
         <header className="border-b border-black/16 pb-10 lg:border-b-0 lg:pb-0">
@@ -130,27 +129,6 @@ export default function CollectionsPage() {
         </div>
       </section>
     </main>
-  );
-}
-
-function CollectionsNav() {
-  return (
-    <nav className="fixed left-0 right-0 top-0 z-30 grid min-h-[64px] grid-cols-[1fr_auto] items-start gap-6 border-b border-black/14 bg-[#e1e2dd]/94 px-5 py-5 text-[9px] uppercase tracking-[0.18em] text-[#121211] backdrop-blur-sm md:grid-cols-[1fr_auto_1fr] lg:px-12">
-      <LogoMark />
-
-      <div className="hidden justify-center gap-14 md:flex">
-        <Link href="/">Home</Link>
-        <Link className="border-b border-black pb-2" href="/collections">
-          Collections
-        </Link>
-        <Link href="/lookbook">Lookbook</Link>
-        <Link href="/about">About</Link>
-      </div>
-
-      <div className="flex justify-end">
-        <CartCountLink />
-      </div>
-    </nav>
   );
 }
 

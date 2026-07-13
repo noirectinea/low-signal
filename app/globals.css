@@ -25,7 +25,6 @@
 html, body {
   height: 100%;
   max-width: 100%;
-  overflow-x: clip;
   overscroll-behavior: none;
   background-color: #e5e6e1;
   color: #121211;
@@ -40,6 +39,7 @@ body {
 
 main,
 section {
+  min-width: 0;
   max-width: 100%;
 }
 

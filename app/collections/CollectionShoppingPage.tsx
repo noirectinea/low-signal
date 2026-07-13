@@ -3,9 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useMemo, useState, useSyncExternalStore } from "react";
-import { CartCountLink } from "@/components/CartCountLink";
-import { LogoMark } from "@/components/LogoMark";
-import { MobileNavMenu } from "@/components/MobileNavMenu";
+import { MobileHomeHeader } from "@/components/MobileHomeHeader";
 import {
   cartStorageKey,
   type CartItem,
@@ -283,8 +281,8 @@ export function CollectionShoppingPage({
   }
 
   return (
-    <main className="min-h-screen overflow-x-hidden bg-[#e5e6e1] text-[#121211]">
-      <ShoppingNav />
+    <main className="min-h-screen bg-[#e5e6e1] text-[#121211]">
+      <MobileHomeHeader mode="paper" />
 
       <section className="mx-auto max-w-[1760px] px-4 pb-16 pt-[86px] sm:px-6 lg:px-10 lg:pt-[94px] xl:px-14">
         <header
@@ -501,28 +499,6 @@ function FilterIntro({
       <p className="text-black/78">Spring 2026 {gender}</p>
       <p className="mt-4 max-w-[230px] text-black/50">{note}</p>
     </div>
-  );
-}
-
-function ShoppingNav() {
-  return (
-    <nav className="fixed left-0 right-0 top-0 z-30 grid min-h-[64px] grid-cols-[1fr_auto] items-start gap-6 border-b border-black/14 bg-[#e0e1dc]/94 px-5 py-5 text-[12px] uppercase tracking-[0.16em] text-[#121211] backdrop-blur-sm lg:grid-cols-[1fr_auto_1fr] lg:px-12">
-      <LogoMark />
-
-      <div className="hidden justify-center gap-14 lg:flex">
-        <Link href="/">Home</Link>
-        <Link className="border-b border-black pb-2" href="/collections">
-          Collections
-        </Link>
-        <Link href="/lookbook">Lookbook</Link>
-        <Link href="/about">About</Link>
-      </div>
-
-      <div className="flex justify-end gap-4">
-        <CartCountLink className="hidden lg:block" />
-        <MobileNavMenu />
-      </div>
-    </nav>
   );
 }
 

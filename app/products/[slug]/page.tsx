@@ -1,9 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { CartCountLink } from "@/components/CartCountLink";
-import { LogoMark } from "@/components/LogoMark";
-import { MobileNavMenu } from "@/components/MobileNavMenu";
+import { MobileHomeHeader } from "@/components/MobileHomeHeader";
 import {
   getProductBySlug,
   getProductSlugs,
@@ -69,8 +67,8 @@ export default async function ProductPage({ params }: ProductPageProps) {
   const relatedProduct = await getRelatedProduct(product);
 
   return (
-    <main className="min-h-screen overflow-x-hidden bg-[#e7e7e1] text-[#141311]">
-      <ProductNav />
+    <main className="min-h-screen bg-[#e7e7e1] text-[#141311]">
+      <MobileHomeHeader mode="paper" />
 
       <section className="grid px-5 pb-28 pt-[92px] lg:min-h-screen lg:grid-cols-[58%_42%] lg:px-0 lg:pb-0 lg:pt-[64px]">
         <div className="grid gap-4 lg:grid-cols-[104px_1fr] lg:border-r lg:border-black/16 lg:p-8 xl:grid-cols-[124px_1fr] xl:p-10">
@@ -188,26 +186,6 @@ export default async function ProductPage({ params }: ProductPageProps) {
         </div>
       </section>
     </main>
-  );
-}
-
-function ProductNav() {
-  return (
-    <nav className="fixed left-0 right-0 top-0 z-30 grid min-h-[64px] grid-cols-[1fr_auto] items-start gap-6 border-b border-black/16 bg-[#e3e3dc]/92 px-5 py-5 text-[12px] uppercase tracking-[0.16em] text-[#141311] backdrop-blur-sm lg:grid-cols-[1fr_auto_1fr] lg:px-12">
-      <LogoMark />
-
-      <div className="hidden justify-center gap-14 lg:flex">
-        <Link href="/">Home</Link>
-        <Link href="/collections">Collections</Link>
-        <Link href="/lookbook">Lookbook</Link>
-        <Link href="/about">About</Link>
-      </div>
-
-      <div className="flex justify-end gap-4">
-        <CartCountLink className="hidden lg:block" />
-        <MobileNavMenu />
-      </div>
-    </nav>
   );
 }
 

@@ -1,7 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { CartCountLink } from "@/components/CartCountLink";
-import { LogoMark } from "@/components/LogoMark";
+import { MobileHomeHeader } from "@/components/MobileHomeHeader";
 
 const approachBlocks = [
   {
@@ -50,8 +49,8 @@ const footerLinks = [
 
 export default function AboutPage() {
   return (
-    <main className="min-h-screen overflow-x-hidden bg-[#e7e7e1] text-[#11110f]">
-      <AboutNav />
+    <main className="min-h-screen bg-[#e7e7e1] text-[#11110f]">
+      <MobileHomeHeader mode="paper" />
 
       <section className="grid min-h-screen border-b border-black/18 pt-[64px] lg:grid-cols-[42%_58%]">
         <div className="flex flex-col justify-between border-b border-black/18 bg-[#eeeee8] px-5 py-10 lg:border-b-0 lg:border-r lg:px-[4vw] lg:py-[7vh]">
@@ -262,26 +261,5 @@ function AboutExpansion() {
         </div>
       </div>
     </section>
-  );
-}
-
-function AboutNav() {
-  return (
-    <nav className="fixed left-0 right-0 top-0 z-30 grid min-h-[64px] grid-cols-[1fr_auto] items-start gap-6 border-b border-black/16 bg-[#e3e3dc]/92 px-5 py-5 text-[9px] uppercase tracking-[0.16em] text-[#141311] backdrop-blur-sm md:grid-cols-[1fr_auto_1fr] lg:px-12">
-      <LogoMark />
-
-      <div className="hidden justify-center gap-14 md:flex">
-        <Link href="/">Home</Link>
-        <Link href="/collections">Collections</Link>
-        <Link href="/lookbook">Lookbook</Link>
-        <Link className="border-b border-black pb-2" href="/about">
-          About
-        </Link>
-      </div>
-
-      <div className="flex justify-end">
-        <CartCountLink />
-      </div>
-    </nav>
   );
 }

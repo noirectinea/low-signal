@@ -3,8 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { LogoMark } from "@/components/LogoMark";
-import { MobileNavMenu } from "@/components/MobileNavMenu";
+import { MobileHomeHeader } from "@/components/MobileHomeHeader";
 import { cartStorageKey, type CartItem } from "@/data/products";
 import { getAvailabilityLabel } from "@/lib/availability";
 
@@ -22,7 +21,6 @@ export function CartPageClient() {
   const [availabilityStatus, setAvailabilityStatus] = useState<
     "idle" | "loading"
   >("idle");
-  const cartCount = items.reduce((total, item) => total + item.quantity, 0);
   const subtotal = items.reduce(
     (total, item) => total + item.price * item.quantity,
     0,
@@ -138,8 +136,8 @@ export function CartPageClient() {
   }
 
   return (
-    <main className="min-h-screen overflow-x-hidden bg-[#f0ece4] text-[#141311]">
-      <CartNav cartCount={cartCount} />
+    <main className="min-h-screen bg-[#f0ece4] text-[#141311]">
+      <MobileHomeHeader mode="paper" />
 
       <section className="px-5 pb-16 pt-[104px] lg:px-12">
         <div className="mx-auto max-w-[1500px]">
@@ -220,26 +218,6 @@ function writeCart(items: CartItem[]) {
 
   window.localStorage.setItem(cartStorageKey, JSON.stringify(items));
   window.dispatchEvent(new Event("low-signal-cart"));
-}
-
-function CartNav({ cartCount }: Readonly<{ cartCount: number }>) {
-  return (
-    <nav className="fixed left-0 right-0 top-0 z-30 grid min-h-[64px] grid-cols-[1fr_auto] items-start gap-6 border-b border-black/16 bg-[#ece8df]/92 px-5 py-5 text-[12px] uppercase tracking-[0.16em] text-[#141311] backdrop-blur-sm lg:grid-cols-[1fr_auto_1fr] lg:px-12">
-      <LogoMark />
-
-      <div className="hidden justify-center gap-14 lg:flex">
-        <Link href="/">Home</Link>
-        <Link href="/collections">Collections</Link>
-        <Link href="/lookbook">Lookbook</Link>
-        <Link href="/about">About</Link>
-      </div>
-
-      <div className="flex justify-end gap-4">
-        <span className="hidden lg:block">Cart ({cartCount})</span>
-        <MobileNavMenu />
-      </div>
-    </nav>
-  );
 }
 
 function CartLine({
