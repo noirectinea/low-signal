@@ -305,7 +305,7 @@ export function HomeSelectedPieces() {
             </p>
             <div
               aria-label="Selected garments. Use left and right arrow keys to browse."
-              className="selected-rail flex snap-x snap-proximity gap-[14px] overflow-x-auto overscroll-x-contain pb-2 pr-[24vw] [-ms-overflow-style:none] [scrollbar-width:none] sm:pr-[52vw] lg:pr-[40vw] [&::-webkit-scrollbar]:hidden"
+              className="selected-rail flex min-w-0 max-w-full snap-x snap-proximity gap-[14px] overflow-x-auto overscroll-x-contain pb-2 pr-[12vw] [-ms-overflow-style:none] [scrollbar-width:none] sm:pr-[52vw] lg:pr-[40vw] [&::-webkit-scrollbar]:hidden"
               onBlurCapture={(event) => {
                 if (!event.currentTarget.contains(event.relatedTarget)) {
                   scheduleAutoAdvance();

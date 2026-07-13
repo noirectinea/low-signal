@@ -43,6 +43,12 @@ section {
   max-width: 100%;
 }
 
+/* Prevent local horizontal scrollers from contributing to document width. */
+.selected-rail {
+  inline-size: 100%;
+  max-inline-size: 100%;
+}
+
 /* Image editorial styling - creates unified visual language */
 img {
   filter: grayscale(10%) contrast(1.02) brightness(1.01) saturate(1.02) sepia(0.05);
