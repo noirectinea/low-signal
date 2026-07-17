@@ -148,25 +148,39 @@ function EditorialGrid() {
   return (
     <section className="mobile-home-editorial border-b border-black/20">
       <div className="mobile-editorial-composition lg:hidden">
-        <Link className="mobile-spring-feature group grid min-h-[540px] grid-cols-[31%_69%] border-b border-black/18 bg-[#e8e9e3]" href="/collections">
-          <div className="flex min-w-0 flex-col border-r border-black/18 px-4 py-7">
-            <Kicker number="02" />
-            <p className="mt-8 text-[11px] uppercase tracking-[0.16em]">Spring 2026</p>
-            <p className="mt-6 text-[9px] uppercase leading-[1.65] tracking-[0.13em] text-black/58">
-              A collection built on restraint, quiet structures, and small interruptions.
-            </p>
-            <span className="mt-auto flex min-h-11 items-center border-b border-black/60 text-[10px] uppercase tracking-[0.13em]">
-              View collection →
-            </span>
+        <Link className="mobile-spring-feature group block border-b border-black/18 bg-[#e8e9e3]" href="/collections">
+          <div className="mobile-spring-heading grid grid-cols-[56px_minmax(0,1fr)] border-b border-black/18">
+            <div className="flex justify-center border-r border-black/16 pt-7">
+              <Kicker number="02" />
+            </div>
+            <div className="grid min-w-0 grid-cols-[auto_1fr] items-start gap-5 px-5 py-7">
+              <p className="text-[12px] uppercase tracking-[0.15em]">Spring 2026</p>
+              <p className="max-w-[190px] justify-self-end text-[8px] uppercase leading-[1.65] tracking-[0.14em] text-black/52">
+                Restraint, quiet structure, and small interruptions.
+              </p>
+            </div>
           </div>
-          <div className="relative min-w-0 overflow-hidden bg-[#c9cac4]">
+
+          <div className="mobile-spring-image relative ml-14 overflow-hidden bg-[#c9cac4]">
             <Image
               src={collectionImage}
               alt="LOW SIGNAL collection preview"
               fill
-              sizes="69vw"
-              className="editorial-image object-cover object-[48%_18%] transition-transform duration-700 group-hover:scale-[1.012]"
+              sizes="(min-width: 768px) calc(100vw - 90px), calc(100vw - 56px)"
+              className="editorial-image object-cover object-[48%_20%] transition-transform duration-700 group-hover:scale-[1.012]"
             />
+            <span className="absolute left-4 top-4 text-[8px] uppercase tracking-[0.16em] text-white/72">
+              Current collection / 01
+            </span>
+          </div>
+
+          <div className="mobile-spring-footer ml-14 grid min-h-[84px] grid-cols-[1fr_auto] items-center gap-5 border-t border-black/18 px-5">
+            <p className="max-w-[180px] text-[8px] uppercase leading-[1.6] tracking-[0.14em] text-black/50">
+              Washed layers / daily repeat
+            </p>
+            <span className="flex min-h-11 items-center border-b border-black/60 text-[9px] uppercase tracking-[0.14em]">
+              View collection →
+            </span>
           </div>
         </Link>
 

@@ -331,7 +331,19 @@ a {
   }
 
   .mobile-spring-feature {
-    min-height: min(68svh, 570px);
+    min-height: 0;
+  }
+
+  .mobile-spring-heading {
+    min-height: 104px;
+  }
+
+  .mobile-spring-image {
+    height: clamp(320px, 40svh, 380px);
+  }
+
+  .mobile-spring-footer {
+    min-height: 84px;
   }
 
   .mobile-lookbook-feature {
@@ -918,6 +930,20 @@ a {
   .mobile-menu-panel {
     padding: 0;
     background: #dfe0da;
+  }
+
+  .mobile-spring-heading {
+    grid-template-columns: 90px minmax(0, 1fr);
+    min-height: 112px;
+  }
+
+  .mobile-spring-image,
+  .mobile-spring-footer {
+    margin-left: 90px;
+  }
+
+  .mobile-spring-image {
+    height: min(40svh, 410px);
   }
 
   .mobile-menu-composition {
