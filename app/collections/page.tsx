@@ -46,8 +46,8 @@ export default function CollectionsPage() {
     <main className="min-h-screen bg-[#e6e7e2] text-[#121211]">
       <MobileHomeHeader mode="paper" />
 
-      <section className="mx-auto grid min-h-[88svh] w-full max-w-[1680px] px-5 pb-12 pt-[96px] sm:px-6 lg:grid-cols-[minmax(320px,480px)_1fr] lg:gap-14 lg:px-12 lg:pb-14 lg:pt-[112px] xl:gap-20 xl:px-14">
-        <header className="border-b border-black/16 pb-10 lg:border-b-0 lg:pb-0">
+      <section className="mobile-collections-hero mx-auto grid min-h-[88svh] w-full max-w-[1680px] px-5 pb-12 pt-[96px] sm:px-6 lg:grid-cols-[minmax(320px,480px)_1fr] lg:gap-14 lg:px-12 lg:pb-14 lg:pt-[112px] xl:gap-20 xl:px-14">
+        <header className="mobile-collections-intro border-b border-black/16 pb-10 lg:border-b-0 lg:pb-0">
           <p className="text-[9px] uppercase tracking-[0.22em] text-black/48">
             05 — Collection / LOW SIGNAL
           </p>
@@ -70,7 +70,7 @@ export default function CollectionsPage() {
           </div>
         </header>
 
-        <div className="grid content-end gap-5 pt-7 sm:grid-cols-2 lg:pt-0">
+        <div className="mobile-collection-entries grid content-end gap-5 pt-7 sm:grid-cols-2 lg:pt-0">
           {entryCards.map((card) => (
             <CollectionEntryCard
               gender={card.gender}
@@ -82,7 +82,7 @@ export default function CollectionsPage() {
         </div>
       </section>
 
-      <section className="mx-auto grid max-w-[1680px] gap-6 border-t border-black/16 px-5 py-10 sm:px-6 lg:grid-cols-[minmax(280px,420px)_1fr] lg:px-12 lg:py-12 xl:px-14">
+      <section className="mobile-collection-notes mx-auto grid max-w-[1680px] gap-6 border-t border-black/16 px-5 py-10 sm:px-6 lg:grid-cols-[minmax(280px,420px)_1fr] lg:px-12 lg:py-12 xl:px-14">
         <div className="grid content-between gap-8 border-b border-black/14 pb-7 lg:border-b-0 lg:border-r lg:pb-0 lg:pr-10">
           <div>
             <p className="text-[9px] uppercase tracking-[0.18em] text-black/54">
@@ -154,7 +154,7 @@ function CollectionEntryCard({
         };
 
   return (
-    <article className="quiet-reveal group border-y border-black/18 py-4 sm:border-b sm:border-t-0 sm:pt-0">
+    <article className={`mobile-collection-entry mobile-collection-entry-${gender} quiet-reveal group border-y border-black/18 py-4 sm:border-b sm:border-t-0 sm:pt-0`}>
       <Link
         className="block focus:outline-none focus-visible:ring-1 focus-visible:ring-black"
         href={`/collections/${gender}`}

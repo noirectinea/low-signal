@@ -284,9 +284,9 @@ export function CollectionShoppingPage({
     <main className="min-h-screen bg-[#e5e6e1] text-[#121211]">
       <MobileHomeHeader mode="paper" />
 
-      <section className="mx-auto max-w-[1760px] px-4 pb-16 pt-[86px] sm:px-6 lg:px-10 lg:pt-[94px] xl:px-14">
+      <section className={`mobile-catalog-shell mobile-catalog-${gender} mx-auto max-w-[1760px] px-4 pb-16 pt-[86px] sm:px-6 lg:px-10 lg:pt-[94px] xl:px-14`}>
         <header
-          className={`grid gap-6 border-b border-black/16 lg:grid-cols-[1fr_minmax(320px,560px)] lg:items-end ${
+          className={`mobile-catalog-header grid gap-6 border-b border-black/16 lg:grid-cols-[1fr_minmax(320px,560px)] lg:items-end ${
             gender === "women" ? "pb-4" : "pb-5"
           }`}
         >
@@ -319,7 +319,7 @@ export function CollectionShoppingPage({
 
         <div className="lg:hidden">
           <FilterIntro gender={gender} note={collectionNote} />
-          <div className="sticky top-[64px] z-20 -mx-4 border-y border-black/16 bg-[#e5e6e1]/95 px-4 backdrop-blur-sm sm:-mx-6 sm:px-6">
+          <div className="mobile-filter-bar sticky top-[64px] z-20 -mx-4 border-y border-black/16 bg-[#e5e6e1]/95 px-4 backdrop-blur-sm sm:-mx-6 sm:px-6">
           <MobileFilters
             activeCategory={activeCategory}
             advancedFilterCount={advancedFilterCount}
@@ -832,7 +832,7 @@ function ProductGrid({
   onClearAll: () => void;
 }>) {
   return (
-    <section aria-label={`${title} product grid`}>
+    <section className="mobile-product-section" aria-label={`${title} product grid`}>
       <CollectionRailHeader
         gender={gender}
         genderLabel={genderLabel}
@@ -843,7 +843,7 @@ function ProductGrid({
 
       {products.length > 0 ? (
         <div
-          className={`grid grid-cols-12 gap-x-3 sm:grid-cols-2 sm:gap-x-5 md:grid-cols-3 lg:grid-cols-4 ${
+          className={`mobile-product-grid grid grid-cols-12 gap-x-3 sm:grid-cols-2 sm:gap-x-5 md:grid-cols-3 lg:grid-cols-4 ${
             gender === "women" ? "gap-y-12 sm:gap-y-14" : "gap-y-10 sm:gap-y-10"
           }`}
         >
@@ -886,7 +886,7 @@ function CollectionRailHeader({
 
   return (
     <div
-      className={`grid gap-3 border-b border-black/14 text-[9px] uppercase tracking-[0.18em] sm:grid-cols-[1fr_auto] sm:items-end ${
+      className={`mobile-collection-rail-header grid gap-3 border-b border-black/14 text-[9px] uppercase tracking-[0.18em] sm:grid-cols-[1fr_auto] sm:items-end ${
         isWomen ? "mb-3 pb-3" : "mb-4 pb-4"
       }`}
     >
@@ -923,7 +923,7 @@ function CampaignRail({
 
   return (
     <div
-      className={`relative overflow-hidden border-y border-black/14 bg-[#d3d5cf] ${
+      className={`mobile-campaign-rail relative overflow-hidden border-y border-black/14 bg-[#d3d5cf] ${
         gender === "women"
           ? "mb-8 h-[52svh] max-h-[360px] min-h-[238px] sm:h-[212px] lg:h-[212px] xl:h-[238px]"
           : "mb-7 h-[46svh] max-h-[330px] min-h-[218px] sm:h-[190px] lg:h-[180px] xl:h-[206px]"
@@ -989,7 +989,7 @@ function ProductCard({
 
   return (
     <article
-      className={`quiet-reveal group relative min-w-0 border-b border-black/14 pb-4 sm:col-span-1 sm:col-start-auto ${
+      className={`mobile-product-card quiet-reveal group relative min-w-0 border-b border-black/14 pb-4 sm:col-span-1 sm:col-start-auto ${
         index % 4 === 0
           ? "col-span-8"
           : index % 4 === 1

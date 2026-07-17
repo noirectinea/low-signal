@@ -7,12 +7,12 @@
     "offenders": [
       {
         "tag": "A",
-        "cls": "selected-campaign-card group w-[68vw] shrink-0 snap-start sm:w-[40vw] lg:w-[25vw]",
+        "cls": "selected-campaign-card mobile-selected-card group w-[82vw] shrink-0 snap-start sm:w-[40vw] lg:w-[25vw]",
         "rect": {}
       },
       {
         "tag": "DIV",
-        "cls": "relative h-[48svh] min-h-[300px] max-h-[480px] overflow-hidden border border-black/14 bg-[#ccd0c9] lg:h-[55vh] lg:min-h-[360px] lg:max-h-[680px]",
+        "cls": "relative h-[62svh] min-h-[420px] max-h-[560px] overflow-hidden border border-black/14 bg-[#ccd0c9] lg:h-[55vh] lg:min-h-[360px] lg:max-h-[680px]",
         "rect": {}
       },
       {
@@ -31,18 +31,18 @@
         "rect": {}
       },
       {
+        "tag": "H3",
+        "cls": "text-[11px] font-medium uppercase tracking-[0.12em]",
+        "rect": {}
+      },
+      {
         "tag": "SPAN",
         "cls": "text-[11px] font-medium",
         "rect": {}
       },
       {
-        "tag": "A",
-        "cls": "selected-campaign-card group w-[68vw] shrink-0 snap-start sm:w-[40vw] lg:w-[25vw]",
-        "rect": {}
-      },
-      {
-        "tag": "DIV",
-        "cls": "relative h-[48svh] min-h-[300px] max-h-[480px] overflow-hidden border border-black/14 bg-[#ccd0c9] lg:h-[55vh] lg:min-h-[360px] lg:max-h-[680px]",
+        "tag": "SPAN",
+        "cls": "mt-3 inline-block h-px w-8 bg-white/58",
         "rect": {}
       }
     ]
@@ -55,12 +55,12 @@
     "offenders": [
       {
         "tag": "A",
-        "cls": "selected-campaign-card group w-[68vw] shrink-0 snap-start sm:w-[40vw] lg:w-[25vw]",
+        "cls": "selected-campaign-card mobile-selected-card group w-[82vw] shrink-0 snap-start sm:w-[40vw] lg:w-[25vw]",
         "rect": {}
       },
       {
         "tag": "DIV",
-        "cls": "relative h-[48svh] min-h-[300px] max-h-[480px] overflow-hidden border border-black/14 bg-[#ccd0c9] lg:h-[55vh] lg:min-h-[360px] lg:max-h-[680px]",
+        "cls": "relative h-[62svh] min-h-[420px] max-h-[560px] overflow-hidden border border-black/14 bg-[#ccd0c9] lg:h-[55vh] lg:min-h-[360px] lg:max-h-[680px]",
         "rect": {}
       },
       {
@@ -79,18 +79,18 @@
         "rect": {}
       },
       {
+        "tag": "H3",
+        "cls": "text-[11px] font-medium uppercase tracking-[0.12em]",
+        "rect": {}
+      },
+      {
         "tag": "SPAN",
         "cls": "text-[11px] font-medium",
         "rect": {}
       },
       {
         "tag": "A",
-        "cls": "selected-campaign-card group w-[68vw] shrink-0 snap-start sm:w-[40vw] lg:w-[25vw]",
-        "rect": {}
-      },
-      {
-        "tag": "DIV",
-        "cls": "relative h-[48svh] min-h-[300px] max-h-[480px] overflow-hidden border border-black/14 bg-[#ccd0c9] lg:h-[55vh] lg:min-h-[360px] lg:max-h-[680px]",
+        "cls": "selected-campaign-card mobile-selected-card group w-[82vw] shrink-0 snap-start sm:w-[40vw] lg:w-[25vw]",
         "rect": {}
       }
     ]
@@ -103,12 +103,12 @@
     "offenders": [
       {
         "tag": "A",
-        "cls": "selected-campaign-card group w-[68vw] shrink-0 snap-start sm:w-[40vw] lg:w-[25vw]",
+        "cls": "selected-campaign-card mobile-selected-card group w-[82vw] shrink-0 snap-start sm:w-[40vw] lg:w-[25vw]",
         "rect": {}
       },
       {
         "tag": "DIV",
-        "cls": "relative h-[48svh] min-h-[300px] max-h-[480px] overflow-hidden border border-black/14 bg-[#ccd0c9] lg:h-[55vh] lg:min-h-[360px] lg:max-h-[680px]",
+        "cls": "relative h-[62svh] min-h-[420px] max-h-[560px] overflow-hidden border border-black/14 bg-[#ccd0c9] lg:h-[55vh] lg:min-h-[360px] lg:max-h-[680px]",
         "rect": {}
       },
       {
@@ -127,18 +127,18 @@
         "rect": {}
       },
       {
+        "tag": "H3",
+        "cls": "text-[11px] font-medium uppercase tracking-[0.12em]",
+        "rect": {}
+      },
+      {
         "tag": "SPAN",
         "cls": "text-[11px] font-medium",
         "rect": {}
       },
       {
         "tag": "A",
-        "cls": "selected-campaign-card group w-[68vw] shrink-0 snap-start sm:w-[40vw] lg:w-[25vw]",
-        "rect": {}
-      },
-      {
-        "tag": "DIV",
-        "cls": "relative h-[48svh] min-h-[300px] max-h-[480px] overflow-hidden border border-black/14 bg-[#ccd0c9] lg:h-[55vh] lg:min-h-[360px] lg:max-h-[680px]",
+        "cls": "selected-campaign-card mobile-selected-card group w-[82vw] shrink-0 snap-start sm:w-[40vw] lg:w-[25vw]",
         "rect": {}
       }
     ]
@@ -151,12 +151,12 @@
     "offenders": [
       {
         "tag": "A",
-        "cls": "selected-campaign-card group w-[68vw] shrink-0 snap-start sm:w-[40vw] lg:w-[25vw]",
+        "cls": "selected-campaign-card mobile-selected-card group w-[82vw] shrink-0 snap-start sm:w-[40vw] lg:w-[25vw]",
         "rect": {}
       },
       {
         "tag": "DIV",
-        "cls": "relative h-[48svh] min-h-[300px] max-h-[480px] overflow-hidden border border-black/14 bg-[#ccd0c9] lg:h-[55vh] lg:min-h-[360px] lg:max-h-[680px]",
+        "cls": "relative h-[62svh] min-h-[420px] max-h-[560px] overflow-hidden border border-black/14 bg-[#ccd0c9] lg:h-[55vh] lg:min-h-[360px] lg:max-h-[680px]",
         "rect": {}
       },
       {
@@ -186,7 +186,7 @@
       },
       {
         "tag": "A",
-        "cls": "selected-campaign-card group w-[68vw] shrink-0 snap-start sm:w-[40vw] lg:w-[25vw]",
+        "cls": "selected-campaign-card mobile-selected-card group w-[82vw] shrink-0 snap-start sm:w-[40vw] lg:w-[25vw]",
         "rect": {}
       }
     ]

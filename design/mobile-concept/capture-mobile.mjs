@@ -16,6 +16,7 @@ const chrome = spawn(chromePath, [
   "--disable-gpu",
   "--no-first-run",
   "--no-default-browser-check",
+  "--allow-file-access-from-files",
   `--remote-debugging-port=${port}`,
   "--user-data-dir=/tmp/low-signal-mobile-capture",
   "--window-size=390,844",
@@ -193,16 +194,60 @@ async function navigate(cdp, path, width, height) {
   });
   await cdp.send("Page.navigate", { url: `${site}${path}` });
   await Promise.race([loadedPromise, sleep(3500)]);
-  await sleep(900);
+  for (let attempt = 0; attempt < 80; attempt += 1) {
+    const ready = await evaluate(
+      cdp,
+      `document.readyState === "complete" &&
+       !document.body.innerText.includes("LOADING COLLECTION") &&
+       !document.body.innerText.includes("Loading collection")`,
+    );
+    if (ready) break;
+    await sleep(150);
+  }
+  await evaluate(
+    cdp,
+    `Promise.all([
+      document.fonts?.ready ?? Promise.resolve(),
+      ...[...document.images].filter((image) => image.loading !== "lazy").map(
+        (image) => image.complete ? Promise.resolve() : new Promise((resolve) => {
+          image.addEventListener("load", resolve, { once: true });
+          image.addEventListener("error", resolve, { once: true });
+        })
+      )
+    ]).then(() => true)`,
+  );
+  await sleep(500);
 }
 
-async function screenshot(cdp, file, fullPage = true) {
+async function screenshot(cdp, file, fullPage = true, directory = outDir) {
   if (fullPage) {
     await warmLazyImages(cdp);
   }
   const params = { captureBeyondViewport: fullPage, format: "png", fromSurface: true };
+  if (fullPage) {
+    const metrics = await cdp.send("Page.getLayoutMetrics");
+    const content = metrics.cssContentSize;
+    params.clip = {
+      height: Math.ceil(content.height),
+      scale: 1,
+      width: Math.ceil(content.width),
+      x: 0,
+      y: 0,
+    };
+  } else {
+    const metrics = await cdp.send("Page.getLayoutMetrics");
+    const viewport = metrics.cssVisualViewport;
+    params.captureBeyondViewport = true;
+    params.clip = {
+      height: Math.ceil(viewport.clientHeight),
+      scale: 1,
+      width: Math.ceil(viewport.clientWidth),
+      x: Math.max(0, viewport.pageX),
+      y: Math.max(0, viewport.pageY),
+    };
+  }
   const result = await cdp.send("Page.captureScreenshot", params);
-  writeFileSync(`${outDir}/${file}`, Buffer.from(result.data, "base64"));
+  writeFileSync(`${directory}/${file}`, Buffer.from(result.data, "base64"));
 }
 
 async function evaluate(cdp, expression) {
@@ -233,6 +278,15 @@ async function warmLazyImages(cdp) {
 async function captureRoute(path, name) {
   const cdp = await newPage();
   await navigate(cdp, path, 390, 844);
+  const pageState = await evaluate(
+    cdp,
+    `({
+      height: document.documentElement.scrollHeight,
+      innerWidth,
+      loading: document.body.innerText.includes("LOADING COLLECTION")
+    })`,
+  );
+  console.log(name, JSON.stringify(pageState, null, 2));
   await screenshot(cdp, `${name}-full-390.png`);
   cdp.close();
 }
@@ -244,6 +298,29 @@ async function captureState(path, name, expression) {
   await evaluate(cdp, expression);
   await sleep(800);
   await screenshot(cdp, `${name}-390.png`, false);
+  cdp.close();
+}
+
+async function captureContactSheet() {
+  const cdp = await newPage();
+  let loaded;
+  const loadedPromise = new Promise((resolve) => {
+    loaded = resolve;
+  });
+  cdp.on("Page.loadEventFired", loaded);
+  await cdp.send("Emulation.setDeviceMetricsOverride", {
+    deviceScaleFactor: 1,
+    height: 1200,
+    isMobile: false,
+    mobile: false,
+    width: 2400,
+  });
+  await cdp.send("Page.navigate", {
+    url: `file://${process.cwd()}/design/mobile-concept/contact-sheet.html`,
+  });
+  await Promise.race([loadedPromise, sleep(3500)]);
+  await sleep(1200);
+  await screenshot(cdp, "contact-sheet.png", true, "design/mobile-concept");
   cdp.close();
 }
 
@@ -287,33 +364,79 @@ const routes = [
   ["/cart", "cart-route"],
 ];
 
+const selectedRoutes = process.env.CAPTURE_ROUTE
+  ? routes.filter(([path]) => path === process.env.CAPTURE_ROUTE)
+  : routes;
+
 if (process.env.CAPTURE_ONLY !== "states") {
-  for (const [path, name] of routes) {
+  for (const [path, name] of selectedRoutes) {
     await captureRoute(path, name);
   }
 }
 
-await captureState(
-  "/?menu=open",
-  "state-mobile-menu",
-  `true`,
-);
+if (!process.env.SKIP_STATES) {
+  await captureState("/", "key-home-hero", `scrollTo(0, 0); true`);
+  await captureState(
+    "/",
+    "key-home-selected",
+    `(() => {
+      document.documentElement.style.scrollBehavior = "auto";
+      const node = document.querySelector("#selected-pieces");
+      scrollTo(0, Math.max(0, (node?.offsetTop ?? 0) - 64));
+      return true;
+    })()`,
+  );
+  await captureState("/collections", "key-collections", `scrollTo(0, 0); true`);
+  await captureState(
+    "/collections/men",
+    "key-men-catalog",
+    `(() => {
+      document.documentElement.style.scrollBehavior = "auto";
+      const node = document.querySelector(".mobile-product-section");
+      scrollTo(0, Math.max(0, (node?.offsetTop ?? 0) - 64));
+      return true;
+    })()`,
+  );
+  await captureState(
+    "/collections/women",
+    "key-women-catalog",
+    `(() => {
+      document.documentElement.style.scrollBehavior = "auto";
+      const node = document.querySelector(".mobile-product-section");
+      scrollTo(0, Math.max(0, (node?.offsetTop ?? 0) - 64));
+      return true;
+    })()`,
+  );
+  await captureState("/products/field-jacket", "key-product", `scrollTo(0, 0); true`);
+  await captureState("/lookbook", "key-lookbook", `scrollTo(0, 0); true`);
+  await captureState("/about", "key-about", `scrollTo(0, 0); true`);
+  await captureState("/cart", "key-cart-route", `scrollTo(0, 0); true`);
+  await captureState(
+    "/?menu=open",
+    "state-mobile-menu",
+    `true`,
+  );
 
-await captureState(
-  "/collections/men",
-  "state-men-filters-open",
-  `(() => {
-    const details = [...document.querySelectorAll("details")];
-    details[0].open = true;
-    details[1].open = true;
-    const nested = [...document.querySelectorAll("details details")];
-    if (nested[0]) nested[0].open = true;
-  })()`,
-);
+  await captureState(
+    "/collections/men",
+    "state-men-filters-open",
+    `(() => {
+      const details = [...document.querySelectorAll("details")];
+      details[0].open = true;
+      details[1].open = true;
+      const nested = [...document.querySelectorAll("details details")];
+      if (nested[0]) nested[0].open = true;
+    })()`,
+  );
+}
 
-if (process.env.CAPTURE_ONLY !== "states") {
-  const checks = await checkWidths(routes.map(([path]) => path));
+if (process.env.CAPTURE_ONLY !== "states" && !process.env.SKIP_CHECKS) {
+  const checks = await checkWidths(selectedRoutes.map(([path]) => path));
   console.log(JSON.stringify(checks, null, 2));
+}
+
+if (!process.env.SKIP_CONTACT_SHEET && !process.env.CAPTURE_ROUTE) {
+  await captureContactSheet();
 }
 
 chrome.kill("SIGTERM");

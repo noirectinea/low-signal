@@ -52,8 +52,8 @@ export default function AboutPage() {
     <main className="min-h-screen bg-[#e7e7e1] text-[#11110f]">
       <MobileHomeHeader mode="paper" />
 
-      <section className="grid min-h-screen border-b border-black/18 pt-[64px] lg:grid-cols-[42%_58%]">
-        <div className="flex flex-col justify-between border-b border-black/18 bg-[#eeeee8] px-5 py-10 lg:border-b-0 lg:border-r lg:px-[4vw] lg:py-[7vh]">
+      <section className="mobile-about-hero grid min-h-screen border-b border-black/18 pt-[64px] lg:grid-cols-[42%_58%]">
+        <div className="mobile-about-statement flex flex-col justify-between border-b border-black/18 bg-[#eeeee8] px-5 py-10 lg:border-b-0 lg:border-r lg:px-[4vw] lg:py-[7vh]">
           <div>
             <p className="text-[9px] uppercase tracking-[0.18em] text-black/54">
               About / Low Signal
@@ -73,8 +73,8 @@ export default function AboutPage() {
           </p>
         </div>
 
-        <div className="grid bg-[#d9d9d1] lg:grid-cols-[1fr_34%]">
-          <div className="px-5 py-10 lg:px-10 lg:py-[7vh]">
+        <div className="mobile-about-system grid bg-[#d9d9d1] lg:grid-cols-[1fr_34%]">
+          <div className="mobile-about-principles px-5 py-10 lg:px-10 lg:py-[7vh]">
             <div className="border-b border-black/16 pb-7">
               <p className="text-[9px] uppercase tracking-[0.18em] text-black/54">
                 Material, form, routine
@@ -104,7 +104,7 @@ export default function AboutPage() {
             </div>
           </div>
 
-          <aside className="grid border-t border-black/16 bg-[#cdcdc5] lg:border-l lg:border-t-0">
+          <aside className="mobile-about-images grid border-t border-black/16 bg-[#cdcdc5] lg:border-l lg:border-t-0">
             <div className="relative min-h-[360px] border-b border-black/16 bg-[#151413] lg:min-h-0">
               <Image
                 alt="LOW SIGNAL garment detail"
@@ -161,7 +161,7 @@ export default function AboutPage() {
 
 function AboutExpansion() {
   return (
-    <section className="border-b border-black/18 bg-[#deded7] px-5 py-12 lg:px-12 lg:py-16">
+    <section className="mobile-about-expansion border-b border-black/18 bg-[#deded7] px-5 py-12 lg:px-12 lg:py-16">
       <div className="mx-auto grid max-w-[1560px] gap-8 lg:grid-cols-[0.9fr_1.1fr]">
         <div className="border-y border-black/16 py-7">
           <p className="text-[9px] uppercase tracking-[0.18em] text-black/54">
@@ -178,7 +178,7 @@ function AboutExpansion() {
           </p>
         </div>
 
-        <div className="grid gap-4 lg:grid-cols-[0.75fr_1fr]">
+        <div className="mobile-about-uniform grid gap-4 lg:grid-cols-[0.75fr_1fr]">
           <div className="relative min-h-[420px] overflow-hidden border border-black/14 bg-[#151413]">
             <Image
               alt="LOW SIGNAL model in washed black clothing"

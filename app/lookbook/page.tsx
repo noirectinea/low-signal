@@ -99,8 +99,8 @@ export default function LookbookPage() {
 
 function LookbookHero() {
   return (
-    <section className="grid border-b border-black/16 pt-[64px] lg:min-h-[88svh] lg:grid-cols-[62%_38%]">
-      <div className="relative min-h-[62vh] overflow-hidden border-b border-black/16 bg-[#151413] lg:min-h-0 lg:border-b-0 lg:border-r">
+    <section className="mobile-lookbook-hero grid border-b border-black/16 pt-[64px] lg:min-h-[88svh] lg:grid-cols-[62%_38%]">
+      <div className="mobile-lookbook-hero-image relative min-h-[62vh] overflow-hidden border-b border-black/16 bg-[#151413] lg:min-h-0 lg:border-b-0 lg:border-r">
         <Image
           alt="Distant LOW SIGNAL figure in dark clothing under a cold coastal sky"
           src="/images/low-signal/lookbook-campaign/coastal-wide-atmosphere.png"
@@ -119,7 +119,7 @@ function LookbookHero() {
         </p>
       </div>
 
-      <div className="flex flex-col justify-between bg-[#dedfd9] px-5 py-10 lg:px-12 lg:py-14">
+      <div className="mobile-lookbook-hero-copy flex flex-col justify-between bg-[#dedfd9] px-5 py-10 lg:px-12 lg:py-14">
         <div>
           <p className="text-[10px] uppercase tracking-[0.2em] text-black/50">
             01-12 Frames / Spring 2026
@@ -153,7 +153,7 @@ function CoastalChapter() {
       title="Coastal Light"
       note="Wind holds the garment away from the body. The horizon stays almost still."
     >
-      <div className="grid gap-5 lg:grid-cols-[1.08fr_0.74fr] lg:items-start">
+      <div className="mobile-lookbook-coastal-primary grid gap-5 lg:grid-cols-[1.08fr_0.74fr] lg:items-start">
         <CampaignFrame
           frame={coastalFrames[0]}
           imageClassName="aspect-[5/4] lg:aspect-[7/5]"
@@ -172,7 +172,7 @@ function CoastalChapter() {
         </div>
       </div>
 
-      <div className="mt-5 grid gap-5 lg:grid-cols-[0.62fr_1fr] lg:items-end">
+      <div className="mobile-lookbook-coastal-secondary mt-5 grid gap-5 lg:grid-cols-[0.62fr_1fr] lg:items-end">
         <CampaignFrame
           frame={coastalFrames[2]}
           imageClassName="aspect-[4/3] lg:ml-[12%]"
@@ -194,7 +194,7 @@ function ConcreteChapter() {
       note="Interior light, cropped posture, and garments that become quieter the longer they are worn."
       tone="dark"
     >
-      <div className="grid gap-5 lg:grid-cols-[0.8fr_1.08fr] lg:items-center">
+      <div className="mobile-lookbook-concrete grid gap-5 lg:grid-cols-[0.8fr_1.08fr] lg:items-center">
         <div className="grid gap-5">
           <CampaignFrame
             frame={roomFrames[0]}
@@ -235,7 +235,7 @@ function MaterialChapter() {
       title="Material Form"
       note="Seams, sleeves, collars, folds. The campaign slows down until the garment becomes surface."
     >
-      <div className="grid gap-5 lg:grid-cols-[1fr_0.72fr] lg:items-start">
+      <div className="mobile-lookbook-material-lead grid gap-5 lg:grid-cols-[1fr_0.72fr] lg:items-start">
         <CampaignFrame
           frame={materialFrames[0]}
           imageClassName="aspect-[16/8]"
@@ -247,7 +247,7 @@ function MaterialChapter() {
         </CompactEditorialNote>
       </div>
 
-      <div className="mt-5 grid gap-5 sm:grid-cols-2 lg:grid-cols-[0.74fr_0.56fr_0.9fr] lg:items-end">
+      <div className="mobile-lookbook-material-grid mt-5 grid gap-5 sm:grid-cols-2 lg:grid-cols-[0.74fr_0.56fr_0.9fr] lg:items-end">
         <CampaignFrame
           frame={materialFrames[1]}
           imageClassName="aspect-[4/3]"
@@ -282,13 +282,13 @@ function ChapterShell({
 
   return (
     <section
-      className={`border-b border-black/16 px-5 py-12 sm:px-6 lg:px-10 lg:py-16 ${
+      className={`mobile-lookbook-chapter border-b border-black/16 px-5 py-12 sm:px-6 lg:px-10 lg:py-16 ${
         isDark ? "bg-[#181715] text-[#e6e6de]" : "bg-[#d8d9d3] text-[#141311]"
       }`}
     >
       <div className="mx-auto max-w-[1540px]">
         <div
-          className={`mb-8 grid gap-5 border-b pb-5 text-[10px] uppercase tracking-[0.18em] lg:grid-cols-[220px_1fr_360px] lg:items-end ${
+          className={`mobile-lookbook-chapter-heading mb-8 grid gap-5 border-b pb-5 text-[10px] uppercase tracking-[0.18em] lg:grid-cols-[220px_1fr_360px] lg:items-end ${
             isDark ? "border-[#e6e6de]/16 text-[#e6e6de]/58" : "border-black/16 text-black/54"
           }`}
         >

@@ -252,7 +252,7 @@ export function HomeSelectedPieces() {
   return (
     <section
       aria-labelledby="selected-garments-title"
-      className="selected-garments-section order-2 border-y border-black/14 bg-[#dedfd9] py-6 text-[#11110f] sm:py-7 lg:order-none lg:py-9"
+      className="selected-garments-section mobile-selected-editorial order-2 border-y border-black/14 bg-[#dedfd9] py-6 text-[#11110f] sm:py-7 lg:order-none lg:py-9"
       id="selected-pieces"
     >
       <div className="mx-auto max-w-[1680px] px-5 sm:px-6 lg:px-12">
@@ -383,10 +383,10 @@ function CampaignRailCard() {
   return (
     <Link
       aria-label="Open men's Spring 2026 collection"
-      className="group w-[36vw] shrink-0 snap-start sm:w-[22vw] lg:hidden"
+      className="mobile-selected-card group w-[82vw] shrink-0 snap-start sm:w-[22vw] lg:hidden"
       href="/collections/men"
     >
-      <div className="relative h-[48svh] min-h-[300px] max-h-[480px] overflow-hidden border border-black/14 bg-[#c8cbc5]">
+      <div className="relative h-[62svh] min-h-[420px] max-h-[560px] overflow-hidden border border-black/14 bg-[#c8cbc5]">
         <Image
           alt="LOW SIGNAL men's Spring 2026 campaign"
           className="object-cover object-[48%_52%] brightness-[0.82] contrast-[1.06] saturate-[0.62] transition-transform duration-700 group-hover:scale-[1.012]"
@@ -457,12 +457,12 @@ function RailCard({
   return (
     <Link
       aria-label={`View piece ${product.name}`}
-      className="selected-campaign-card group w-[68vw] shrink-0 snap-start sm:w-[40vw] lg:w-[25vw]"
+        className="selected-campaign-card mobile-selected-card group w-[82vw] shrink-0 snap-start sm:w-[40vw] lg:w-[25vw]"
       data-rail-index={index - 1}
       href={`/products/${product.slug}`}
       onClick={onClick}
     >
-      <div className="relative h-[48svh] min-h-[300px] max-h-[480px] overflow-hidden border border-black/14 bg-[#ccd0c9] lg:h-[55vh] lg:min-h-[360px] lg:max-h-[680px]">
+      <div className="relative h-[62svh] min-h-[420px] max-h-[560px] overflow-hidden border border-black/14 bg-[#ccd0c9] lg:h-[55vh] lg:min-h-[360px] lg:max-h-[680px]">
         <span className="absolute left-4 top-4 z-10 text-[9px] font-medium uppercase tracking-[0.13em] text-white/70">
           {String(index).padStart(2, "0")}
         </span>

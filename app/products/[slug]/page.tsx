@@ -70,9 +70,9 @@ export default async function ProductPage({ params }: ProductPageProps) {
     <main className="min-h-screen bg-[#e7e7e1] text-[#141311]">
       <MobileHomeHeader mode="paper" />
 
-      <section className="grid px-5 pb-28 pt-[92px] lg:min-h-screen lg:grid-cols-[58%_42%] lg:px-0 lg:pb-0 lg:pt-[64px]">
-        <div className="grid gap-4 lg:grid-cols-[104px_1fr] lg:border-r lg:border-black/16 lg:p-8 xl:grid-cols-[124px_1fr] xl:p-10">
-          <div className="order-2 grid grid-cols-3 gap-3 lg:order-1 lg:grid-cols-1">
+      <section className="mobile-product-page grid px-5 pb-28 pt-[92px] lg:min-h-screen lg:grid-cols-[58%_42%] lg:px-0 lg:pb-0 lg:pt-[64px]">
+        <div className="mobile-product-gallery grid gap-4 lg:grid-cols-[104px_1fr] lg:border-r lg:border-black/16 lg:p-8 xl:grid-cols-[124px_1fr] xl:p-10">
+          <div className="mobile-product-thumbnails order-2 grid grid-cols-3 gap-3 lg:order-1 lg:grid-cols-1">
             {gallery.map((image) => (
               <div
                 className="relative aspect-[4/5] overflow-hidden border border-black/12 bg-[#d0d0c8]"
@@ -89,7 +89,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
             ))}
           </div>
 
-          <div className="relative order-1 min-h-[68vh] overflow-hidden border border-black/12 bg-[#d0d0c8] lg:order-2 lg:min-h-0">
+          <div className="mobile-product-lead relative order-1 min-h-[68vh] overflow-hidden border border-black/12 bg-[#d0d0c8] lg:order-2 lg:min-h-0">
             <Image
               alt={product.name}
               src={product.image}
@@ -105,7 +105,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
           </div>
         </div>
 
-        <div className="flex flex-col justify-between border-black/16 pt-10 lg:border-t-0 lg:bg-[#ddddd6] lg:px-12 lg:py-12 xl:px-16">
+        <div className="mobile-product-information flex flex-col justify-between border-black/16 pt-10 lg:border-t-0 lg:bg-[#ddddd6] lg:px-12 lg:py-12 xl:px-16">
           <div>
             <div className="flex items-center justify-between border-b border-black/16 pb-6 text-[9px] uppercase tracking-[0.14em] text-black/64">
               <span>05 - Garment / Spring 2026</span>

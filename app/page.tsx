@@ -35,7 +35,7 @@ const footerLinks = [
 
 export default function Home() {
   return (
-    <main className="flex min-h-screen w-full flex-col bg-[#e4e5df] text-[#111]">
+    <main className="mobile-home-root flex min-h-screen w-full flex-col bg-[#e4e5df] text-[#111]">
       <MobileHomeHeader />
       <section className="order-1 grid w-full bg-[#e4e5df] lg:order-none lg:h-[100svh] lg:grid-rows-[65fr_35fr]">
         <HeroPanel />
@@ -51,7 +51,7 @@ export default function Home() {
 
 function HeroPanel() {
   return (
-    <section className="relative min-h-[100svh] overflow-hidden border-b border-black/20 bg-[#e4e5df] lg:h-full lg:min-h-0">
+    <section className="mobile-home-hero relative min-h-[100svh] overflow-hidden border-b border-black/20 bg-[#e4e5df] lg:h-full lg:min-h-0">
       <div className="absolute inset-y-0 left-0 w-[32%] bg-[#e4e5df] lg:w-[29.5vw]" />
       <div className="absolute inset-y-0 left-[32%] right-0 lg:left-[29.5vw]">
         <Image
@@ -137,7 +137,7 @@ function HeroPanel() {
 
 function EditorialGrid() {
   return (
-    <section className="border-b border-black/20">
+    <section className="mobile-home-editorial border-b border-black/20">
       <div className="lg:hidden">
         <div className="bg-[#e8e9e3] px-5 py-7">
           <Kicker number="02" />
@@ -252,8 +252,8 @@ function EditorialGrid() {
 
 function MaterialForm() {
   return (
-    <section className="order-3 grid min-h-[72svh] w-full grid-cols-[46%_54%] border-t border-black/20 bg-[#d6d7d1] lg:order-none lg:min-h-[76svh] lg:grid-cols-[38vw_1fr]">
-      <div className="relative border-r border-black/18 bg-[#d4d5cf] lg:min-h-0">
+    <section className="mobile-material-story order-3 grid min-h-[72svh] w-full grid-cols-[46%_54%] border-t border-black/20 bg-[#d6d7d1] lg:order-none lg:min-h-[76svh] lg:grid-cols-[38vw_1fr]">
+      <div className="mobile-material-copy relative border-r border-black/18 bg-[#d4d5cf] lg:min-h-0">
         <div className="h-full px-5 py-9 lg:h-auto lg:px-0 lg:py-0">
           <div className="lg:absolute lg:left-[8.5vw] lg:top-[22%] lg:max-w-[310px]">
             <Kicker number="05" />
@@ -269,7 +269,7 @@ function MaterialForm() {
               <br />
               over time.
             </p>
-            <div className="mt-7 hidden max-w-[260px] grid-cols-2 border-y border-black/18 text-[8px] uppercase tracking-[0.15em] text-black/56 lg:mt-[40px] lg:grid lg:grid-cols-1 lg:text-[9px]">
+            <div className="mobile-material-notes mt-7 hidden max-w-[260px] grid-cols-2 border-y border-black/18 text-[8px] uppercase tracking-[0.15em] text-black/56 lg:mt-[40px] lg:grid lg:grid-cols-1 lg:text-[9px]">
               {materialNotes.map((item) => (
                 <div
                   key={item}
@@ -290,9 +290,9 @@ function MaterialForm() {
         </div>
       </div>
 
-      <div className="relative min-h-0 bg-[#d6d7d1] lg:px-[5vw] lg:py-[7vh]">
+      <div className="mobile-material-image-column relative min-h-0 bg-[#d6d7d1] lg:px-[5vw] lg:py-[7vh]">
         <div className="grid h-full content-center gap-5">
-          <div className="relative h-full min-h-[72svh] w-full overflow-hidden border-l border-black/14 bg-[#bfc0b8] lg:ml-[3vw] lg:min-h-0 lg:aspect-[16/11] lg:h-auto lg:w-[88%] lg:border">
+          <div className="mobile-material-image relative h-full min-h-[72svh] w-full overflow-hidden border-l border-black/14 bg-[#bfc0b8] lg:ml-[3vw] lg:min-h-0 lg:aspect-[16/11] lg:h-auto lg:w-[88%] lg:border">
             <Image
               src={materialStoryImage}
               alt="Close black washed fabric, rib texture, and shadow"
@@ -315,9 +315,9 @@ function MaterialForm() {
 
 function JournalSection() {
   return (
-    <section id="journal" className="order-4 w-full overflow-hidden border-t border-black/18 bg-[#d4d5cf] px-5 py-9 text-[#111] lg:order-none lg:px-[4.5vw] lg:py-[5vh]">
+    <section id="journal" className="mobile-journal order-4 w-full overflow-hidden border-t border-black/18 bg-[#d4d5cf] px-5 py-9 text-[#111] lg:order-none lg:px-[4.5vw] lg:py-[5vh]">
       <div className="grid gap-6 lg:grid-cols-[28vw_1fr] lg:gap-9">
-        <aside className="grid max-w-[360px] grid-cols-[auto_1fr] gap-x-8 lg:flex lg:flex-col">
+        <aside className="mobile-journal-intro grid max-w-[360px] grid-cols-[auto_1fr] gap-x-8 lg:flex lg:flex-col">
           <Kicker number="07" />
           <h2 className="text-[11px] uppercase leading-[1.45] tracking-[0.22em] lg:mt-[34px]">
             Journal
@@ -349,8 +349,8 @@ function JournalSection() {
           </div>
         </aside>
 
-        <div className="grid min-w-0 grid-cols-[64%_36%] lg:block">
-          <div className="relative h-[60svh] min-h-[400px] overflow-hidden border border-black/15 bg-[#bdc0b9] lg:h-[34svh] lg:min-h-[230px]">
+        <div className="mobile-journal-composition grid min-w-0 grid-cols-[64%_36%] lg:block">
+          <div className="mobile-journal-lead relative h-[60svh] min-h-[400px] overflow-hidden border border-black/15 bg-[#bdc0b9] lg:h-[34svh] lg:min-h-[230px]">
             <Image
               src={lookbookImage}
               alt="Man standing near the sea in a LOW SIGNAL editorial photograph"
@@ -366,8 +366,8 @@ function JournalSection() {
             <a href="#journal" className="absolute bottom-5 left-5 border-b border-white/70 pb-2 text-[9px] uppercase tracking-[0.18em] text-white lg:hidden">Read journal →</a>
           </div>
 
-          <div className="grid gap-6 border-l border-black/15 pl-3 lg:mt-6 lg:grid-cols-[1fr_170px] lg:border-l-0 lg:pl-0">
-            <div className="grid grid-rows-2 gap-3 lg:grid-cols-5 lg:grid-rows-none lg:gap-4">
+          <div className="mobile-journal-details grid gap-6 border-l border-black/15 pl-3 lg:mt-6 lg:grid-cols-[1fr_170px] lg:border-l-0 lg:pl-0">
+            <div className="mobile-journal-thumbs grid grid-rows-2 gap-3 lg:grid-cols-5 lg:grid-rows-none lg:gap-4">
               {journalImages.map(([src, label], index) => (
                 <div key={label} className={`${index > 1 ? "hidden lg:block" : ""} ${index === 1 ? "lg:mt-7" : ""}`}>
                   <div className="relative h-full min-h-[190px] overflow-hidden border border-black/14 bg-[#151413] lg:h-[92px] lg:min-h-0">

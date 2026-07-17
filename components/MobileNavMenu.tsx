@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import { CartCountLink } from "./CartCountLink";
 
@@ -79,36 +80,49 @@ export function MobileNavMenu({
         <div
           aria-label="Site menu"
           aria-modal="true"
-          className="absolute left-0 right-0 top-16 z-[70] h-[calc(100svh-4rem)] overflow-y-auto border-b border-current bg-[#e4e5df] p-5 text-[#121211]"
+          className="mobile-menu-panel absolute left-0 right-0 top-16 z-[70] h-[calc(100svh-4rem)] overflow-y-auto border-b border-current bg-[#e4e5df] p-5 text-[#121211]"
           id="mobile-site-menu"
           role="dialog"
           onPointerDown={(event) => {
             if (event.target === event.currentTarget) setOpen(false);
           }}
         >
-          <nav aria-label="Mobile navigation" className="grid divide-y divide-black/16 border-y border-black/16">
-            {links.map(([label, href], index) => (
-              <Link
-                className="py-4 text-[14px] uppercase tracking-[0.14em]"
-                href={href}
-                key={href}
-                ref={index === 0 ? firstLinkRef : undefined}
+          <div className="mobile-menu-composition">
+            <nav aria-label="Mobile navigation" className="mobile-menu-primary grid divide-y divide-black/16 border-y border-black/16">
+              {links.map(([label, href], index) => (
+                <Link
+                  className="grid grid-cols-[30px_1fr] items-center py-4 text-[14px] uppercase tracking-[0.14em]"
+                  href={href}
+                  key={href}
+                  ref={index === 0 ? firstLinkRef : undefined}
+                  onClick={() => setOpen(false)}
+                >
+                  <span className="text-[8px] text-black/42">{String(index + 1).padStart(2, "0")}</span>
+                  <span>{label}</span>
+                </Link>
+              ))}
+              <CartCountLink
+                className="grid grid-cols-[30px_1fr] items-center py-4 pl-[30px] text-[14px] uppercase tracking-[0.14em]"
                 onClick={() => setOpen(false)}
-              >
-                {label}
-              </Link>
-            ))}
-            <CartCountLink
-              className="py-4 text-[14px] uppercase tracking-[0.14em]"
-              onClick={() => setOpen(false)}
-            />
-          </nav>
-          <Link className="mt-6 grid min-h-[148px] grid-cols-[1fr_auto] content-between border-y border-black/16 py-5 text-[12px] uppercase leading-[1.45] tracking-[0.14em] text-black" href="/collections" onClick={() => setOpen(false)}>
-            <span className="max-w-[180px] text-[26px] leading-[0.92] tracking-[0.02em]">Spring 2026</span>
-            <span className="text-[9px] text-black/50">01 / 05</span>
-            <span className="col-span-2 w-fit border-b border-black/60 pb-1 text-[10px]">Shop collection →</span>
-          </Link>
-          <nav aria-label="Secondary navigation" className="mt-6 grid grid-cols-2 gap-4 text-[12px] uppercase tracking-[0.12em] text-black/62">
+              />
+            </nav>
+            <Link className="mobile-menu-campaign relative min-h-[260px] overflow-hidden border-y border-black/16 text-[#f0eee7]" href="/collections" onClick={() => setOpen(false)}>
+              <Image
+                alt="LOW SIGNAL Spring 2026 collection"
+                className="object-cover object-[50%_42%] brightness-[0.68] contrast-[1.08] saturate-[0.62]"
+                fill
+                sizes="46vw"
+                src="/images/low-signal/products/product-01.jpg"
+              />
+              <div className="absolute inset-0 bg-black/22" />
+              <div className="absolute inset-0 grid content-between p-4 text-[9px] uppercase tracking-[0.14em]">
+                <span>01 / 05</span>
+                <span className="controlled-display-title text-[28px]">Spring<br />2026</span>
+                <span className="w-fit border-b border-white/60 pb-1">Shop →</span>
+              </div>
+            </Link>
+          </div>
+          <nav aria-label="Secondary navigation" className="mobile-menu-secondary mt-6 grid grid-cols-2 gap-4 text-[12px] uppercase tracking-[0.12em] text-black/62">
             <Link href="/collections" onClick={() => setOpen(false)}>Search</Link>
             <Link href="/account" onClick={() => setOpen(false)}>Account</Link>
             <a href="https://instagram.com">Instagram</a>
