@@ -74,7 +74,7 @@ function HeroPanel() {
         <div className="absolute inset-0 bg-[#d8cfc1]/10 mix-blend-screen" />
       </div>
 
-      <div className="absolute left-5 right-5 top-[84px] z-20 h-px bg-black/30 lg:left-[18px] lg:right-auto lg:top-[48px] lg:w-[46.35vw] lg:bg-black/40" />
+      <div className="absolute left-[18px] top-[48px] z-20 hidden h-px w-[46.35vw] bg-black/40 lg:block" />
       <div className="absolute left-[75.15vw] right-[18px] top-[48px] z-20 hidden h-px bg-black/40 lg:block" />
 
       <div className="absolute left-[5.15vw] top-1/2 z-20 hidden w-[210px] -translate-y-1/2 flex-col items-start lg:flex">
