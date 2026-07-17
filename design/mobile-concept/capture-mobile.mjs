@@ -4,10 +4,12 @@ import { mkdirSync, writeFileSync } from "node:fs";
 import net from "node:net";
 
 const chromePath = "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome";
-const port = 9223;
+const port = Number(process.env.CAPTURE_DEBUG_PORT ?? 9223);
 const origin = `http://127.0.0.1:${port}`;
-const site = "http://localhost:3000";
+const site = process.env.CAPTURE_SITE ?? "http://localhost:3000";
 const outDir = "design/mobile-concept/screenshots";
+const captureWidth = Number(process.env.CAPTURE_WIDTH ?? 390);
+const captureHeight = Number(process.env.CAPTURE_HEIGHT ?? 844);
 
 mkdirSync(outDir, { recursive: true });
 
@@ -18,8 +20,8 @@ const chrome = spawn(chromePath, [
   "--no-default-browser-check",
   "--allow-file-access-from-files",
   `--remote-debugging-port=${port}`,
-  "--user-data-dir=/tmp/low-signal-mobile-capture",
-  "--window-size=390,844",
+  `--user-data-dir=/tmp/low-signal-mobile-capture-${port}`,
+  `--window-size=${captureWidth},${captureHeight}`,
 ], {
   stdio: "ignore",
 });
@@ -277,7 +279,7 @@ async function warmLazyImages(cdp) {
 
 async function captureRoute(path, name) {
   const cdp = await newPage();
-  await navigate(cdp, path, 390, 844);
+  await navigate(cdp, path, captureWidth, captureHeight);
   const pageState = await evaluate(
     cdp,
     `({
@@ -287,7 +289,7 @@ async function captureRoute(path, name) {
     })`,
   );
   console.log(name, JSON.stringify(pageState, null, 2));
-  await screenshot(cdp, `${name}-full-390.png`);
+  await screenshot(cdp, `${name}-full-${captureWidth}.png`);
   cdp.close();
 }
 

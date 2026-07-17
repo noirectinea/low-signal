@@ -367,6 +367,9 @@ a {
   }
 
   .mobile-selected-editorial .mobile-selected-card > div:first-child {
+    height: 62svh;
+    min-height: 420px;
+    max-height: 560px;
     border-color: rgb(236 236 229 / 0.16);
   }
 
