@@ -10,9 +10,11 @@ type AccountState =
 export function AccountHeaderLink({
   className = "",
   compact = false,
+  onClick,
 }: {
   className?: string;
   compact?: boolean;
+  onClick?: () => void;
 }) {
   const [account, setAccount] = useState<AccountState>({
     authenticated: false,
@@ -49,6 +51,7 @@ export function AccountHeaderLink({
       aria-label={account.authenticated ? "Open my account" : "Sign in"}
       className={className}
       href={account.authenticated ? "/account" : "/account/login"}
+      onClick={onClick}
     >
       {account.authenticated
         ? compact

@@ -5,11 +5,11 @@ import { useEffect, useRef, useState } from "react";
 import { AccountHeaderLink } from "./AccountHeaderLink";
 
 const links = [
-  ["Shop all", "/collections"],
-  ["Men", "/collections/men"],
-  ["Women", "/collections/women"],
-  ["Lookbook", "/lookbook"],
-  ["About", "/about"],
+  ["Shop all", "16 pieces", "/collections"],
+  ["Men", "08 pieces", "/collections/men"],
+  ["Women", "08 pieces", "/collections/women"],
+  ["Lookbook", "Issue 01", "/lookbook"],
+  ["About", "Brand notes", "/about"],
 ] as const;
 
 export function MobileNavMenu({
@@ -87,37 +87,56 @@ export function MobileNavMenu({
         <div
           aria-label="Site menu"
           aria-modal="true"
-          className="mobile-menu-panel absolute left-0 right-0 top-16 z-[70] h-[calc(100svh-4rem)] overflow-y-auto border-b border-current bg-[#e4e5df] p-5 text-[#121211]"
+          className="mobile-menu-panel fixed inset-x-0 bottom-0 top-16 z-[70] overflow-y-auto border-b border-current bg-[#e4e5df] text-[#121211]"
           id="mobile-site-menu"
           role="dialog"
           onPointerDown={(event) => {
             if (event.target === event.currentTarget) setOpen(false);
           }}
         >
+          <div className="mobile-menu-meta">
+            <span>Navigation / 01</span>
+            <span>Spring 2026</span>
+          </div>
+
           <div className="mobile-menu-composition">
-            <nav aria-label="Mobile navigation" className="mobile-menu-primary grid divide-y divide-black/16 border-y border-black/16">
-              {links.map(([label, href], index) => (
+            <nav aria-label="Mobile navigation" className="mobile-menu-primary">
+              {links.map(([label, note, href], index) => (
                 <Link
-                  className="grid min-h-14 grid-cols-[36px_1fr_auto] items-center px-4 text-[13px] uppercase tracking-[0.14em]"
+                  className="mobile-menu-primary-link"
                   href={href}
                   key={href}
                   ref={index === 0 ? firstLinkRef : undefined}
                   onClick={() => setOpen(false)}
                 >
-                  <span className="text-[8px] text-black/42">{String(index + 1).padStart(2, "0")}</span>
-                  <span>{label}</span>
-                  <span aria-hidden="true" className="text-[10px] text-black/44">→</span>
+                  <span className="mobile-menu-index">{String(index + 1).padStart(2, "0")}</span>
+                  <span className="mobile-menu-label">{label}</span>
+                  <span className="mobile-menu-note">{note}</span>
+                  <span aria-hidden="true" className="mobile-menu-arrow">→</span>
                 </Link>
               ))}
             </nav>
           </div>
-          <nav aria-label="Secondary navigation" className="mobile-menu-secondary grid grid-cols-2 text-[11px] uppercase tracking-[0.12em] text-black/62">
-            <Link className="flex min-h-11 items-center" href="/search" onClick={() => setOpen(false)}>Search</Link>
-            <AccountHeaderLink className="flex min-h-11 items-center" />
-            <Link className="flex min-h-11 items-center" href="/account/orders" onClick={() => setOpen(false)}>Orders</Link>
-            <Link className="flex min-h-11 items-center" href="/shipping" onClick={() => setOpen(false)}>Shipping & Returns</Link>
-            <Link className="flex min-h-11 items-center" href="/contact" onClick={() => setOpen(false)}>Contact</Link>
-          </nav>
+
+          <div className="mobile-menu-lower">
+            <nav aria-label="Secondary navigation" className="mobile-menu-secondary">
+              <Link href="/search" onClick={() => setOpen(false)}>Search</Link>
+              <AccountHeaderLink onClick={() => setOpen(false)} />
+              <Link href="/account/orders" onClick={() => setOpen(false)}>Orders</Link>
+              <Link href="/shipping" onClick={() => setOpen(false)}>Shipping & Returns</Link>
+              <Link href="/contact" onClick={() => setOpen(false)}>Contact</Link>
+            </nav>
+
+            <Link
+              className="mobile-menu-current"
+              href="/collections"
+              onClick={() => setOpen(false)}
+            >
+              <span>Current selection</span>
+              <strong>Spring 2026</strong>
+              <span>Shop collection →</span>
+            </Link>
+          </div>
         </div>
       ) : null}
     </div>

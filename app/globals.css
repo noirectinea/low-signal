@@ -306,6 +306,10 @@ a {
     flex-shrink: 0;
   }
 
+  .mobile-home-root > footer {
+    order: 5;
+  }
+
   .mobile-home-hero > div:first-child {
     width: 29%;
   }
@@ -899,22 +903,70 @@ a {
   .mobile-menu-panel {
     padding: 0;
     background: #dfe0da;
+    display: grid;
+    grid-template-rows: auto auto 1fr;
+  }
+
+  .mobile-menu-meta {
+    min-height: 46px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 16px;
+    border-bottom: 1px solid rgb(0 0 0 / 0.16);
+    color: rgb(18 18 17 / 0.46);
+    font-size: 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.16em;
   }
 
   .mobile-menu-composition {
     min-height: 0;
-    display: grid;
-    grid-template-columns: 1fr;
   }
 
   .mobile-menu-primary {
-    align-content: start;
-    border-left: 0;
-    border-right: 0;
+    border-bottom: 1px solid rgb(0 0 0 / 0.16);
   }
 
-  .mobile-menu-primary a {
-    min-height: 56px;
+  .mobile-menu-primary-link {
+    min-height: 58px;
+    display: grid;
+    grid-template-columns: 30px minmax(0, 1fr) auto 18px;
+    align-items: center;
+    column-gap: 8px;
+    padding: 0 16px;
+    border-bottom: 1px solid rgb(0 0 0 / 0.14);
+    text-transform: uppercase;
+  }
+
+  .mobile-menu-primary-link:last-child {
+    border-bottom: 0;
+  }
+
+  .mobile-menu-index {
+    color: rgb(18 18 17 / 0.38);
+    font-size: 8px;
+    letter-spacing: 0.14em;
+  }
+
+  .mobile-menu-label {
+    font-family: var(--font-archivo), Arial, sans-serif;
+    font-size: clamp(18px, 5.4vw, 22px);
+    font-weight: 500;
+    line-height: 0.95;
+    letter-spacing: -0.025em;
+  }
+
+  .mobile-menu-note {
+    color: rgb(18 18 17 / 0.42);
+    font-size: 7px;
+    letter-spacing: 0.13em;
+  }
+
+  .mobile-menu-arrow {
+    justify-self: end;
+    color: rgb(18 18 17 / 0.56);
+    font-size: 11px;
   }
 
   .mobile-menu-cart-link::before {
@@ -937,10 +989,56 @@ a {
     border-bottom: 1px solid rgb(0 0 0 / 0.16);
   }
 
+  .mobile-menu-lower {
+    min-height: 0;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 42%;
+    align-self: stretch;
+  }
+
   .mobile-menu-secondary {
-    margin: 0;
-    padding: 12px 16px;
+    display: grid;
+    align-content: start;
+    padding: 14px 16px;
+    border-right: 1px solid rgb(0 0 0 / 0.16);
     background: #dfe0da;
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: rgb(18 18 17 / 0.62);
+  }
+
+  .mobile-menu-secondary a {
+    min-height: 38px;
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid rgb(0 0 0 / 0.12);
+  }
+
+  .mobile-menu-current {
+    display: flex;
+    min-width: 0;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 16px 14px;
+    background: #171614;
+    color: #ecece5;
+    text-transform: uppercase;
+  }
+
+  .mobile-menu-current span {
+    font-size: 7px;
+    line-height: 1.5;
+    letter-spacing: 0.14em;
+    color: rgb(236 236 229 / 0.58);
+  }
+
+  .mobile-menu-current strong {
+    font-family: var(--font-archivo), Arial, sans-serif;
+    font-size: clamp(20px, 6vw, 25px);
+    font-weight: 500;
+    line-height: 0.9;
+    letter-spacing: -0.035em;
   }
 }
 
@@ -955,9 +1053,30 @@ a {
     flex-shrink: 0;
   }
 
+  .mobile-home-root > footer {
+    order: 5;
+  }
+
   .mobile-menu-panel {
     padding: 0;
     background: #dfe0da;
+    display: grid;
+    grid-template-columns: minmax(0, 62%) minmax(0, 38%);
+    grid-template-rows: auto 1fr;
+  }
+
+  .mobile-menu-meta {
+    grid-column: 1 / -1;
+    min-height: 52px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 24px;
+    border-bottom: 1px solid rgb(0 0 0 / 0.16);
+    color: rgb(18 18 17 / 0.46);
+    font-size: 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.16em;
   }
 
   .mobile-spring-heading {
@@ -976,15 +1095,46 @@ a {
 
   .mobile-menu-composition {
     display: grid;
-    grid-template-columns: minmax(0, 1fr) 38%;
+    grid-template-columns: minmax(0, 1fr);
+    border-right: 1px solid rgb(0 0 0 / 0.16);
   }
 
   .mobile-menu-primary {
     align-content: start;
   }
 
-  .mobile-menu-primary a {
-    min-height: 58px;
+  .mobile-menu-primary-link {
+    min-height: 72px;
+    display: grid;
+    grid-template-columns: 40px minmax(0, 1fr) auto 20px;
+    align-items: center;
+    gap: 10px;
+    padding: 0 24px;
+    border-bottom: 1px solid rgb(0 0 0 / 0.14);
+    text-transform: uppercase;
+  }
+
+  .mobile-menu-index {
+    color: rgb(18 18 17 / 0.38);
+    font-size: 8px;
+  }
+
+  .mobile-menu-label {
+    font-family: var(--font-archivo), Arial, sans-serif;
+    font-size: 28px;
+    font-weight: 500;
+    line-height: 0.95;
+    letter-spacing: -0.025em;
+  }
+
+  .mobile-menu-note {
+    color: rgb(18 18 17 / 0.42);
+    font-size: 7px;
+    text-transform: uppercase;
+  }
+
+  .mobile-menu-arrow {
+    justify-self: end;
   }
 
   .mobile-menu-cart-link::before {
@@ -1006,8 +1156,48 @@ a {
   }
 
   .mobile-menu-secondary {
-    padding: 14px 20px;
-    border-top: 1px solid rgb(0 0 0 / 0.16);
+    display: grid;
+    align-content: start;
+    padding: 18px 20px;
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: rgb(18 18 17 / 0.62);
+  }
+
+  .mobile-menu-secondary a {
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid rgb(0 0 0 / 0.12);
+  }
+
+  .mobile-menu-lower {
+    display: grid;
+    grid-template-rows: 1fr 180px;
+  }
+
+  .mobile-menu-current {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 20px;
+    background: #171614;
+    color: #ecece5;
+    text-transform: uppercase;
+  }
+
+  .mobile-menu-current span {
+    color: rgb(236 236 229 / 0.58);
+    font-size: 8px;
+  }
+
+  .mobile-menu-current strong {
+    font-family: var(--font-archivo), Arial, sans-serif;
+    font-size: 30px;
+    font-weight: 500;
+    line-height: 0.9;
+    letter-spacing: -0.035em;
   }
 
   .mobile-selected-editorial .mobile-selected-card {
