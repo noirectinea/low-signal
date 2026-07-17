@@ -122,9 +122,9 @@ function HeroPanel() {
 
       <div className="absolute inset-x-5 bottom-6 z-30 grid grid-cols-[32%_1fr] gap-5 border-t border-black/34 pt-4 lg:hidden">
         <p className="min-w-0 text-[9px] uppercase leading-[1.65] tracking-[0.12em] text-black/72">Washed black clothing for daily wear.</p>
-        <div className="grid min-w-0 gap-3 text-[10px] uppercase tracking-[0.12em]">
-          <Link className="whitespace-nowrap border-b border-black/70 pb-2" href="/collections">Shop Spring 2026 →</Link>
-          <Link className="w-fit border-b border-black/35 pb-1 text-black/66" href="/lookbook">View Lookbook</Link>
+        <div className="grid min-w-0 gap-3 text-[10px] uppercase tracking-[0.12em] text-[#f5f2ed]/82">
+          <Link className="whitespace-nowrap border-b border-[#f5f2ed]/62 pb-2" href="/collections">Shop Spring 2026 →</Link>
+          <Link className="w-fit border-b border-[#f5f2ed]/38 pb-1 text-[#f5f2ed]/68" href="/lookbook">View Lookbook</Link>
         </div>
       </div>
 

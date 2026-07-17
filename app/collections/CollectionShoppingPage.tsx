@@ -292,7 +292,7 @@ export function CollectionShoppingPage({
         >
           <div>
             <CollectionBreadcrumb gender={gender} genderLabel={genderLabel} />
-            <h1 className="fashion-rail-title mt-4 max-w-[480px] text-[46px] text-black/94 sm:text-[62px] lg:text-[76px] xl:text-[84px]">
+            <h1 className="fashion-rail-title mt-5 max-w-[480px] text-[25vw] text-black/94 sm:text-[62px] lg:text-[76px] xl:text-[84px]">
               {genderLabel}
             </h1>
             <p className="mt-3 text-[10px] uppercase tracking-[0.18em] text-black/50">
@@ -300,7 +300,7 @@ export function CollectionShoppingPage({
             </p>
           </div>
 
-          <div className="grid gap-4">
+          <div className="grid gap-4 border-t border-black/12 pt-5 lg:border-t-0 lg:pt-0">
             <ProductSearch
               resultCount={visibleProducts.length}
               searchQuery={searchQuery}
@@ -843,13 +843,13 @@ function ProductGrid({
 
       {products.length > 0 ? (
         <div
-          className={`grid grid-cols-2 gap-x-3 sm:gap-x-5 md:grid-cols-3 lg:grid-cols-4 ${
-            gender === "women" ? "gap-y-12 sm:gap-y-14" : "gap-y-9 sm:gap-y-10"
+          className={`grid grid-cols-12 gap-x-3 sm:grid-cols-2 sm:gap-x-5 md:grid-cols-3 lg:grid-cols-4 ${
+            gender === "women" ? "gap-y-12 sm:gap-y-14" : "gap-y-10 sm:gap-y-10"
           }`}
         >
           {products.map((product, index) => (
-            <ProductCard
-              index={index}
+              <ProductCard
+                index={index}
               isWomen={gender === "women"}
               cartItems={cartItems}
               key={product.id}
@@ -925,8 +925,8 @@ function CampaignRail({
     <div
       className={`relative overflow-hidden border-y border-black/14 bg-[#d3d5cf] ${
         gender === "women"
-          ? "mb-8 h-[178px] sm:h-[212px] lg:h-[212px] xl:h-[238px]"
-          : "mb-6 h-[160px] sm:h-[190px] lg:h-[180px] xl:h-[206px]"
+          ? "mb-8 h-[52svh] max-h-[360px] min-h-[238px] sm:h-[212px] lg:h-[212px] xl:h-[238px]"
+          : "mb-7 h-[46svh] max-h-[330px] min-h-[218px] sm:h-[190px] lg:h-[180px] xl:h-[206px]"
       }`}
     >
       <Image
@@ -989,7 +989,15 @@ function ProductCard({
 
   return (
     <article
-      className="quiet-reveal group relative min-w-0 border-b border-black/14 pb-4"
+      className={`quiet-reveal group relative min-w-0 border-b border-black/14 pb-4 sm:col-span-1 sm:col-start-auto ${
+        index % 4 === 0
+          ? "col-span-8"
+          : index % 4 === 1
+            ? "col-span-8 col-start-5"
+            : index % 4 === 2
+              ? "col-span-7"
+              : "col-span-9 col-start-4"
+      }`}
       style={{ animationDelay: `${Math.min(index, 10) * 45}ms` }}
     >
       <Link
@@ -998,7 +1006,11 @@ function ProductCard({
         href={`/products/${product.slug}`}
       />
 
-      <div className="relative aspect-[4/5] overflow-hidden border border-black/10 bg-[#d1d3cd]">
+      <div
+        className={`relative overflow-hidden border border-black/10 bg-[#d1d3cd] ${
+          index % 4 === 2 ? "aspect-[5/6]" : index % 4 === 3 ? "aspect-[4/5]" : "aspect-[3/4]"
+        } sm:aspect-[4/5]`}
+      >
         <Image
           alt={product.name}
           className={`product-image object-cover brightness-[0.86] contrast-[1.06] saturate-[0.62] transition-[filter,transform] ease-out group-hover:scale-[1.03] group-hover:brightness-[0.78] ${
@@ -1008,7 +1020,7 @@ function ProductCard({
           }`}
           fill
           priority={index < 2}
-          sizes="(min-width: 1280px) 18vw, (min-width: 1024px) 17vw, (min-width: 768px) 25vw, 48vw"
+          sizes="(min-width: 1280px) 18vw, (min-width: 1024px) 17vw, (min-width: 768px) 25vw, 74vw"
           src={product.image}
         />
         <div className="absolute inset-0 bg-black/0 transition duration-500 group-hover:bg-black/12" />

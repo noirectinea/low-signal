@@ -12,10 +12,26 @@ const links = [
   ["About", "/about"],
 ] as const;
 
-export function MobileNavMenu() {
+export function MobileNavMenu({
+  onOpenChange,
+}: Readonly<{
+  onOpenChange?: (open: boolean) => void;
+}>) {
   const [open, setOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
   const firstLinkRef = useRef<HTMLAnchorElement>(null);
+
+  useEffect(() => {
+    if (new URLSearchParams(window.location.search).get("menu") === "open") {
+      const timer = window.setTimeout(() => setOpen(true), 0);
+
+      return () => window.clearTimeout(timer);
+    }
+  }, []);
+
+  useEffect(() => {
+    onOpenChange?.(open);
+  }, [onOpenChange, open]);
 
   useEffect(() => {
     if (!open) return;
@@ -63,7 +79,7 @@ export function MobileNavMenu() {
         <div
           aria-label="Site menu"
           aria-modal="true"
-          className="fixed inset-x-0 bottom-0 top-16 overflow-y-auto border-b border-current bg-[#e4e5df] p-5 text-[#121211] shadow-[0_14px_30px_rgb(0_0_0_/_0.12)]"
+          className="absolute left-0 right-0 top-16 z-[70] h-[calc(100svh-4rem)] overflow-y-auto border-b border-current bg-[#e4e5df] p-5 text-[#121211]"
           id="mobile-site-menu"
           role="dialog"
           onPointerDown={(event) => {
@@ -87,8 +103,10 @@ export function MobileNavMenu() {
               onClick={() => setOpen(false)}
             />
           </nav>
-          <Link className="mt-6 flex min-h-12 items-center justify-center bg-[#171614] px-5 text-[14px] uppercase tracking-[0.12em] text-[#f4f0e8]" href="/collections" onClick={() => setOpen(false)}>
-            Shop Spring 2026 →
+          <Link className="mt-6 grid min-h-[148px] grid-cols-[1fr_auto] content-between border-y border-black/16 py-5 text-[12px] uppercase leading-[1.45] tracking-[0.14em] text-black" href="/collections" onClick={() => setOpen(false)}>
+            <span className="max-w-[180px] text-[26px] leading-[0.92] tracking-[0.02em]">Spring 2026</span>
+            <span className="text-[9px] text-black/50">01 / 05</span>
+            <span className="col-span-2 w-fit border-b border-black/60 pb-1 text-[10px]">Shop collection →</span>
           </Link>
           <nav aria-label="Secondary navigation" className="mt-6 grid grid-cols-2 gap-4 text-[12px] uppercase tracking-[0.12em] text-black/62">
             <Link href="/collections" onClick={() => setOpen(false)}>Search</Link>

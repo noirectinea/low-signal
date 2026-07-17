@@ -136,17 +136,17 @@ export function CartPageClient() {
   }
 
   return (
-    <main className="min-h-screen bg-[#f0ece4] text-[#141311]">
+    <main className="min-h-screen bg-[#e7e7e1] text-[#141311]">
       <MobileHomeHeader mode="paper" />
 
-      <section className="px-5 pb-16 pt-[104px] lg:px-12">
+      <section className="px-5 pb-16 pt-[92px] lg:px-12 lg:pt-[104px]">
         <div className="mx-auto max-w-[1500px]">
-          <div className="grid border-b border-black/16 pb-8 lg:grid-cols-[1fr_auto]">
+          <div className="grid border-b border-black/16 pb-7 lg:grid-cols-[1fr_auto] lg:pb-8">
             <div>
               <p className="text-[12px] uppercase tracking-[0.14em] text-black/50">
                 Cart / Current rail
               </p>
-              <h1 className="controlled-display-title mt-8 text-[56px] uppercase text-black/92 sm:text-[76px] lg:text-[96px]">
+              <h1 className="controlled-display-title mt-7 text-[23vw] uppercase text-black/92 sm:text-[76px] lg:text-[96px]">
                 Your cart
               </h1>
             </div>
@@ -157,7 +157,7 @@ export function CartPageClient() {
           </div>
 
           {items.length > 0 ? (
-            <div className="grid gap-10 pt-10 lg:grid-cols-[1fr_360px] xl:grid-cols-[1fr_420px]">
+            <div className="grid gap-9 pt-8 lg:grid-cols-[1fr_360px] lg:pt-10 xl:grid-cols-[1fr_420px]">
               <div className="border-t border-black/16">
                 {items.map((item) => (
                   <CartLine
@@ -237,8 +237,8 @@ function CartLine({
   const plusDisabled = typeof stock === "number" && item.quantity >= stock;
 
   return (
-    <article className="grid gap-6 border-b border-black/16 py-7 text-[12px] uppercase leading-[1.55] tracking-[0.14em] sm:grid-cols-[132px_1fr_auto] lg:grid-cols-[160px_1fr_auto]">
-      <div className="relative aspect-[4/5] overflow-hidden bg-[#d8d3c8]">
+    <article className="grid grid-cols-[38%_1fr] gap-x-5 gap-y-5 border-b border-black/16 py-7 text-[11px] uppercase leading-[1.55] tracking-[0.14em] sm:grid-cols-[132px_1fr_auto] sm:text-[12px] lg:grid-cols-[160px_1fr_auto]">
+      <div className="relative aspect-[4/5] overflow-hidden border border-black/12 bg-[#d8d3c8]">
         <Image
           src={item.image}
           alt={item.name}
@@ -250,10 +250,10 @@ function CartLine({
         />
       </div>
 
-      <div className="grid gap-6 sm:grid-cols-[1fr_auto]">
+      <div className="grid min-w-0 gap-5 sm:grid-cols-[1fr_auto] sm:gap-6">
         <div>
           <h2 className="max-w-[240px] text-[12px] text-black">{item.name}</h2>
-          <div className="mt-5 grid gap-1 text-black/50">
+          <div className="mt-4 grid gap-1 text-[9px] text-black/50 sm:mt-5 sm:text-[12px]">
             <p>Category: {item.category}</p>
             <p>Color: {item.color ?? "Black"}</p>
             {item.materials ? <p>Material: {item.materials}</p> : null}
@@ -271,7 +271,7 @@ function CartLine({
             </p>
           ) : null}
           <button
-            className="mt-6 border-b border-black/40 pb-1 text-black/54"
+            className="mt-5 border-b border-black/40 pb-1 text-[9px] text-black/54 sm:mt-6 sm:text-[12px]"
             type="button"
             onClick={() => onRemove(item.id)}
           >
@@ -279,7 +279,7 @@ function CartLine({
           </button>
         </div>
 
-        <div className="flex items-start gap-6 sm:justify-end">
+        <div className="flex items-start gap-6 border-t border-black/12 pt-4 sm:border-t-0 sm:pt-0 sm:justify-end">
           <button
             type="button"
             onClick={() => onQuantity(item.id, -1)}
@@ -300,7 +300,7 @@ function CartLine({
         </div>
       </div>
 
-      <p className="text-left sm:text-right">${item.price * item.quantity}</p>
+      <p className="col-span-2 border-t border-black/12 pt-4 text-right sm:col-span-1 sm:border-t-0 sm:pt-0">${item.price * item.quantity}</p>
     </article>
   );
 }
@@ -315,7 +315,7 @@ function OrderSummary({
   subtotal: number;
 }>) {
   return (
-    <aside className="h-fit border border-black/16 bg-[#ebe6dc] p-6 text-[12px] uppercase tracking-[0.14em] lg:sticky lg:top-[96px]">
+    <aside className="h-fit border-y border-black/16 bg-[#dedfd9] py-6 text-[11px] uppercase tracking-[0.14em] sm:border sm:p-6 sm:text-[12px] lg:sticky lg:top-[96px]">
       <p className="border-b border-black/16 pb-5 text-black/58">
         Order summary
       </p>
