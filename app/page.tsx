@@ -74,9 +74,6 @@ function HeroPanel() {
         <div className="absolute inset-0 bg-[#d8cfc1]/10 mix-blend-screen" />
       </div>
 
-      <div className="absolute left-[18px] top-[48px] z-20 hidden h-px w-[46.35vw] bg-black/40 lg:block" />
-      <div className="absolute left-[75.15vw] right-[18px] top-[48px] z-20 hidden h-px bg-black/40 lg:block" />
-
       <div className="absolute left-[5.15vw] top-1/2 z-20 hidden w-[210px] -translate-y-1/2 flex-col items-start lg:flex">
         <Kicker number="01" />
         <p className="mt-[26px] max-w-[205px] text-[12px] uppercase leading-[1.52] tracking-[0.19em]">
