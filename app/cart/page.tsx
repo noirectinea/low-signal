@@ -1,18 +1,11 @@
-import { requireAccountSession } from "@/lib/account";
+import type { Metadata } from "next";
 import { CartPageClient } from "./CartPageClient";
 
-export default async function CartPage({
-  searchParams,
-}: Readonly<{
-  searchParams: Promise<{
-    guest?: string;
-  }>;
-}>) {
-  const { guest } = await searchParams;
+export const metadata: Metadata = {
+  description: "Review LOW SIGNAL garments, sizes, quantities, and order subtotal.",
+  title: "Cart / LOW SIGNAL",
+};
 
-  if (guest !== "1") {
-    await requireAccountSession("/cart");
-  }
-
+export default function CartPage() {
   return <CartPageClient />;
 }

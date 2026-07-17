@@ -1,6 +1,13 @@
 import Image from "next/image";
 import Link from "next/link";
+import type { Metadata } from "next";
 import { MobileHomeHeader } from "@/components/MobileHomeHeader";
+import { SiteFooter } from "@/components/SiteFooter";
+
+export const metadata: Metadata = {
+  description: "LOW SIGNAL materials, production approach, care, and garments made for repeat wear.",
+  title: "About / LOW SIGNAL",
+};
 
 const approachBlocks = [
   {
@@ -38,13 +45,6 @@ const materialLanguage = [
     title: "Worn nylon",
     text: "Light protection with a softened, low-shine finish.",
   },
-];
-
-const footerLinks = [
-  ["Collections", "/collections"],
-  ["Lookbook", "/lookbook"],
-  ["Contact", "#"],
-  ["Instagram", "#"],
 ];
 
 export default function AboutPage() {
@@ -144,17 +144,8 @@ export default function AboutPage() {
       </section>
 
       <AboutExpansion />
+      <SiteFooter />
 
-      <footer className="flex flex-wrap items-center justify-between gap-5 border-t border-black/18 bg-[#deded7] px-5 py-5 text-[9px] uppercase tracking-[0.16em] md:px-8">
-        <span>LOW SIGNAL / MATERIAL LANGUAGE</span>
-        <nav className="flex flex-wrap gap-x-7 gap-y-3">
-          {footerLinks.map(([label, href]) => (
-            <Link key={label} href={href}>
-              {label}
-            </Link>
-          ))}
-        </nav>
-      </footer>
     </main>
   );
 }

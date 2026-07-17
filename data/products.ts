@@ -14,6 +14,7 @@ export type Product = {
   objectPosition?: string;
   description: string;
   materials: string;
+  keywords?: string[];
 };
 
 export type ProductGender = "men" | "women";

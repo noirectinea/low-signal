@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { HomeSelectedPieces } from "@/components/HomeSelectedPieces";
 import { MobileHomeHeader } from "@/components/MobileHomeHeader";
+import { SiteFooter } from "@/components/SiteFooter";
 
 const heroImage = "/images/hero/ch1.png";
 const collectionImage = "/images/hero/ch3.png";
@@ -25,14 +26,6 @@ const journalRows = [
   ["03", "Coastal light"],
   ["04", "Road note"],
 ];
-const footerLinks = [
-  ["Collections", "/collections"],
-  ["Lookbook", "/lookbook"],
-  ["About", "/about"],
-  ["Contact", "#contact"],
-  ["Shipping", "#shipping"],
-];
-
 export default function Home() {
   return (
     <main className="mobile-home-root min-h-screen w-full bg-[#e4e5df] text-[#111]">
@@ -44,7 +37,7 @@ export default function Home() {
       <MaterialForm />
       <HomeSelectedPieces />
       <JournalSection />
-      <FinalFooter />
+      <SiteFooter />
     </main>
   );
 }
@@ -305,12 +298,12 @@ function MaterialForm() {
                 </div>
               ))}
             </div>
-            <a
+            <Link
               className="mt-7 inline-flex border-b border-black pb-[5px] text-[9px] uppercase tracking-[0.16em] lg:mt-[42px]"
               href="/about"
             >
               Our approach
-            </a>
+            </Link>
           </div>
         </div>
       </div>
@@ -343,7 +336,7 @@ function JournalSection() {
     <section id="journal" className="mobile-journal order-4 w-full overflow-hidden border-t border-black/18 bg-[#d4d5cf] px-5 py-9 text-[#111] lg:order-none lg:px-[4.5vw] lg:py-[5vh]">
       <div className="grid gap-6 lg:grid-cols-[28vw_1fr] lg:gap-9">
         <aside className="mobile-journal-intro grid max-w-[360px] grid-cols-[auto_1fr] gap-x-8 lg:flex lg:flex-col">
-          <Kicker number="07" />
+          <Kicker number="06" />
           <h2 className="text-[11px] uppercase leading-[1.45] tracking-[0.22em] lg:mt-[34px]">
             Journal
           </h2>
@@ -358,12 +351,12 @@ function JournalSection() {
             Garments, road light, studio notes, and fabric details from the
             current season.
           </p>
-          <a
-            href="#journal"
+          <Link
+            href="/journal"
             className="col-span-2 mt-5 hidden w-fit border-b border-black/55 pb-[6px] text-[9px] uppercase tracking-[0.18em] transition-opacity duration-300 hover:opacity-55 lg:mt-[28px] lg:inline-flex"
           >
             Read journal →
-          </a>
+          </Link>
 
           <div className="mt-9 hidden border-y border-black/18 py-4 text-[9px] uppercase leading-[1.65] tracking-[0.17em] text-black/50 lg:block">
             <p className="text-black/68">Current entry</p>
@@ -388,7 +381,7 @@ function JournalSection() {
               <span>Road note / 01</span>
               <span>Field note / coastal light</span>
             </div>
-            <a href="#journal" className="absolute bottom-5 left-5 border-b border-white/70 pb-2 text-[9px] uppercase tracking-[0.18em] text-white lg:hidden">Read journal →</a>
+            <Link href="/journal" className="absolute bottom-5 left-5 border-b border-white/70 pb-2 text-[9px] uppercase tracking-[0.18em] text-white lg:hidden">Read journal →</Link>
           </div>
 
           <div className="mobile-journal-details grid gap-6 border-l border-black/15 pl-3 lg:mt-6 lg:grid-cols-[1fr_170px] lg:border-l-0 lg:pl-0">
@@ -427,7 +420,7 @@ function JournalSection() {
             {journalRows.map(([number, label]) => (
               <a
                 key={number}
-                href="#journal"
+                href={`/journal?entry=${number}`}
                 className="grid grid-cols-[42px_1fr_auto] border-b border-black/16 py-4 transition-opacity duration-300 hover:opacity-55"
               >
                 <span>{number}</span>
@@ -442,58 +435,6 @@ function JournalSection() {
   );
 }
 
-function FinalFooter() {
-  return (
-    <footer className="order-5 grid w-full border-t border-black/20 bg-[#d8d9d3] text-[9px] uppercase tracking-[0.16em] lg:order-none lg:grid-cols-[24vw_1fr_18vw]">
-      <div className="border-b border-black/18 px-5 py-6 lg:border-b-0 lg:border-r lg:px-[3vw] lg:py-[30px]">
-        <div className="hidden lg:block"><Kicker number="08" /></div>
-        <h2 className="mt-4 text-[11px] uppercase tracking-[0.18em] lg:mt-[22px]">
-          Spring 2026
-        </h2>
-        <p className="mt-4 hidden max-w-[190px] text-[15px] leading-[1.1] tracking-[0.12em] lg:mt-6 lg:block lg:text-[20px]">
-          Available now
-        </p>
-        <Link
-          href="/collections"
-          className="mt-5 hidden w-fit border-b border-black/55 pb-[6px] text-[8px] tracking-[0.15em] transition-opacity duration-300 hover:opacity-55 lg:mt-6 lg:inline-flex lg:text-[9px]"
-        >
-          Shop collection →
-        </Link>
-      </div>
-
-      <div className="flex min-w-0 flex-col justify-between px-5 pb-7 pt-5 lg:border-r lg:px-[4vw] lg:py-[30px]">
-        <p className="hidden max-w-[620px] text-[11px] leading-[1.55] tracking-[0.12em] lg:block lg:text-[18px]">
-          Low Signal works with washed cotton, dense knitwear, black canvas,
-          and garments made for repeat wear.
-        </p>
-        <div className="flex flex-wrap gap-x-5 gap-y-3 text-[8px] lg:mt-[28px] lg:gap-x-8 lg:border-t lg:border-black/18 lg:pt-4 lg:text-[9px]">
-          {footerLinks.map(([label, href], index) => (
-            <Link
-              key={label}
-              href={href}
-              className={`${index === footerLinks.length - 1 ? "hidden lg:inline-flex" : "inline-flex"} border-b border-black/20 pb-2 transition-opacity duration-300 hover:opacity-55`}
-            >
-              {label}
-            </Link>
-          ))}
-        </div>
-      </div>
-
-      <div className="hidden px-[7vw] py-[28px] lg:block lg:px-[2vw] lg:py-[30px]">
-        <div className="relative h-[92px] overflow-hidden border border-black/16 bg-[#d1ccc2] lg:h-[108px]">
-          <Image
-            src={garmentTwo}
-            alt="LOW SIGNAL fabric detail"
-            fill
-            sizes="28vw"
-            className="editorial-image object-cover object-center brightness-[0.86] contrast-[1.04]"
-          />
-        </div>
-        <p className="mt-3 text-black/56">Fabric detail / closing page</p>
-      </div>
-    </footer>
-  );
-}
 function Kicker({
   number,
   light = false,

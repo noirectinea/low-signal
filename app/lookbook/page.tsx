@@ -1,7 +1,14 @@
 import Image from "next/image";
 import Link from "next/link";
+import type { Metadata } from "next";
 import type { ReactNode } from "react";
 import { MobileHomeHeader } from "@/components/MobileHomeHeader";
+import { SiteFooter } from "@/components/SiteFooter";
+
+export const metadata: Metadata = {
+  description: "LOW SIGNAL Spring 2026 lookbook: coastal light, concrete rooms, and shoppable washed-black garments.",
+  title: "Lookbook 01 / LOW SIGNAL",
+};
 
 const coastalFrames = [
   {
@@ -89,10 +96,12 @@ export default function LookbookPage() {
     <main className="min-h-screen bg-[#e4e5df] text-[#141311]">
       <MobileHomeHeader mode="paper" />
       <LookbookHero />
+      <LookbookChapterNav />
       <CoastalChapter />
       <ConcreteChapter />
       <MaterialChapter />
       <ShopCta />
+      <SiteFooter />
     </main>
   );
 }
@@ -149,7 +158,9 @@ function LookbookHero() {
 function CoastalChapter() {
   return (
     <ChapterShell
+      id="coastal-light"
       eyebrow="Chapter 01"
+      progress="01 / 03"
       title="Coastal Light"
       note="Wind holds the garment away from the body. The horizon stays almost still."
     >
@@ -157,6 +168,7 @@ function CoastalChapter() {
         <CampaignFrame
           frame={coastalFrames[0]}
           imageClassName="aspect-[5/4] lg:aspect-[7/5]"
+          product={{ name: "Field Jacket", slug: "field-jacket" }}
         />
 
         <div className="grid gap-5 lg:pt-16">
@@ -189,7 +201,9 @@ function CoastalChapter() {
 function ConcreteChapter() {
   return (
     <ChapterShell
+      id="concrete-room"
       eyebrow="Chapter 02"
+      progress="02 / 03"
       title="Concrete Room"
       note="Interior light, cropped posture, and garments that become quieter the longer they are worn."
       tone="dark"
@@ -200,6 +214,7 @@ function ConcreteChapter() {
             frame={roomFrames[0]}
             imageClassName="aspect-[4/5]"
             muted
+            product={{ name: "Work Jacket", slug: "work-jacket" }}
           />
           <CampaignFrame
             frame={roomFrames[1]}
@@ -231,7 +246,9 @@ function ConcreteChapter() {
 function MaterialChapter() {
   return (
     <ChapterShell
+      id="material-form"
       eyebrow="Chapter 03"
+      progress="03 / 03"
       title="Material Form"
       note="Seams, sleeves, collars, folds. The campaign slows down until the garment becomes surface."
     >
@@ -239,6 +256,7 @@ function MaterialChapter() {
         <CampaignFrame
           frame={materialFrames[0]}
           imageClassName="aspect-[16/8]"
+          product={{ name: "Rib Cardigan", slug: "rib-cardigan" }}
         />
         <CompactEditorialNote>
           A body moves.
@@ -268,13 +286,17 @@ function MaterialChapter() {
 function ChapterShell({
   children,
   eyebrow,
+  id,
   note,
+  progress,
   title,
   tone = "light",
 }: Readonly<{
   children: ReactNode;
   eyebrow: string;
+  id: string;
   note: string;
+  progress: string;
   title: string;
   tone?: "light" | "dark";
 }>) {
@@ -285,6 +307,7 @@ function ChapterShell({
       className={`mobile-lookbook-chapter border-b border-black/16 px-5 py-12 sm:px-6 lg:px-10 lg:py-16 ${
         isDark ? "bg-[#181715] text-[#e6e6de]" : "bg-[#d8d9d3] text-[#141311]"
       }`}
+      id={id}
     >
       <div className="mx-auto max-w-[1540px]">
         <div
@@ -292,7 +315,7 @@ function ChapterShell({
             isDark ? "border-[#e6e6de]/16 text-[#e6e6de]/58" : "border-black/16 text-black/54"
           }`}
         >
-          <p>{eyebrow}</p>
+          <p>{eyebrow} / {progress}</p>
           <h2
             className={`controlled-display-title text-[34px] sm:text-[46px] lg:text-[60px] ${
               isDark ? "text-[#e6e6de]" : "text-black/94"
@@ -315,6 +338,7 @@ function CampaignFrame({
   frame,
   imageClassName,
   muted = false,
+  product,
 }: Readonly<{
   frame: {
     alt: string;
@@ -324,6 +348,10 @@ function CampaignFrame({
   };
   imageClassName: string;
   muted?: boolean;
+  product?: {
+    name: string;
+    slug: string;
+  };
 }>) {
   return (
     <figure>
@@ -344,6 +372,15 @@ function CampaignFrame({
           }`}
         />
         <div className="absolute inset-0 bg-[#11110f]/8" />
+        {product ? (
+          <Link
+            aria-label={`Shop ${product.name} from this look`}
+            className="absolute bottom-4 right-4 flex min-h-11 items-center border border-[#f0eee7]/45 bg-[#161513]/82 px-4 text-[9px] uppercase tracking-[0.16em] text-[#f0eee7] backdrop-blur-sm transition-colors hover:bg-[#f0eee7] hover:text-[#161513]"
+            href={`/products/${product.slug}`}
+          >
+            Shop this look →
+          </Link>
+        ) : null}
       </div>
       <figcaption
         className={`mt-3 text-[9px] uppercase leading-[1.5] tracking-[0.18em] ${
@@ -353,6 +390,32 @@ function CampaignFrame({
         {frame.caption}
       </figcaption>
     </figure>
+  );
+}
+
+function LookbookChapterNav() {
+  return (
+    <nav
+      aria-label="Lookbook chapters"
+      className="sticky top-16 z-20 grid grid-cols-3 border-b border-black/16 bg-[#dedfd9]/95 text-[8px] uppercase tracking-[0.14em] backdrop-blur-md lg:top-[72px] lg:text-[9px]"
+    >
+      {[
+        ["01", "Coastal", "#coastal-light"],
+        ["02", "Concrete", "#concrete-room"],
+        ["03", "Material", "#material-form"],
+      ].map(([number, label, href], index) => (
+        <Link
+          className={`flex min-h-11 items-center justify-center gap-2 px-2 ${
+            index > 0 ? "border-l border-black/14" : ""
+          }`}
+          href={href}
+          key={href}
+        >
+          <span className="text-black/40">{number}</span>
+          <span>{label}</span>
+        </Link>
+      ))}
+    </nav>
   );
 }
 

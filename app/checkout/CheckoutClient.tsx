@@ -3,9 +3,8 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { FormEvent, useEffect, useState } from "react";
-import { LogoMark } from "@/components/LogoMark";
-import { MobileNavMenu } from "@/components/MobileNavMenu";
-import { cartStorageKey, type CartItem } from "@/data/products";
+import { MobileHomeHeader } from "@/components/MobileHomeHeader";
+import { SiteFooter } from "@/components/SiteFooter";
 import {
   buildOrderPayloadFromCart,
   CheckoutPayloadError,
@@ -13,6 +12,8 @@ import {
   formatOrderError,
   type OrderResponse,
 } from "@/lib/cart-order";
+import { clearCart, useCart } from "@/lib/cart-store";
+import { trackEcommerce } from "@/lib/analytics";
 
 type CheckoutProfile = {
   default_address?: string | null;
@@ -26,8 +27,7 @@ type CheckoutProfile = {
 
 export function CheckoutClient() {
   const router = useRouter();
-  const [hydrated, setHydrated] = useState(false);
-  const [items, setItems] = useState<CartItem[]>([]);
+  const { hydrated, items, subtotal } = useCart();
   const [profile, setProfile] = useState<CheckoutProfile | null>(null);
   const [status, setStatus] = useState<"idle" | "loading" | "error">(
     "idle",
@@ -42,8 +42,6 @@ export function CheckoutClient() {
     let active = true;
 
     async function loadCheckoutState() {
-      const storedItems = readCart();
-
       try {
         const response = await fetch("/api/account/me");
         const result = (await response.json()) as {
@@ -60,10 +58,6 @@ export function CheckoutClient() {
         }
       }
 
-      if (active) {
-        setItems(storedItems);
-        setHydrated(true);
-      }
     }
 
     void loadCheckoutState();
@@ -73,6 +67,20 @@ export function CheckoutClient() {
     };
   }, []);
 
+  useEffect(() => {
+    if (!hydrated || !items.length) return;
+
+    trackEcommerce("begin_checkout", {
+      currency: "USD",
+      items: items.map((item) => ({
+        item_id: item.productId ?? item.id,
+        item_name: item.name,
+        quantity: item.quantity,
+      })),
+      value: subtotal,
+    });
+  }, [hydrated, items, subtotal]);
+
   async function submitOrder(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setStatus("loading");
@@ -80,6 +88,14 @@ export function CheckoutClient() {
     setDebugMessage("");
 
     const formData = new FormData(event.currentTarget);
+    trackEcommerce("add_shipping_info", {
+      delivery_method: formData.get("deliveryMethod"),
+      value: subtotal,
+    });
+    trackEcommerce("add_payment_info", {
+      payment_method: formData.get("paymentMethod"),
+      value: subtotal,
+    });
     let payload;
 
     try {
@@ -151,9 +167,12 @@ export function CheckoutClient() {
       return;
     }
 
-    window.localStorage.removeItem(cartStorageKey);
-    window.dispatchEvent(new Event("low-signal-cart"));
-    setItems([]);
+    clearCart();
+    trackEcommerce("purchase", {
+      currency: result.order.currency,
+      transaction_id: result.order.order_number,
+      value: result.order.total,
+    });
     setIdempotencyKey(createCheckoutIdempotencyKey());
 
     const params = new URLSearchParams({
@@ -169,7 +188,7 @@ export function CheckoutClient() {
 
   return (
     <main className="min-h-screen overflow-x-hidden bg-[#e5e6e1] text-[#121211]">
-      <CheckoutNav />
+      <MobileHomeHeader mode="paper" />
 
       <section className="mx-auto grid max-w-[1320px] gap-10 px-5 pb-16 pt-[104px] lg:grid-cols-[1fr_380px] lg:px-12">
         <div>
@@ -195,10 +214,11 @@ export function CheckoutClient() {
                 </p>
               ) : (
                 <p className="text-[12px] uppercase leading-[1.7] tracking-[0.14em] text-black/60">
-                  <Link className="border-b border-black/50 pb-1 text-black" href="/account/login">Sign in</Link>{" "}
+                  <Link className="border-b border-black/50 pb-1 text-black" href="/account/login?next=%2Fcheckout">Sign in</Link>{" "}
                   to save your details and view previous orders. Guest checkout is available.
                 </p>
               )}
+              <CheckoutStepHeading number="01" title="Contact" />
               <CheckoutField
                 defaultValue={profile?.email ?? ""}
                 label="Email"
@@ -206,6 +226,14 @@ export function CheckoutClient() {
                 required
                 type="email"
               />
+              <CheckoutField
+                defaultValue={profile?.phone ?? ""}
+                label="Phone"
+                name="phone"
+                type="tel"
+              />
+
+              <CheckoutStepHeading number="02" title="Shipping address" />
               <div className="grid gap-5 sm:grid-cols-2">
                 <CheckoutField
                   defaultValue={splitName(profile?.full_name).firstName}
@@ -218,11 +246,6 @@ export function CheckoutClient() {
                   name="lastName"
                 />
               </div>
-              <CheckoutField
-                defaultValue={profile?.phone ?? ""}
-                label="Phone"
-                name="phone"
-              />
               <CheckoutField
                 defaultValue={profile?.full_name ?? ""}
                 label="Shipping name"
@@ -257,6 +280,47 @@ export function CheckoutClient() {
                   required
                 />
               </div>
+
+              <CheckoutStepHeading number="03" title="Delivery method" />
+              <div className="grid gap-px bg-black/14 text-[10px] uppercase tracking-[0.14em] sm:grid-cols-2">
+                <CheckoutChoice
+                  defaultChecked
+                  detail="Tracked / calculated at checkout"
+                  label="Standard delivery"
+                  name="deliveryMethod"
+                  value="standard"
+                />
+                <CheckoutChoice
+                  detail="Priority / when available"
+                  label="Express delivery"
+                  name="deliveryMethod"
+                  value="express"
+                />
+              </div>
+
+              <CheckoutStepHeading number="04" title="Payment" />
+              <div className="border-y border-black/14 py-5">
+                <CheckoutChoice
+                  defaultChecked
+                  detail="Order remains pending until payment is confirmed"
+                  label="Payment on confirmation"
+                  name="paymentMethod"
+                  value="confirmation"
+                />
+              </div>
+
+              <CheckoutStepHeading number="05" title="Billing address" />
+              <label className="flex min-h-12 items-center gap-3 border-y border-black/14 text-[10px] uppercase tracking-[0.14em] text-black/62">
+                <input
+                  className="accent-black"
+                  defaultChecked
+                  name="billingSameAsShipping"
+                  type="checkbox"
+                />
+                <span>Use shipping address for billing</span>
+              </label>
+
+              <CheckoutStepHeading number="06" title="Review order" />
               <CheckoutField label="Notes" name="notes" />
 
               <button
@@ -307,10 +371,11 @@ export function CheckoutClient() {
           </div>
           <div className="flex items-center justify-between border-t border-black/16 pt-5 text-black">
             <span>Total</span>
-            <span>Verified after order</span>
+            <span>${subtotal}</span>
           </div>
         </aside>
       </section>
+      <SiteFooter />
     </main>
   );
 }
@@ -321,26 +386,6 @@ function logCheckoutDebug(label: string, value: unknown) {
   }
 
   console.log(`[checkout] ${label}`, value);
-}
-
-function CheckoutNav() {
-  return (
-    <nav className="fixed left-0 right-0 top-0 z-30 grid min-h-[64px] grid-cols-[1fr_auto] items-start gap-6 border-b border-black/16 bg-[#e3e3dc]/92 px-5 py-5 text-[12px] uppercase tracking-[0.16em] text-[#141311] backdrop-blur-sm lg:grid-cols-[1fr_auto_1fr] lg:px-12">
-      <LogoMark />
-
-      <div className="hidden justify-center gap-14 lg:flex">
-        <Link href="/">Home</Link>
-        <Link href="/collections">Collections</Link>
-        <Link href="/lookbook">Lookbook</Link>
-        <Link href="/about">About</Link>
-      </div>
-
-      <div className="flex justify-end">
-        <span className="hidden lg:block"><Link href="/cart">Cart</Link></span>
-        <MobileNavMenu />
-      </div>
-    </nav>
-  );
 }
 
 function CheckoutField({
@@ -370,18 +415,50 @@ function CheckoutField({
   );
 }
 
-function readCart(): CartItem[] {
-  if (typeof window === "undefined") {
-    return [];
-  }
+function CheckoutStepHeading({
+  number,
+  title,
+}: {
+  number: string;
+  title: string;
+}) {
+  return (
+    <div className="mt-3 flex items-center gap-5 border-b border-black/16 pb-4 text-[10px] uppercase tracking-[0.16em]">
+      <span className="text-black/42">{number}</span>
+      <h2>{title}</h2>
+    </div>
+  );
+}
 
-  try {
-    const storedCart = window.localStorage.getItem(cartStorageKey);
-
-    return storedCart ? (JSON.parse(storedCart) as CartItem[]) : [];
-  } catch {
-    return [];
-  }
+function CheckoutChoice({
+  defaultChecked = false,
+  detail,
+  label,
+  name,
+  value,
+}: {
+  defaultChecked?: boolean;
+  detail: string;
+  label: string;
+  name: string;
+  value: string;
+}) {
+  return (
+    <label className="grid min-h-[84px] cursor-pointer grid-cols-[auto_1fr] items-start gap-3 bg-[#e5e6e1] p-4">
+      <input
+        className="mt-1 accent-black"
+        defaultChecked={defaultChecked}
+        name={name}
+        required
+        type="radio"
+        value={value}
+      />
+      <span className="grid gap-2 text-[10px] uppercase tracking-[0.14em]">
+        <span>{label}</span>
+        <span className="text-[8px] leading-[1.6] text-black/48">{detail}</span>
+      </span>
+    </label>
+  );
 }
 
 function splitName(value?: string | null) {

@@ -1,5 +1,8 @@
 import Link from "next/link";
-import { LogoMark } from "@/components/LogoMark";
+import { AuthPasswordField } from "@/components/AuthPasswordField";
+import { AuthSubmitButton } from "@/components/AuthSubmitButton";
+import { MobileHomeHeader } from "@/components/MobileHomeHeader";
+import { SiteFooter } from "@/components/SiteFooter";
 import { registerAction } from "../actions";
 
 type RegisterPageProps = {
@@ -17,7 +20,7 @@ export default async function RegisterPage({
 
   return (
     <main className="min-h-screen overflow-x-hidden bg-[#e5e6e1] text-[#121211]">
-      <RegisterNav />
+      <MobileHomeHeader mode="paper" />
       <section className="mx-auto grid min-h-screen max-w-[1320px] content-center px-5 py-[104px] lg:px-12">
         <div className="grid gap-10 border-y border-black/16 py-12 lg:grid-cols-[1fr_420px]">
           <div>
@@ -38,25 +41,25 @@ export default async function RegisterPage({
             className="h-fit border border-black/16 p-6 text-[9px] uppercase tracking-[0.14em]"
           >
             <input name="next" type="hidden" value={next} />
-            <AuthField label="Full name" name="fullName" required />
-            <AuthField label="Email" name="email" required type="email" />
-            <AuthField
-              label="Password"
-              name="password"
-              required
-              type="password"
-            />
+            <AuthField autoComplete="name" label="Full name" name="fullName" required />
+            <AuthField autoComplete="email" label="Email" name="email" required type="email" />
+            <AuthPasswordField autoComplete="new-password" minLength={8} />
+            <p className="mt-4 leading-[1.7] text-black/48">
+              Use at least 8 characters.
+            </p>
+            <label className="mt-5 flex min-h-11 items-center gap-3 leading-[1.6] text-black/58">
+              <input className="accent-black" name="terms" required type="checkbox" />
+              <span>
+                I accept the <Link className="border-b border-black/40" href="/terms">Terms</Link> and{" "}
+                <Link className="border-b border-black/40" href="/privacy">Privacy Policy</Link>.
+              </span>
+            </label>
 
             {params.error ? (
               <p className="mt-5 leading-[1.7] text-black/58">{params.error}</p>
             ) : null}
 
-            <button
-              className="add-to-cart-label mt-7 w-full bg-black px-5 py-4 text-[#ecece5] transition-opacity duration-300 hover:opacity-80"
-              type="submit"
-            >
-              Create account -&gt;
-            </button>
+            <AuthSubmitButton idleLabel="Create account ->" pendingLabel="Creating account..." />
             <Link
               className="mt-5 block text-center text-black/58"
               href={`/account/login?next=${encodeURIComponent(next)}`}
@@ -66,33 +69,19 @@ export default async function RegisterPage({
           </form>
         </div>
       </section>
+      <SiteFooter />
     </main>
   );
 }
 
-function RegisterNav() {
-  return (
-    <nav className="fixed left-0 right-0 top-0 z-30 grid min-h-[64px] grid-cols-[1fr_auto] items-start gap-6 border-b border-black/16 bg-[#e3e3dc]/92 px-5 py-5 text-[9px] uppercase tracking-[0.16em] text-[#141311] backdrop-blur-sm md:grid-cols-[1fr_auto_1fr] lg:px-12">
-      <LogoMark />
-      <div className="hidden justify-center gap-14 md:flex">
-        <Link href="/">Home</Link>
-        <Link href="/collections">Collections</Link>
-        <Link href="/lookbook">Lookbook</Link>
-        <Link href="/about">About</Link>
-      </div>
-      <div className="flex justify-end">
-        <Link href="/cart">Cart</Link>
-      </div>
-    </nav>
-  );
-}
-
 function AuthField({
+  autoComplete,
   label,
   name,
   required,
   type = "text",
 }: Readonly<{
+  autoComplete?: string;
   label: string;
   name: string;
   required?: boolean;
@@ -102,6 +91,7 @@ function AuthField({
     <label className="mt-5 grid gap-3 border-b border-black/16 pb-3 text-black/64 first:mt-0 focus-within:border-black/42">
       <span>{label}</span>
       <input
+        autoComplete={autoComplete}
         className="bg-transparent py-1 text-[12px] uppercase tracking-[0.12em] text-black outline-none"
         name={name}
         required={required}

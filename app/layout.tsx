@@ -5,6 +5,7 @@ import {
   Libre_Caslon_Display,
 } from "next/font/google";
 import "./globals.css";
+import { AnalyticsBridge } from "@/components/AnalyticsBridge";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -27,8 +28,13 @@ const archivalDisplay = Libre_Caslon_Display({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://low-signal-nine.vercel.app"),
   title: "LOW SIGNAL",
   description: "LOW SIGNAL is an independent clothing brand: quiet, observant, and slightly strange.",
+  openGraph: {
+    siteName: "LOW SIGNAL",
+    type: "website",
+  },
 };
 
 export default function RootLayout({
@@ -39,9 +45,24 @@ export default function RootLayout({
   return (
     <html
       lang="en"
+      data-scroll-behavior="smooth"
       className={`${inter.variable} ${archivo.variable} ${archivalDisplay.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col bg-[#e5e6e1] text-[#121211]">
+        <script
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "Organization",
+              email: "studio@lowsignal.com",
+              name: "LOW SIGNAL",
+              sameAs: ["https://www.instagram.com/lowsignal/"],
+              url: "https://low-signal-nine.vercel.app",
+            }).replaceAll("<", "\\u003c"),
+          }}
+          type="application/ld+json"
+        />
+        <AnalyticsBridge />
         {children}
       </body>
     </html>

@@ -4,6 +4,7 @@ import {
   formatAccountMoney,
   AccountChrome,
 } from "./AccountChrome";
+import { logoutAction } from "./actions";
 import { getCustomerOrders, requireAccountSession } from "@/lib/account";
 
 export default async function AccountPage() {
@@ -30,6 +31,14 @@ export default async function AccountPage() {
             >
               Delivery settings
             </Link>
+            <form action={logoutAction}>
+              <button
+                className="min-h-11 w-full border border-black/16 p-5 text-left transition-colors hover:border-black/42"
+                type="submit"
+              >
+                Log out
+              </button>
+            </form>
           </div>
         </div>
 

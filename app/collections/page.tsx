@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { MobileHomeHeader } from "@/components/MobileHomeHeader";
+import { SiteFooter } from "@/components/SiteFooter";
 import { getProductsByGender, type ProductGender } from "@/data/products";
 
 const entryCards: Array<{
@@ -21,16 +22,19 @@ const entryCards: Array<{
 
 const categoryPreviews = [
   {
+    href: "/search?q=Outerwear",
     image: "/images/low-signal/selected-collection/outer-layer.jpg",
     label: "Outerwear",
     note: "Washed shells, field layers, and quiet protection.",
   },
   {
+    href: "/search?q=Knitwear",
     image: "/images/low-signal/selected-collection/knitwear.jpg",
     label: "Knitwear",
     note: "Rib texture, soft wool, and pieces built for repeat wear.",
   },
   {
+    href: "/search?q=Trousers",
     image: "/images/low-signal/selected-collection/trousers.jpg",
     label: "Trousers",
     note: "Relaxed volume, dry cloth, and a low break over the shoe.",
@@ -81,7 +85,6 @@ export default function CollectionsPage() {
           ))}
         </div>
       </section>
-
       <section className="mobile-collection-notes mx-auto grid max-w-[1680px] gap-6 border-t border-black/16 px-5 py-10 sm:px-6 lg:grid-cols-[minmax(280px,420px)_1fr] lg:px-12 lg:py-12 xl:px-14">
         <div className="grid content-between gap-8 border-b border-black/14 pb-7 lg:border-b-0 lg:border-r lg:pb-0 lg:pr-10">
           <div>
@@ -108,7 +111,7 @@ export default function CollectionsPage() {
           {categoryPreviews.map((preview) => (
             <Link
               className="group grid gap-4 border-b border-black/14 pb-4"
-              href="/collections"
+              href={preview.href}
               key={preview.label}
             >
               <div className="relative aspect-[5/4] overflow-hidden border border-black/12 bg-[#d1d3cd]">
@@ -128,6 +131,7 @@ export default function CollectionsPage() {
           ))}
         </div>
       </section>
+      <SiteFooter />
     </main>
   );
 }

@@ -2,16 +2,22 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useMemo, useState, useSyncExternalStore } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { MobileHomeHeader } from "@/components/MobileHomeHeader";
+import { SiteFooter } from "@/components/SiteFooter";
 import {
-  cartStorageKey,
   type CartItem,
   type Product,
   type ProductGender,
   type ProductSize,
 } from "@/data/products";
 import { getAvailabilityState } from "@/lib/availability";
+import {
+  addProductToCart,
+  changeCartQuantity as updateCartQuantity,
+  useCart,
+} from "@/lib/cart-store";
+import { trackEcommerce } from "@/lib/analytics";
 
 const categories = ["Outerwear", "Shirts", "Knitwear", "Trousers"] as const;
 const materialOptions = [
@@ -75,46 +81,6 @@ type AdvancedFilters = {
   size: string;
 };
 
-function readCartSnapshot() {
-  if (typeof window === "undefined") {
-    return "[]";
-  }
-
-  return window.localStorage.getItem(cartStorageKey) ?? "[]";
-}
-
-function subscribeCartStore(onStoreChange: () => void) {
-  if (typeof window === "undefined") {
-    return () => {};
-  }
-
-  window.addEventListener("storage", onStoreChange);
-  window.addEventListener("low-signal-cart", onStoreChange);
-
-  return () => {
-    window.removeEventListener("storage", onStoreChange);
-    window.removeEventListener("low-signal-cart", onStoreChange);
-  };
-}
-
-function parseCart(snapshot: string): CartItem[] {
-  try {
-    return JSON.parse(snapshot) as CartItem[];
-  } catch {
-    return [];
-  }
-}
-
-function writeCart(items: CartItem[]) {
-  if (typeof window === "undefined") {
-    return;
-  }
-
-  window.localStorage.setItem(cartStorageKey, JSON.stringify(items));
-  window.dispatchEvent(new Event("storage"));
-  window.dispatchEvent(new Event("low-signal-cart"));
-}
-
 export function CollectionShoppingPage({
   gender,
   products,
@@ -132,12 +98,9 @@ export function CollectionShoppingPage({
   const [searchQuery, setSearchQuery] = useState("");
   const [sortOrder, setSortOrder] = useState<SortOrder>("newest");
   const [mobilePanel, setMobilePanel] = useState<"filters" | "sort" | null>(null);
-  const cartSnapshot = useSyncExternalStore(
-    subscribeCartStore,
-    readCartSnapshot,
-    () => "[]",
-  );
-  const cartItems = useMemo(() => parseCart(cartSnapshot), [cartSnapshot]);
+  const [urlStateReady, setUrlStateReady] = useState(false);
+  const panelRef = useRef<HTMLDivElement>(null);
+  const { items: cartItems } = useCart();
   const genderLabel = gender.toUpperCase();
   const allLabel = `All ${gender}`;
   const collectionNote =
@@ -150,6 +113,17 @@ export function CollectionShoppingPage({
   ).length;
   const totalFilterCount =
     advancedFilterCount + (activeCategory === "all" ? 0 : 1);
+  const activeFilterLabels = [
+    activeCategory !== "all" ? activeCategory : null,
+    advancedFilters.size !== "all" ? `Size ${advancedFilters.size}` : null,
+    advancedFilters.color !== "all" ? advancedFilters.color : null,
+    advancedFilters.material !== "all"
+      ? materialOptions.find((option) => option.key === advancedFilters.material)?.label
+      : null,
+    advancedFilters.price !== "all"
+      ? priceOptions.find((option) => option.key === advancedFilters.price)?.label
+      : null,
+  ].filter((label): label is string => Boolean(label));
   const visibleProducts = useMemo(() => {
     const categoryProducts =
       activeCategory === "all"
@@ -212,17 +186,88 @@ export function CollectionShoppingPage({
   }, [activeCategory, advancedFilters, normalizedSearchQuery, products, sortOrder]);
 
   useEffect(() => {
+    const timer = window.setTimeout(() => {
+      const params = new URLSearchParams(window.location.search);
+      const category = params.get("type");
+      const material = params.get("material");
+      const price = params.get("price");
+      const sort = params.get("sort");
+
+      if (category === "all" || categories.includes(category as Category)) {
+        setActiveCategory(category as Category | "all");
+      }
+      setAdvancedFilters({
+        color: params.get("color") || "all",
+        material:
+          materialOptions.some((option) => option.key === material)
+            ? (material as MaterialFilter)
+            : "all",
+        price:
+          priceOptions.some((option) => option.key === price)
+            ? (price as PriceFilter)
+            : "all",
+        size: params.get("size") || "all",
+      });
+      setSearchQuery(params.get("q") || "");
+      if (sort === "price-asc" || sort === "price-desc" || sort === "newest") {
+        setSortOrder(sort);
+      }
+      setUrlStateReady(true);
+    }, 0);
+
+    return () => window.clearTimeout(timer);
+  }, []);
+
+  useEffect(() => {
+    if (!urlStateReady) return;
+    const params = new URLSearchParams();
+    if (activeCategory !== "all") params.set("type", activeCategory);
+    if (advancedFilters.size !== "all") params.set("size", advancedFilters.size);
+    if (advancedFilters.color !== "all") params.set("color", advancedFilters.color);
+    if (advancedFilters.material !== "all") params.set("material", advancedFilters.material);
+    if (advancedFilters.price !== "all") params.set("price", advancedFilters.price);
+    if (searchQuery.trim()) params.set("q", searchQuery.trim());
+    if (sortOrder !== "newest") params.set("sort", sortOrder);
+    const query = params.toString();
+    window.history.replaceState(null, "", `${window.location.pathname}${query ? `?${query}` : ""}`);
+  }, [activeCategory, advancedFilters, searchQuery, sortOrder, urlStateReady]);
+
+  useEffect(() => {
     if (!mobilePanel) return;
     const previousOverflow = document.documentElement.style.overflow;
+    const previousFocus = document.activeElement as HTMLElement | null;
     document.documentElement.style.overflow = "hidden";
-    const closeOnEscape = (event: KeyboardEvent) => {
-      if (event.key === "Escape") setMobilePanel(null);
+    const handleKeyboard = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setMobilePanel(null);
+        return;
+      }
+      if (event.key !== "Tab" || !panelRef.current) return;
+      const focusable = Array.from(
+        panelRef.current.querySelectorAll<HTMLElement>(
+          "button:not([disabled]), input:not([disabled]), a[href]",
+        ),
+      );
+      if (!focusable.length) return;
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault();
+        first.focus();
+      }
     };
-    document.addEventListener("keydown", closeOnEscape);
+    document.addEventListener("keydown", handleKeyboard);
+    window.requestAnimationFrame(() => {
+      panelRef.current?.querySelector<HTMLElement>("button")?.focus();
+    });
 
     return () => {
       document.documentElement.style.overflow = previousOverflow;
-      document.removeEventListener("keydown", closeOnEscape);
+      document.removeEventListener("keydown", handleKeyboard);
+      previousFocus?.focus();
     };
   }, [mobilePanel]);
 
@@ -242,60 +287,31 @@ export function CollectionShoppingPage({
   }
 
   function addToCart(product: Product, size: string) {
-    const items = parseCart(readCartSnapshot());
-    const cartItemId = getCartItemId(product, size);
     const selectedSize = getProductSizeOptions(product).find(
       (option) => option.label === size,
     );
-    const selectedStock = selectedSize?.stock ?? 1;
-    const current = items.find((item) => item.id === cartItemId);
 
-    const nextItems = current
-      ? items.map((item) =>
-          item.id === cartItemId
-            ? {
-                ...item,
-                quantity: Math.min(item.quantity + 1, selectedStock),
-              }
-            : item,
-        )
-      : [
-          ...items,
-          {
-            ...product,
-            id: cartItemId,
-            productId: product.id,
-            quantity: 1,
-            size,
-            variantId: selectedSize?.variantId ?? selectedSize?.id,
-          },
-        ];
-
-    writeCart(nextItems);
+    addProductToCart({
+      product,
+      size,
+      sizeOption: selectedSize,
+    });
+    trackEcommerce("add_to_cart", {
+      currency: "USD",
+      item_id: product.id,
+      item_name: product.name,
+      size,
+      value: product.price,
+    });
   }
 
   function changeCartQuantity(product: Product, size: string, delta: number) {
-    const items = parseCart(readCartSnapshot());
     const cartItemId = getCartItemId(product, size);
     const selectedStock =
       getProductSizeOptions(product).find((option) => option.label === size)
         ?.stock ?? 1;
 
-    writeCart(
-      items
-        .map((item) =>
-          item.id === cartItemId
-            ? {
-                ...item,
-                quantity: Math.min(
-                  Math.max(0, item.quantity + delta),
-                  selectedStock,
-                ),
-              }
-            : item,
-        )
-        .filter((item) => item.quantity > 0),
-    );
+    updateCartQuantity(cartItemId, delta, selectedStock);
   }
 
   return (
@@ -356,9 +372,18 @@ export function CollectionShoppingPage({
             </button>
           </div>
           {totalFilterCount > 0 ? (
-            <div className="mobile-active-filters flex min-h-12 items-center justify-between border-b border-black/14 text-[9px] uppercase tracking-[0.15em] text-black/58">
-              <span>{String(visibleProducts.length).padStart(2, "0")} pieces / {totalFilterCount} active</span>
-              <button className="flex min-h-11 items-center border-b border-black/44 text-black" type="button" onClick={clearAllFilters}>Clear all</button>
+            <div className="mobile-active-filters border-b border-black/14 py-3 text-[9px] uppercase tracking-[0.15em] text-black/58">
+              <div className="flex items-center justify-between gap-4">
+                <span>{String(visibleProducts.length).padStart(2, "0")} pieces</span>
+                <button className="flex min-h-11 items-center border-b border-black/44 text-black" type="button" onClick={clearAllFilters}>Clear all</button>
+              </div>
+              <div aria-label="Selected filters" className="flex flex-wrap gap-2 pb-1">
+                {activeFilterLabels.map((label) => (
+                  <span className="border border-black/20 px-3 py-2 text-black/72" key={label}>
+                    {label}
+                  </span>
+                ))}
+              </div>
             </div>
           ) : null}
 
@@ -377,6 +402,7 @@ export function CollectionShoppingPage({
               setActiveCategory={setActiveCategory}
               setSortOrder={setSortOrder}
               sortOrder={sortOrder}
+              panelRef={panelRef}
             />
           ) : null}
         </div>
@@ -424,6 +450,7 @@ export function CollectionShoppingPage({
           />
         </div>
       </section>
+      <SiteFooter />
     </main>
   );
 }
@@ -527,7 +554,7 @@ function FilterIntro({
   note: string;
 }>) {
   return (
-    <div className="mb-6 border-y border-black/14 py-5 text-[9px] uppercase leading-[1.7] tracking-[0.18em] text-black/52 lg:mb-7">
+    <div className="mobile-filter-intro mb-6 border-y border-black/14 py-5 text-[9px] uppercase leading-[1.7] tracking-[0.18em] text-black/52 lg:mb-7">
       <p className="text-black/78">Spring 2026 {gender}</p>
       <p className="mt-4 max-w-[230px] text-black/50">{note}</p>
     </div>
@@ -594,6 +621,7 @@ function MobileCatalogPanel({
   setActiveCategory,
   setSortOrder,
   sortOrder,
+  panelRef,
 }: Readonly<{
   activeCategory: Category | "all";
   advancedFilterCount: number;
@@ -608,9 +636,17 @@ function MobileCatalogPanel({
   setActiveCategory: (category: Category | "all") => void;
   setSortOrder: (value: SortOrder) => void;
   sortOrder: SortOrder;
+  panelRef: React.RefObject<HTMLDivElement | null>;
 }>) {
   return (
-    <div aria-label={panel === "filters" ? "Collection filters" : "Collection sorting"} aria-modal="true" className="mobile-catalog-panel fixed inset-x-0 bottom-0 top-16 z-40 grid grid-rows-[auto_1fr_auto] bg-[#e5e6e1] text-[#121211]" role="dialog">
+    <>
+    <button
+      aria-label="Close collection panel"
+      className="fixed inset-0 z-[39] cursor-default bg-black/40"
+      type="button"
+      onClick={onClose}
+    />
+    <div ref={panelRef} aria-label={panel === "filters" ? "Collection filters" : "Collection sorting"} aria-modal="true" className="mobile-catalog-panel fixed inset-x-0 bottom-0 z-40 grid max-h-[calc(100svh-72px)] grid-rows-[auto_1fr_auto] border-t border-black/24 bg-[#e5e6e1] text-[#121211] shadow-[0_-20px_60px_rgba(0,0,0,0.16)]" role="dialog">
       <div className="flex min-h-14 items-center justify-between border-b border-black/16 px-5 text-[12px] uppercase tracking-[0.14em]">
         <span>{panel === "filters" ? `Filters${advancedFilterCount > 0 ? ` / ${advancedFilterCount}` : ""}` : "Sort garments"}</span>
         <button className="min-h-11 px-2" type="button" onClick={onClose}>Close</button>
@@ -635,7 +671,10 @@ function MobileCatalogPanel({
         ) : (
           <div className="divide-y divide-black/14 border-y border-black/14 text-[12px] uppercase tracking-[0.14em]">
             {(["newest", "price-asc", "price-desc"] as const).map((value) => (
-              <button className={`flex min-h-14 w-full items-center justify-between text-left ${sortOrder === value ? "text-black" : "text-black/50"}`} key={value} type="button" onClick={() => setSortOrder(value)}>
+              <button className={`flex min-h-14 w-full items-center justify-between text-left ${sortOrder === value ? "text-black" : "text-black/50"}`} key={value} type="button" onClick={() => {
+                setSortOrder(value);
+                onClose();
+              }}>
                 <span>{value === "newest" ? "Newest first" : value === "price-asc" ? "Price: low to high" : "Price: high to low"}</span>
                 <span>{sortOrder === value ? "●" : "○"}</span>
               </button>
@@ -644,11 +683,20 @@ function MobileCatalogPanel({
         )}
       </div>
       <div className="border-t border-black/16 bg-[#dedfd9] p-4">
-        <button className="flex min-h-14 w-full items-center justify-center bg-[#171614] px-5 text-[12px] uppercase tracking-[0.14em] text-[#ecece5]" type="button" onClick={onClose}>
-          {panel === "filters" ? `Show ${String(resultCount).padStart(2, "0")} pieces` : "Apply sorting"} →
-        </button>
+        {panel === "filters" ? (
+          <button className="flex min-h-14 w-full items-center justify-center bg-[#171614] px-5 text-[12px] uppercase tracking-[0.14em] text-[#ecece5]" type="button" onClick={() => {
+            trackEcommerce("filter", {
+              active_filters: advancedFilterCount,
+              result_count: resultCount,
+            });
+            onClose();
+          }}>
+            Show {String(resultCount).padStart(2, "0")} pieces →
+          </button>
+        ) : null}
       </div>
     </div>
+    </>
   );
 }
 
@@ -738,10 +786,10 @@ function AdvancedFilterPanel({
   }
 
   return (
-    <details className="group mt-7 border-y border-black/12 text-[8px] uppercase tracking-[0.16em] transition-colors duration-300 hover:border-black/18">
-      <summary className="flex cursor-pointer list-none items-center justify-between py-4 text-black/58 transition-all duration-300 hover:px-2 hover:text-black">
+    <div className="mt-7 border-y border-black/12 text-[8px] uppercase tracking-[0.16em] transition-colors duration-300 hover:border-black/18">
+      <div className="flex min-h-12 items-center justify-between border-b border-black/12 text-black/58">
         <span>
-          Filter +
+          Refine selection
           {filterCount > 0 ? ` / ${filterCount}` : ""}
         </span>
         {filterCount > 0 ? (
@@ -756,11 +804,9 @@ function AdvancedFilterPanel({
             Clear
           </button>
         ) : (
-          <span className="text-[12px] leading-none transition-transform duration-300 group-open:rotate-45">
-            +
-          </span>
+          <span>Size / Color / Material / Price</span>
         )}
-      </summary>
+      </div>
 
       <div className="divide-y divide-black/12 border-t border-black/12">
         <OptionDisclosure
@@ -808,7 +854,7 @@ function AdvancedFilterPanel({
           onSelect={(value) => updateFilter("price", value)}
         />
       </div>
-    </details>
+    </div>
   );
 }
 
@@ -990,6 +1036,7 @@ function CampaignRail({
         alt="Spring 2026 rail garment details"
         className="object-cover brightness-[0.76] contrast-[1.05] saturate-[0.55]"
         fill
+        priority
         sizes="(min-width: 1024px) 72vw, 100vw"
         src={railImage}
       />
@@ -1024,6 +1071,7 @@ function ProductCard({
     sizeOptions[0]?.label ??
     "M";
   const [isSizePickerOpen, setIsSizePickerOpen] = useState(false);
+  const [showAddedToast, setShowAddedToast] = useState(false);
   const [selectedSize, setSelectedSize] = useState(firstAvailableSize);
   const productCartItems = cartItems.filter((item) =>
     item.id.startsWith(`${product.id}-`),
@@ -1042,6 +1090,7 @@ function ProductCard({
     setSelectedSize(size);
     onAdd(product, size);
     setIsSizePickerOpen(false);
+    setShowAddedToast(true);
   }
 
   return (
@@ -1164,18 +1213,37 @@ function ProductCard({
           </div>
         ) : (
           <button
-            aria-label={`Choose size for ${product.name}`}
-            className={`relative z-20 flex min-h-11 min-w-11 self-end items-center justify-center border-b border-black/18 px-1 pb-1 text-[18px] leading-none text-black/70 transition duration-300 ease-out hover:border-black/60 hover:text-black group-hover:text-black ${
-              isWomen ? "group-hover:rotate-45" : ""
-            } disabled:cursor-not-allowed disabled:opacity-30`}
+            aria-label={`Quick add ${product.name}; choose a size`}
+            className="relative z-20 flex min-h-11 self-end items-center justify-center whitespace-nowrap border-b border-black/24 px-1 text-[8px] uppercase tracking-[0.11em] text-black/70 transition duration-300 ease-out hover:border-black/60 hover:text-black disabled:cursor-not-allowed disabled:opacity-30"
             disabled={isSoldOut}
             type="button"
             onClick={() => setIsSizePickerOpen((isOpen) => !isOpen)}
           >
-            {isSoldOut ? "—" : "+"}
+            {isSoldOut ? "Sold out" : "Quick add +"}
           </button>
         )}
       </div>
+
+      {showAddedToast ? (
+        <div
+          aria-live="polite"
+          className="fixed inset-x-4 bottom-4 z-[80] grid gap-4 border border-white/12 bg-[#171614] p-5 text-[9px] uppercase tracking-[0.14em] text-[#ecece5] sm:left-auto sm:right-5 sm:w-[380px]"
+        >
+          <p>{product.name} / {selectedSize} added to cart.</p>
+          <div className="flex items-center justify-between gap-5">
+            <Link className="relative z-20 flex min-h-11 items-center border-b border-white/55" href="/cart">
+              View cart
+            </Link>
+            <button
+              className="relative z-20 min-h-11 border-b border-white/28 text-white/68"
+              type="button"
+              onClick={() => setShowAddedToast(false)}
+            >
+              Continue shopping
+            </button>
+          </div>
+        </div>
+      ) : null}
     </article>
   );
 }

@@ -1,8 +1,7 @@
-import Link from "next/link";
 import type { ReactNode } from "react";
-import { LogoMark } from "@/components/LogoMark";
+import { MobileHomeHeader } from "@/components/MobileHomeHeader";
+import { SiteFooter } from "@/components/SiteFooter";
 import { getOrderTimelineSteps } from "@/lib/availability";
-import { logoutAction } from "./actions";
 
 export function AccountChrome({
   children,
@@ -15,7 +14,7 @@ export function AccountChrome({
 }>) {
   return (
     <main className="min-h-screen overflow-x-hidden bg-[#e5e6e1] text-[#121211]">
-      <AccountNav />
+      <MobileHomeHeader mode="paper" />
       <section className="mx-auto max-w-[1320px] px-5 pb-16 pt-[104px] lg:px-12">
         <div className="border-y border-black/16 py-12">
           <p className="text-[9px] uppercase tracking-[0.16em] text-black/64">
@@ -27,29 +26,8 @@ export function AccountChrome({
           <div className="mt-12">{children}</div>
         </div>
       </section>
+      <SiteFooter />
     </main>
-  );
-}
-
-export function AccountNav() {
-  return (
-    <nav className="fixed left-0 right-0 top-0 z-30 grid min-h-[64px] grid-cols-[1fr_auto] items-start gap-6 border-b border-black/16 bg-[#e3e3dc]/92 px-5 py-5 text-[9px] uppercase tracking-[0.16em] text-[#141311] backdrop-blur-sm md:grid-cols-[1fr_auto_1fr] lg:px-12">
-      <LogoMark />
-
-      <div className="hidden justify-center gap-14 md:flex">
-        <Link href="/">Home</Link>
-        <Link href="/collections">Collections</Link>
-        <Link href="/account">Account</Link>
-        <Link href="/account/orders">Orders</Link>
-        <Link href="/account/settings">Settings</Link>
-      </div>
-
-      <div className="flex justify-end">
-        <form action={logoutAction}>
-          <button type="submit">Logout</button>
-        </form>
-      </div>
-    </nav>
   );
 }
 

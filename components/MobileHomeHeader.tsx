@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { CartCountLink } from "./CartCountLink";
+import { AccountHeaderLink } from "./AccountHeaderLink";
 import { LogoMark } from "./LogoMark";
 import { MobileNavMenu } from "./MobileNavMenu";
 
@@ -18,18 +19,20 @@ export function MobileHomeHeader({ mode = "overlay" }: Readonly<{ mode?: "overla
   }, []);
   const paperMode = mode === "paper" || isScrolled || isMenuOpen;
   const links = [["Home", "/"], ["Collections", "/collections"], ["Lookbook", "/lookbook"], ["About", "/about"]];
-  return <header className={`mobile-site-header fixed inset-x-0 top-0 z-50 grid h-16 min-w-0 grid-cols-[1fr_auto] items-center gap-6 border-b px-5 text-[11px] uppercase tracking-[0.14em] transition-[background-color,border-color,color] duration-300 lg:grid-cols-[1fr_auto_1fr] lg:px-12 ${paperMode ? "border-black/16 bg-[#dedfd9]/94 text-[#151413] backdrop-blur-md" : "border-white/38 bg-transparent text-white mix-blend-difference lg:border-white/28 lg:bg-gradient-to-b lg:from-black/42 lg:to-transparent lg:mix-blend-normal"}`}>
+  return <header className={`mobile-site-header fixed inset-x-0 top-0 z-50 grid h-16 min-w-0 grid-cols-[1fr_auto] items-center gap-6 border-b px-5 text-[11px] uppercase tracking-[0.14em] transition-[background-color,border-color,color] duration-300 lg:grid-cols-[1fr_auto_1fr] lg:px-12 ${paperMode ? `border-black/16 ${isMenuOpen ? "bg-[#dedfd9]" : "bg-[#dedfd9]/94 backdrop-blur-md"} text-[#151413]` : "border-white/38 bg-transparent text-white mix-blend-difference lg:border-white/28 lg:bg-gradient-to-b lg:from-black/42 lg:to-transparent lg:mix-blend-normal"}`}>
     <div className="mobile-header-logo flex min-h-11 w-fit items-center lg:hidden">
       <LogoMark className="text-[11px]" />
     </div>
     <div className="hidden lg:block">
       <LogoMark className="text-[11px]" />
     </div>
-    <nav aria-label="Primary navigation" className="hidden items-center justify-center gap-10 lg:flex">
+    <nav aria-label="Primary navigation" className="hidden items-center justify-center gap-8 xl:gap-10 lg:flex">
       {links.map(([label, href]) => <Link className={pathname === href ? "border-b border-current pb-1" : ""} href={href} key={href}>{label}</Link>)}
     </nav>
-    <div className="flex min-w-0 items-center justify-end gap-3 lg:gap-4">
-      <CartCountLink className="mobile-header-action flex min-h-11 items-center whitespace-nowrap text-[11px] uppercase tracking-[0.12em] lg:hidden" href="/cart?guest=1" />
+    <div className="flex min-w-0 items-center justify-end gap-2 lg:gap-4">
+      <Link aria-label="Search products" className="flex min-h-11 items-center text-[9px] tracking-[0.1em] lg:text-[11px] lg:tracking-[0.12em]" href="/search">Search</Link>
+      <AccountHeaderLink className="flex min-h-11 items-center whitespace-nowrap text-[9px] tracking-[0.1em] lg:text-[11px] lg:tracking-[0.12em]" compact />
+      <CartCountLink className="mobile-header-action flex min-h-11 items-center whitespace-nowrap text-[9px] uppercase tracking-[0.1em] lg:hidden" />
       <CartCountLink className="hidden min-h-11 items-center whitespace-nowrap text-[11px] uppercase tracking-[0.12em] lg:flex" />
       <MobileNavMenu onOpenChange={setIsMenuOpen} />
     </div>

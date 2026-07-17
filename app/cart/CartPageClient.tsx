@@ -4,8 +4,16 @@ import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { MobileHomeHeader } from "@/components/MobileHomeHeader";
-import { cartStorageKey, type CartItem } from "@/data/products";
+import { SiteFooter } from "@/components/SiteFooter";
+import { type CartItem } from "@/data/products";
 import { getAvailabilityLabel } from "@/lib/availability";
+import {
+  changeCartQuantity,
+  removeCartItem,
+  restoreCartItem,
+  useCart,
+} from "@/lib/cart-store";
+import { trackEcommerce } from "@/lib/analytics";
 
 type CartAvailability = Record<
   string,
@@ -16,20 +24,13 @@ type CartAvailability = Record<
 >;
 
 export function CartPageClient() {
-  const [items, setItems] = useState<CartItem[]>(readCart);
+  const { hydrated, items, subtotal } = useCart();
   const [availability, setAvailability] = useState<CartAvailability>({});
   const [availabilityStatus, setAvailabilityStatus] = useState<
     "idle" | "loading"
   >("idle");
-  const subtotal = items.reduce(
-    (total, item) => total + item.price * item.quantity,
-    0,
-  );
+  const [removedItem, setRemovedItem] = useState<CartItem | null>(null);
   const hasBlockingWarnings = items.some((item) => availability[item.id]?.message);
-
-  useEffect(() => {
-    writeCart(items);
-  }, [items]);
 
   useEffect(() => {
     if (!items.length) {
@@ -113,26 +114,24 @@ export function CartPageClient() {
   }, [items]);
 
   function changeQuantity(id: string, delta: number) {
-    setItems((currentItems) =>
-      currentItems
-        .map((item) => {
-          if (item.id !== id) {
-            return item;
-          }
+    const item = items.find((current) => current.id === id);
+    const maxStock = availability[id]?.stock ?? item?.stock ?? 20;
 
-          const maxStock = availability[id]?.stock ?? item.stock ?? 20;
-
-          return {
-            ...item,
-            quantity: Math.min(Math.max(0, item.quantity + delta), maxStock),
-          };
-        })
-        .filter((item) => item.quantity > 0),
-    );
+    changeCartQuantity(id, delta, maxStock);
   }
 
   function removeItem(id: string) {
-    setItems((currentItems) => currentItems.filter((item) => item.id !== id));
+    const removed = removeCartItem(id) ?? null;
+
+    setRemovedItem(removed);
+    if (removed) {
+      trackEcommerce("remove_from_cart", {
+        item_id: removed.productId ?? removed.id,
+        item_name: removed.name,
+        quantity: removed.quantity,
+        value: removed.price * removed.quantity,
+      });
+    }
   }
 
   return (
@@ -156,7 +155,14 @@ export function CartPageClient() {
             </p>
           </div>
 
-          {items.length > 0 ? (
+          {!hydrated ? (
+            <div
+              aria-live="polite"
+              className="grid min-h-[320px] place-items-center border-b border-black/16 py-16 text-[11px] uppercase tracking-[0.14em] text-black/50"
+            >
+              Loading your cart.
+            </div>
+          ) : items.length > 0 ? (
             <div className="grid gap-9 pt-8 lg:grid-cols-[1fr_360px] lg:pt-10 xl:grid-cols-[1fr_420px]">
               <div className="border-t border-black/16">
                 {items.map((item) => (
@@ -192,32 +198,30 @@ export function CartPageClient() {
               </div>
             </div>
           )}
+
+          {removedItem ? (
+            <div
+              aria-live="polite"
+              className="fixed inset-x-4 bottom-4 z-40 flex min-h-14 items-center justify-between gap-5 border border-black/18 bg-[#171614] px-5 text-[11px] uppercase tracking-[0.14em] text-[#ecece5] sm:left-auto sm:right-5 sm:w-[360px]"
+            >
+              <span>{removedItem.name} removed.</span>
+              <button
+                className="min-h-11 border-b border-white/55"
+                type="button"
+                onClick={() => {
+                  restoreCartItem(removedItem);
+                  setRemovedItem(null);
+                }}
+              >
+                Undo
+              </button>
+            </div>
+          ) : null}
         </div>
       </section>
+      <SiteFooter />
     </main>
   );
-}
-
-function readCart(): CartItem[] {
-  if (typeof window === "undefined") {
-    return [];
-  }
-
-  try {
-    const storedCart = window.localStorage.getItem(cartStorageKey);
-    return storedCart ? (JSON.parse(storedCart) as CartItem[]) : [];
-  } catch {
-    return [];
-  }
-}
-
-function writeCart(items: CartItem[]) {
-  if (typeof window === "undefined") {
-    return;
-  }
-
-  window.localStorage.setItem(cartStorageKey, JSON.stringify(items));
-  window.dispatchEvent(new Event("low-signal-cart"));
 }
 
 function CartLine({

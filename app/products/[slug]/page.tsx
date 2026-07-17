@@ -2,12 +2,14 @@ import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { MobileHomeHeader } from "@/components/MobileHomeHeader";
+import { SiteFooter } from "@/components/SiteFooter";
 import {
   getProductBySlug,
   getProductSlugs,
   getRelatedProduct,
 } from "@/lib/shop";
 import { ProductPurchasePanel } from "./ProductPurchasePanel";
+import { ProductGallery } from "./ProductGallery";
 
 export const dynamicParams = true;
 
@@ -30,7 +32,28 @@ export async function generateMetadata({ params }: ProductPageProps) {
   const product = await getProductBySlug(slug);
 
   return {
+    alternates: product
+      ? { canonical: `/products/${product.slug}` }
+      : undefined,
+    description: product?.description ?? "LOW SIGNAL garment.",
+    openGraph: product
+      ? {
+          description: product.description,
+          images: [{ alt: product.name, url: product.image }],
+          title: `${product.name} / LOW SIGNAL`,
+          type: "website" as const,
+          url: `/products/${product.slug}`,
+        }
+      : undefined,
     title: product ? `${product.name} / LOW SIGNAL` : "Product / LOW SIGNAL",
+    twitter: product
+      ? {
+          card: "summary_large_image" as const,
+          description: product.description,
+          images: [product.image],
+          title: `${product.name} / LOW SIGNAL`,
+        }
+      : undefined,
   };
 }
 
@@ -64,77 +87,87 @@ export default async function ProductPage({ params }: ProductPageProps) {
       src: "/images/low-signal/journal/fabric-detail.jpg",
     },
   ].slice(0, 3);
-  const mobileGallery = detailImages
-    .filter((image) => image.src !== product.image)
-    .slice(0, 3);
   const relatedProduct = await getRelatedProduct(product);
+  const structuredData = [
+    {
+      "@context": "https://schema.org",
+      "@type": "Product",
+      brand: {
+        "@type": "Brand",
+        name: "LOW SIGNAL",
+      },
+      color: product.color,
+      description: product.description,
+      image: gallery.map((image) => image.src),
+      material: product.materials,
+      name: product.name,
+      offers: {
+        "@type": "Offer",
+        availability:
+          (product.stock ?? 0) > 0
+            ? "https://schema.org/InStock"
+            : "https://schema.org/OutOfStock",
+        price: product.price,
+        priceCurrency: "USD",
+        url: `https://low-signal-nine.vercel.app/products/${product.slug}`,
+      },
+      sku: product.id,
+      url: `https://low-signal-nine.vercel.app/products/${product.slug}`,
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      itemListElement: [
+        {
+          "@type": "ListItem",
+          item: "https://low-signal-nine.vercel.app/collections",
+          name: "Collections",
+          position: 1,
+        },
+        {
+          "@type": "ListItem",
+          item: `https://low-signal-nine.vercel.app/collections/${product.gender}`,
+          name: product.gender,
+          position: 2,
+        },
+        {
+          "@type": "ListItem",
+          item: `https://low-signal-nine.vercel.app/products/${product.slug}`,
+          name: product.name,
+          position: 3,
+        },
+      ],
+    },
+  ];
 
   return (
     <main className="min-h-screen bg-[#e7e7e1] text-[#141311]">
+      <script
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(structuredData).replaceAll("<", "\\u003c"),
+        }}
+        type="application/ld+json"
+      />
       <MobileHomeHeader mode="paper" />
 
       <section className="mobile-product-page grid px-5 pb-28 pt-[92px] lg:min-h-screen lg:grid-cols-[58%_42%] lg:px-0 lg:pb-0 lg:pt-[64px]">
-        <div className="mobile-product-gallery grid gap-4 lg:grid-cols-[104px_1fr] lg:border-r lg:border-black/16 lg:p-8 xl:grid-cols-[124px_1fr] xl:p-10">
-          <div className="order-1 hidden grid-cols-1 gap-3 lg:grid">
-            {gallery.map((image) => (
-              <div
-                className="relative aspect-[4/5] overflow-hidden border border-black/12 bg-[#d0d0c8]"
-                key={image.src}
-              >
-                <Image
-                  alt={image.alt}
-                  src={image.src}
-                  fill
-                  sizes="(min-width: 1024px) 124px, 30vw"
-                  className="object-cover brightness-[0.88] contrast-[1.04] saturate-[0.68]"
-                />
-              </div>
-            ))}
-          </div>
-
-          {mobileGallery.length > 0 ? (
-            <div className="mobile-product-thumbnails order-2 grid grid-flow-col auto-cols-[28%] gap-2 overflow-x-auto lg:hidden">
-              {mobileGallery.map((image) => (
-                <div
-                  className="relative aspect-[4/5] overflow-hidden border border-black/12 bg-[#d0d0c8]"
-                  key={image.src}
-                >
-                  <Image
-                    alt={image.alt}
-                    src={image.src}
-                    fill
-                    sizes="28vw"
-                    className="object-cover brightness-[0.9] contrast-[1.04] saturate-[0.72]"
-                  />
-                </div>
-              ))}
-            </div>
-          ) : null}
-
-          <div className="mobile-product-lead relative order-1 min-h-[68vh] overflow-hidden border border-black/12 bg-[#d0d0c8] lg:order-2 lg:min-h-0">
-            <Image
-              alt={product.name}
-              src={product.image}
-              fill
-              priority
-              sizes="(min-width: 1024px) 48vw, 100vw"
-              className={`${getProductImageFit(product)} brightness-[0.9] contrast-[1.04] saturate-[0.68] ${
-                product.objectPosition ?? "object-center"
-              }`}
-            />
-            <div className="absolute inset-0 bg-[#171614]/[0.03]" />
-            <span className="absolute bottom-4 right-4 bg-black/62 px-3 py-2 text-[12px] uppercase tracking-[0.12em] text-white lg:hidden">01 / {String(1 + mobileGallery.length).padStart(2, "0")}</span>
-          </div>
-        </div>
+        <ProductGallery
+          imageFit={getProductImageFit(product)}
+          images={gallery}
+          objectPosition={product.objectPosition ?? "object-center"}
+          productName={product.name}
+        />
 
         <div className="mobile-product-information flex flex-col justify-between border-black/16 pt-10 lg:border-t-0 lg:bg-[#ddddd6] lg:px-12 lg:py-12 xl:px-16">
           <div>
-            <div className="flex items-center justify-between border-b border-black/16 pb-6 text-[9px] uppercase tracking-[0.14em] text-black/64">
-              <span>05 - Garment / Spring 2026</span>
-              <span>
+            <nav aria-label="Product breadcrumb" className="flex items-center justify-between border-b border-black/16 pb-6 text-[9px] uppercase tracking-[0.14em] text-black/64">
+              <Link className="border-b border-black/30 pb-1" href="/collections">
+                Collections / Spring 2026
+              </Link>
+              <Link className="border-b border-black/30 pb-1" href={`/collections/${product.gender}`}>
                 {product.gender} / {product.category}
-              </span>
-            </div>
+              </Link>
+            </nav>
 
             <div className="border-b border-black/16 py-10">
               <h1 className="product-display-title max-w-[600px] text-[44px] text-black/94 sm:text-[62px] lg:text-[76px]">
@@ -207,6 +240,41 @@ export default async function ProductPage({ params }: ProductPageProps) {
           </div>
         </div>
       </section>
+
+      {relatedProduct ? (
+        <section className="border-t border-black/16 bg-[#deded7] px-5 py-12 sm:px-6 lg:px-12 lg:py-16">
+          <div className="mx-auto max-w-[1500px]">
+            <div className="flex items-center justify-between border-b border-black/16 pb-5 text-[9px] uppercase tracking-[0.16em] text-black/50">
+              <span>Related product</span>
+              <span>Same rail / {relatedProduct.category}</span>
+            </div>
+            <Link
+              className="group mt-6 grid gap-5 sm:grid-cols-[minmax(260px,440px)_1fr] sm:items-end"
+              href={`/products/${relatedProduct.slug}`}
+            >
+              <div className="relative aspect-[4/5] overflow-hidden bg-[#cacbc5]">
+                <Image
+                  alt={relatedProduct.name}
+                  className={`object-cover brightness-[0.88] contrast-[1.04] saturate-[0.7] transition duration-700 group-hover:scale-[1.015] ${relatedProduct.objectPosition ?? "object-center"}`}
+                  fill
+                  sizes="(min-width: 640px) 440px, 100vw"
+                  src={relatedProduct.image}
+                />
+              </div>
+              <div className="border-y border-black/16 py-7 uppercase">
+                <h2 className="controlled-display-title text-[44px] sm:text-[62px]">
+                  {relatedProduct.name}
+                </h2>
+                <div className="mt-7 flex items-center justify-between gap-5 text-[10px] tracking-[0.16em]">
+                  <span>${relatedProduct.price}</span>
+                  <span className="border-b border-black/55 pb-2">View product →</span>
+                </div>
+              </div>
+            </Link>
+          </div>
+        </section>
+      ) : null}
+      <SiteFooter />
     </main>
   );
 }

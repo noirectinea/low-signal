@@ -1,35 +1,16 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
-  cartStorageKey,
-  type CartItem,
   type Product,
   type ProductSize,
 } from "@/data/products";
 import { getAvailabilityLabel } from "@/lib/availability";
+import { addProductToCart, readCart } from "@/lib/cart-store";
+import { trackEcommerce } from "@/lib/analytics";
 
 const sizes = ["XS", "S", "M", "L", "XL"] as const;
-
-function readCart(): CartItem[] {
-  if (typeof window === "undefined") {
-    return [];
-  }
-
-  try {
-    const storedCart = window.localStorage.getItem(cartStorageKey);
-    return storedCart ? (JSON.parse(storedCart) as CartItem[]) : [];
-  } catch {
-    return [];
-  }
-}
-
-function writeCart(items: CartItem[]) {
-  window.localStorage.setItem(cartStorageKey, JSON.stringify(items));
-  window.dispatchEvent(new Event("storage"));
-  window.dispatchEvent(new Event("low-signal-cart"));
-}
 
 export function ProductPurchasePanel({
   product,
@@ -55,6 +36,15 @@ export function ProductPurchasePanel({
     product.stock ??
     sizeOptions.reduce((total, size) => total + size.stock, 0);
 
+  useEffect(() => {
+    trackEcommerce("view_item", {
+      currency: "USD",
+      item_id: product.id,
+      item_name: product.name,
+      value: product.price,
+    });
+  }, [product.id, product.name, product.price]);
+
   function addToCart() {
     if (!selectedSize) {
       setMessage("Choose a size before adding this piece.");
@@ -66,37 +56,27 @@ export function ProductPurchasePanel({
       return;
     }
 
-    const cartItemId = `${product.id}-${selectedSize.toLowerCase()}`;
-    const cartItems = readCart();
-    const currentItem = cartItems.find((item) => item.id === cartItemId);
+    const currentItem = readCart().find(
+      (item) => item.id === `${product.id}-${selectedSize.toLowerCase()}`,
+    );
 
     if (currentItem && currentItem.quantity >= selectedStock) {
       setMessage(`Only ${selectedStock} available in this size.`);
       return;
     }
 
-    const nextItems = currentItem
-      ? cartItems.map((item) =>
-          item.id === cartItemId
-            ? {
-                ...item,
-                quantity: Math.min(item.quantity + 1, selectedStock || 1),
-              }
-            : item,
-        )
-      : [
-          ...cartItems,
-          {
-            ...product,
-            id: cartItemId,
-            productId: product.id,
-            size: selectedSize,
-            variantId: selectedSizeOption?.variantId ?? selectedSizeOption?.id,
-            quantity: 1,
-          },
-        ];
-
-    writeCart(nextItems);
+    addProductToCart({
+      product,
+      size: selectedSize,
+      sizeOption: selectedSizeOption,
+    });
+    trackEcommerce("add_to_cart", {
+      currency: "USD",
+      item_id: product.id,
+      item_name: product.name,
+      size: selectedSize,
+      value: product.price,
+    });
     setAdded(true);
     setMessage("");
   }
@@ -137,21 +117,31 @@ export function ProductPurchasePanel({
         ))}
       </div>
 
-      <button
-        className="mobile-add-to-cart-button add-to-cart-label mt-6 flex min-h-14 w-full items-center justify-center gap-4 bg-[#171614] px-6 py-5 text-[12px] uppercase text-[#ecece5] transition-opacity duration-300 hover:opacity-82 disabled:cursor-not-allowed disabled:opacity-45"
-        disabled={!selectedSize || selectedStock <= 0}
-        type="button"
-        onClick={addToCart}
-      >
-        {!selectedSize
-          ? "Choose a size"
-          : selectedStock <= 0
-          ? "Sold out"
-          : added
-            ? "Added to cart"
-            : "Add to cart"}
-        <span aria-hidden="true">-&gt;</span>
-      </button>
+      <div className="mobile-purchase-bar mt-6 grid grid-cols-[auto_1fr] items-center gap-4">
+        <div className="hidden text-[10px] uppercase leading-[1.55] tracking-[0.12em] lg:block">
+          <span>${product.price}</span>
+          <span className="ml-4 text-black/48">{selectedSize || "Select size"}</span>
+        </div>
+        <div className="grid text-[9px] uppercase leading-[1.45] tracking-[0.12em] lg:hidden">
+          <span>${product.price}</span>
+          <span className="text-black/50">{selectedSize || "Select size"}</span>
+        </div>
+        <button
+          className="add-to-cart-label flex min-h-14 w-full items-center justify-center gap-4 bg-[#171614] px-5 py-4 text-[11px] uppercase text-[#ecece5] transition-opacity duration-300 hover:opacity-82 disabled:cursor-not-allowed disabled:opacity-55"
+          disabled={!selectedSize || selectedStock <= 0}
+          type="button"
+          onClick={addToCart}
+        >
+          {!selectedSize
+            ? "Select a size"
+            : selectedStock <= 0
+            ? "Sold out"
+            : added
+              ? "Added to cart"
+              : "Add to cart"}
+          <span aria-hidden="true">-&gt;</span>
+        </button>
+      </div>
       <p className="mt-4 border-t border-black/12 pt-4 text-[12px] uppercase tracking-[0.14em] text-black/62">
         {totalStock > 0
           ? `${getAvailabilityLabel(selectedSize ? selectedStock : totalStock)} / ships in 2-4 days`
@@ -171,8 +161,7 @@ export function ProductPurchasePanel({
         <div aria-live="polite" className="mt-4 grid gap-3 border-t border-black/12 pt-4 text-[12px] uppercase tracking-[0.14em]">
           <p>Added to your cart.</p>
           <div className="flex flex-wrap gap-5">
-            <Link className="border-b border-black/60 pb-1 lg:hidden" href="/cart?guest=1">View cart →</Link>
-            <Link className="hidden border-b border-black/60 pb-1 lg:inline" href="/cart">View cart →</Link>
+            <Link className="border-b border-black/60 pb-1" href="/cart">View cart →</Link>
             <Link className="border-b border-black/36 pb-1 text-black/62" href={`/collections/${product.gender}`}>Continue shopping</Link>
           </div>
         </div>

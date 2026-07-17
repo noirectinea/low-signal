@@ -1,12 +1,11 @@
 "use client";
 
 import Link from "next/link";
-import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
-import { CartCountLink } from "./CartCountLink";
+import { AccountHeaderLink } from "./AccountHeaderLink";
 
 const links = [
-  ["Shop", "/collections"],
+  ["Shop all", "/collections"],
   ["Men", "/collections/men"],
   ["Women", "/collections/women"],
   ["Lookbook", "/lookbook"],
@@ -110,33 +109,14 @@ export function MobileNavMenu({
                   <span aria-hidden="true" className="text-[10px] text-black/44">→</span>
                 </Link>
               ))}
-              <CartCountLink
-                className="mobile-menu-cart-link grid min-h-14 grid-cols-[36px_1fr_auto] items-center px-4 text-[13px] uppercase tracking-[0.14em]"
-                href="/cart?guest=1"
-                onClick={() => setOpen(false)}
-              />
             </nav>
-            <Link className="mobile-menu-campaign relative min-h-[144px] overflow-hidden border-b border-black/16 text-[#f0eee7]" href="/collections" onClick={() => setOpen(false)}>
-              <Image
-                alt="LOW SIGNAL Spring 2026 collection"
-                className="object-cover object-[50%_38%] brightness-[0.72] contrast-[1.06] saturate-[0.66]"
-                fill
-                sizes="100vw"
-                src="/images/low-signal/products/product-01.jpg"
-              />
-              <div className="absolute inset-0 bg-black/22" />
-              <div className="absolute inset-0 grid grid-cols-[1fr_auto] content-between items-end gap-4 p-4 text-[9px] uppercase tracking-[0.14em]">
-                <span className="col-span-2 self-start">Spring 2026 / current rail</span>
-                <span className="controlled-display-title text-[24px] leading-[0.92]">Selected<br />garments</span>
-                <span className="flex min-h-11 items-center border-b border-white/60">Shop collection →</span>
-              </div>
-            </Link>
           </div>
           <nav aria-label="Secondary navigation" className="mobile-menu-secondary grid grid-cols-2 text-[11px] uppercase tracking-[0.12em] text-black/62">
-            <Link className="flex min-h-11 items-center" href="/collections" onClick={() => setOpen(false)}>Search</Link>
-            <Link className="flex min-h-11 items-center" href="/account" onClick={() => setOpen(false)}>Account</Link>
-            <a className="flex min-h-11 items-center" href="https://instagram.com">Instagram</a>
-            <a className="flex min-h-11 items-center" href="mailto:studio@lowsignal.com">Contact</a>
+            <Link className="flex min-h-11 items-center" href="/search" onClick={() => setOpen(false)}>Search</Link>
+            <AccountHeaderLink className="flex min-h-11 items-center" />
+            <Link className="flex min-h-11 items-center" href="/account/orders" onClick={() => setOpen(false)}>Orders</Link>
+            <Link className="flex min-h-11 items-center" href="/shipping" onClick={() => setOpen(false)}>Shipping & Returns</Link>
+            <Link className="flex min-h-11 items-center" href="/contact" onClick={() => setOpen(false)}>Contact</Link>
           </nav>
         </div>
       ) : null}

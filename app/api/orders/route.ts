@@ -78,10 +78,6 @@ const isDevelopment = process.env.NODE_ENV !== "production";
 export async function POST(request: Request) {
   const session = await getAccountSession();
 
-  if (!session) {
-    return orderError("unauthorized", "Please log in to place an order.", 401);
-  }
-
   let rawPayload: unknown;
 
   try {
@@ -135,16 +131,18 @@ export async function POST(request: Request) {
       );
     }
 
-    await linkOrderToCustomer({
-      checkoutCustomer: validation.payload.customer,
-      orderId: rpcResult.order.id,
-      shipping: validation.payload.shipping,
-      user: session.user,
-    });
-    logOrderDebug("linked_order_to_customer", {
-      orderId: rpcResult.order.id,
-      userId: session.user.id,
-    });
+    if (session) {
+      await linkOrderToCustomer({
+        checkoutCustomer: validation.payload.customer,
+        orderId: rpcResult.order.id,
+        shipping: validation.payload.shipping,
+        user: session.user,
+      });
+      logOrderDebug("linked_order_to_customer", {
+        orderId: rpcResult.order.id,
+        userId: session.user.id,
+      });
+    }
 
     return Response.json({
       duplicate: rpcResult.duplicate,

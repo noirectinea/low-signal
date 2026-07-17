@@ -3,6 +3,7 @@
 import { redirect } from "next/navigation";
 import {
   requireAccountSession,
+  requestPasswordReset,
   signInWithEmail,
   signOut,
   signUpWithEmail,
@@ -36,9 +37,11 @@ export async function registerAction(formData: FormData) {
   const next = safeNext(cleanValue(formData.get("next")) || "/account");
   const password = cleanValue(formData.get("password"));
 
-  if (!email || !fullName || password.length < 6) {
+  const acceptedTerms = cleanValue(formData.get("terms")) === "on";
+
+  if (!email || !fullName || password.length < 8 || !acceptedTerms) {
     const message =
-      "Enter a name, email, and password with at least 6 characters.";
+      "Enter a name, email, password with at least 8 characters, and accept the terms.";
 
     redirect(
       `/account/register?next=${encodeURIComponent(
@@ -68,6 +71,24 @@ export async function registerAction(formData: FormData) {
   }
 
   redirect(next);
+}
+
+export async function forgotPasswordAction(formData: FormData) {
+  const email = cleanValue(formData.get("email")).toLowerCase();
+
+  if (!email) {
+    redirect("/account/forgot-password?error=Enter your email address.");
+  }
+
+  const result = await requestPasswordReset(email);
+
+  if (!result.ok) {
+    redirect(
+      `/account/forgot-password?error=${encodeURIComponent(result.message)}`,
+    );
+  }
+
+  redirect("/account/forgot-password?sent=1");
 }
 
 export async function logoutAction() {

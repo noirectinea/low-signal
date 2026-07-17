@@ -181,6 +181,19 @@ export async function signInWithEmail({
   };
 }
 
+export async function requestPasswordReset(email: string): Promise<AuthResult> {
+  const result = await authRequest<Record<string, never>>("recover", {
+    email,
+  });
+
+  if (!result.ok) return result;
+
+  return {
+    ok: true,
+    session: false,
+  };
+}
+
 export async function signOut() {
   const token = await getAccessToken();
 
