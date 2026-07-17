@@ -35,7 +35,7 @@ const footerLinks = [
 
 export default function Home() {
   return (
-    <main className="mobile-home-root flex min-h-screen w-full flex-col bg-[#e4e5df] text-[#111]">
+    <main className="mobile-home-root min-h-screen w-full bg-[#e4e5df] text-[#111]">
       <MobileHomeHeader />
       <section className="order-1 grid w-full bg-[#e4e5df] lg:order-none lg:h-[100svh] lg:grid-rows-[65fr_35fr]">
         <HeroPanel />

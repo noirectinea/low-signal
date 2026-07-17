@@ -296,6 +296,11 @@ a {
  * for a narrow editorial canvas.
  */
 @media (max-width: 767.98px) {
+  .mobile-home-root {
+    display: flex;
+    flex-direction: column;
+  }
+
   .mobile-home-root > section,
   .mobile-home-root > footer {
     flex-shrink: 0;
