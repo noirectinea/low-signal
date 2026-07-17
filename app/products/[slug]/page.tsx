@@ -64,6 +64,9 @@ export default async function ProductPage({ params }: ProductPageProps) {
       src: "/images/low-signal/journal/fabric-detail.jpg",
     },
   ].slice(0, 3);
+  const mobileGallery = detailImages
+    .filter((image) => image.src !== product.image)
+    .slice(0, 3);
   const relatedProduct = await getRelatedProduct(product);
 
   return (
@@ -72,7 +75,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
 
       <section className="mobile-product-page grid px-5 pb-28 pt-[92px] lg:min-h-screen lg:grid-cols-[58%_42%] lg:px-0 lg:pb-0 lg:pt-[64px]">
         <div className="mobile-product-gallery grid gap-4 lg:grid-cols-[104px_1fr] lg:border-r lg:border-black/16 lg:p-8 xl:grid-cols-[124px_1fr] xl:p-10">
-          <div className="mobile-product-thumbnails order-2 grid grid-cols-3 gap-3 lg:order-1 lg:grid-cols-1">
+          <div className="order-1 hidden grid-cols-1 gap-3 lg:grid">
             {gallery.map((image) => (
               <div
                 className="relative aspect-[4/5] overflow-hidden border border-black/12 bg-[#d0d0c8]"
@@ -89,6 +92,25 @@ export default async function ProductPage({ params }: ProductPageProps) {
             ))}
           </div>
 
+          {mobileGallery.length > 0 ? (
+            <div className="mobile-product-thumbnails order-2 grid grid-flow-col auto-cols-[28%] gap-2 overflow-x-auto lg:hidden">
+              {mobileGallery.map((image) => (
+                <div
+                  className="relative aspect-[4/5] overflow-hidden border border-black/12 bg-[#d0d0c8]"
+                  key={image.src}
+                >
+                  <Image
+                    alt={image.alt}
+                    src={image.src}
+                    fill
+                    sizes="28vw"
+                    className="object-cover brightness-[0.9] contrast-[1.04] saturate-[0.72]"
+                  />
+                </div>
+              ))}
+            </div>
+          ) : null}
+
           <div className="mobile-product-lead relative order-1 min-h-[68vh] overflow-hidden border border-black/12 bg-[#d0d0c8] lg:order-2 lg:min-h-0">
             <Image
               alt={product.name}
@@ -101,7 +123,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
               }`}
             />
             <div className="absolute inset-0 bg-[#171614]/[0.03]" />
-            <span className="absolute bottom-4 right-4 bg-black/62 px-3 py-2 text-[12px] uppercase tracking-[0.12em] text-white lg:hidden">01 / {String(gallery.length).padStart(2, "0")}</span>
+            <span className="absolute bottom-4 right-4 bg-black/62 px-3 py-2 text-[12px] uppercase tracking-[0.12em] text-white lg:hidden">01 / {String(1 + mobileGallery.length).padStart(2, "0")}</span>
           </div>
         </div>
 

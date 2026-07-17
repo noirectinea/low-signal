@@ -60,7 +60,16 @@ function HeroPanel() {
           fill
           priority
           sizes="(min-width: 1024px) 70vw, 68vw"
-          className="hero-image object-cover object-[54%_24%] min-[390px]:object-[52%_23%] min-[430px]:object-[50%_22%] lg:object-[50%_20%]"
+          className="hero-image hidden object-cover object-[50%_20%] lg:block"
+        />
+        <Image
+          src="/images/hero/ch1-mobile-2x.png"
+          alt="LOW SIGNAL editorial portrait in a black coat"
+          fill
+          priority
+          quality={95}
+          sizes="72vw"
+          className="hero-image object-cover object-center lg:hidden"
         />
         <div className="absolute inset-0 bg-[#d8cfc1]/10 mix-blend-screen" />
       </div>
@@ -120,11 +129,11 @@ function HeroPanel() {
         SIGNAL
       </h1>
 
-      <div className="absolute inset-x-5 bottom-6 z-30 grid grid-cols-[32%_1fr] gap-5 border-t border-black/34 pt-4 lg:hidden">
-        <p className="min-w-0 text-[9px] uppercase leading-[1.65] tracking-[0.12em] text-black/72">Washed black clothing for daily wear.</p>
-        <div className="grid min-w-0 gap-3 text-[10px] uppercase tracking-[0.12em] text-[#f5f2ed]/82">
-          <Link className="whitespace-nowrap border-b border-[#f5f2ed]/62 pb-2" href="/collections">Shop Spring 2026 →</Link>
-          <Link className="w-fit border-b border-[#f5f2ed]/38 pb-1 text-[#f5f2ed]/68" href="/lookbook">View Lookbook</Link>
+      <div className="mobile-hero-actions absolute inset-x-5 bottom-5 z-30 grid grid-cols-[29%_1fr] gap-4 border-t border-black/34 pt-3 lg:hidden">
+        <p className="min-w-0 text-[10px] uppercase leading-[1.55] tracking-[0.1em] text-black/76">Washed black clothing for daily wear.</p>
+        <div className="grid min-w-0 text-[11px] uppercase tracking-[0.11em] text-[#f5f2ed]/88">
+          <Link className="flex min-h-11 items-center whitespace-nowrap border-b border-[#f5f2ed]/62" href="/collections">Shop Spring 2026 →</Link>
+          <Link className="flex min-h-10 w-fit items-center border-b border-[#f5f2ed]/38 text-[#f5f2ed]/72" href="/lookbook">View Lookbook</Link>
         </div>
       </div>
 
@@ -138,41 +147,46 @@ function HeroPanel() {
 function EditorialGrid() {
   return (
     <section className="mobile-home-editorial border-b border-black/20">
-      <div className="lg:hidden">
-        <div className="bg-[#e8e9e3] px-5 py-7">
-          <Kicker number="02" />
-          <div className="mt-5 flex items-end justify-between border-t border-black/28 pt-4 text-[9px] uppercase tracking-[0.16em]">
-            <span>Spring 2026</span>
-            <Link className="border-b border-black/60 pb-1" href="/collections">View collection →</Link>
+      <div className="mobile-editorial-composition lg:hidden">
+        <Link className="mobile-spring-feature group grid min-h-[540px] grid-cols-[31%_69%] border-b border-black/18 bg-[#e8e9e3]" href="/collections">
+          <div className="flex min-w-0 flex-col border-r border-black/18 px-4 py-7">
+            <Kicker number="02" />
+            <p className="mt-8 text-[11px] uppercase tracking-[0.16em]">Spring 2026</p>
+            <p className="mt-6 text-[9px] uppercase leading-[1.65] tracking-[0.13em] text-black/58">
+              A collection built on restraint, quiet structures, and small interruptions.
+            </p>
+            <span className="mt-auto flex min-h-11 items-center border-b border-black/60 text-[10px] uppercase tracking-[0.13em]">
+              View collection →
+            </span>
           </div>
-        </div>
-        <div className="grid min-h-[68svh] grid-cols-[56%_44%] border-t border-black/18">
-          <Link className="group relative min-w-0 overflow-hidden border-r border-black/18 bg-[#c9cac4]" href="/collections">
+          <div className="relative min-w-0 overflow-hidden bg-[#c9cac4]">
             <Image
               src={collectionImage}
               alt="LOW SIGNAL collection preview"
               fill
-              sizes="56vw"
-              className="editorial-image object-cover object-[50%_18%] transition-transform duration-700 group-hover:scale-[1.012]"
+              sizes="69vw"
+              className="editorial-image object-cover object-[48%_18%] transition-transform duration-700 group-hover:scale-[1.012]"
             />
-          </Link>
-          <Link className="group grid min-w-0 grid-rows-[1fr_auto] bg-[#ebece6]" href="/lookbook">
-            <div className="relative min-h-0 overflow-hidden">
+          </div>
+        </Link>
+
+        <Link className="mobile-lookbook-feature group grid min-h-[280px] grid-cols-[66%_34%] bg-[#ebece6]" href="/lookbook">
+          <div className="relative min-w-0 overflow-hidden border-r border-black/18">
               <Image
                 src={lookbookImage}
                 alt="LOW SIGNAL lookbook photograph"
                 fill
-                sizes="44vw"
-                className="editorial-image object-cover object-[58%_54%] transition-transform duration-700 group-hover:scale-[1.012]"
+                sizes="66vw"
+                className="editorial-image object-cover object-[50%_54%] transition-transform duration-700 group-hover:scale-[1.012]"
               />
-            </div>
-            <div className="px-4 py-6 text-[9px] uppercase tracking-[0.16em]">
-              <div className="flex items-center gap-3"><span>03</span><span className="h-px flex-1 bg-black/26" /></div>
-              <p className="mt-4">Lookbook</p>
-              <span className="mt-5 inline-flex border-b border-black/60 pb-1">View lookbook →</span>
-            </div>
-          </Link>
-        </div>
+          </div>
+          <div className="flex min-w-0 flex-col px-4 py-6 text-[9px] uppercase tracking-[0.15em]">
+            <div className="flex items-center gap-3"><span>03</span><span className="h-px flex-1 bg-black/26" /></div>
+            <p className="mt-6 text-[11px]">Lookbook</p>
+            <p className="mt-4 text-[8px] leading-[1.6] text-black/52">Coastal light / issue 01</p>
+            <span className="mt-auto flex min-h-11 items-center border-b border-black/60 text-[9px]">View lookbook →</span>
+          </div>
+        </Link>
       </div>
 
       <div className="hidden h-full grid-cols-[32.5vw_24vw_1fr] lg:grid">

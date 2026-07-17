@@ -307,32 +307,35 @@ a {
   }
 
   .mobile-home-hero > div:first-child {
-    width: 24%;
+    width: 29%;
   }
 
   .mobile-home-hero > div:nth-child(2) {
-    left: 24%;
+    left: 29%;
   }
 
   .mobile-home-hero .hero-printed-title {
-    left: 4.6%;
-    top: 57%;
-    font-size: clamp(6rem, 27vw, 7.25rem);
-    line-height: 0.69;
+    left: 5%;
+    top: 55%;
+    font-size: clamp(5.25rem, 23vw, 6.3rem);
+    line-height: 0.72;
   }
 
   .mobile-home-hero > div:nth-last-of-type(1) {
-    grid-template-columns: 24% minmax(0, 1fr);
+    grid-template-columns: 29% minmax(0, 1fr);
     gap: 16px;
   }
 
-  .mobile-home-editorial > div:first-child > div:first-child {
-    padding-block: 30px;
+  .mobile-hero-actions {
+    grid-template-columns: 29% minmax(0, 1fr);
   }
 
-  .mobile-home-editorial > div:first-child > div:last-child {
-    min-height: 76svh;
-    grid-template-columns: 61% 39%;
+  .mobile-spring-feature {
+    min-height: min(68svh, 570px);
+  }
+
+  .mobile-lookbook-feature {
+    min-height: min(36svh, 310px);
   }
 
   .mobile-selected-editorial {
@@ -368,14 +371,23 @@ a {
   }
 
   .mobile-selected-editorial .mobile-selected-card {
-    width: calc(82vw - 8px);
+    width: 72vw;
   }
 
   .mobile-selected-editorial .mobile-selected-card > div:first-child {
-    height: 62svh;
-    min-height: 420px;
-    max-height: 560px;
+    height: 48svh;
+    min-height: 350px;
+    max-height: 430px;
     border-color: rgb(236 236 229 / 0.16);
+  }
+
+  .mobile-selected-editorial .mobile-selected-product-info {
+    border-color: rgb(236 236 229 / 0.16);
+  }
+
+  .mobile-selected-editorial .selected-rail-control {
+    min-width: 44px;
+    min-height: 44px;
   }
 
   .mobile-selected-editorial .selected-rail + div {
@@ -401,8 +413,8 @@ a {
   }
 
   .mobile-material-copy {
-    width: 76%;
-    min-height: 58svh;
+    width: 78%;
+    min-height: 52svh;
     border-bottom: 1px solid rgb(17 17 15 / 0.16);
   }
 
@@ -426,14 +438,14 @@ a {
   }
 
   .mobile-material-image-column {
-    width: 84%;
-    margin-left: 16%;
+    width: 82%;
+    margin-left: 18%;
     margin-top: 0;
     border-top: 1px solid rgb(17 17 15 / 0.16);
   }
 
   .mobile-material-image {
-    min-height: 76svh;
+    min-height: 58svh;
     border-left: 1px solid rgb(17 17 15 / 0.18);
   }
 
@@ -464,8 +476,8 @@ a {
 
   .mobile-journal-lead {
     grid-column: 1 / 11;
-    height: 62svh;
-    min-height: 440px;
+    height: 54svh;
+    min-height: 390px;
   }
 
   .mobile-journal-details {
@@ -507,13 +519,13 @@ a {
   }
 
   .mobile-collections-intro h1 {
-    font-size: clamp(4rem, 22vw, 5.7rem);
+    font-size: clamp(4rem, 19vw, 4.8rem);
   }
 
   .mobile-collection-entries {
     display: grid;
-    grid-template-columns: repeat(12, minmax(0, 1fr));
-    gap: 28px 0;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
     padding-top: 30px;
   }
 
@@ -522,19 +534,30 @@ a {
   }
 
   .mobile-collection-entry-men {
-    grid-column: 1 / 12;
+    grid-column: auto;
   }
 
   .mobile-collection-entry-women {
-    grid-column: 3 / 13;
+    grid-column: auto;
   }
 
   .mobile-collection-entry > a > div:first-child {
-    aspect-ratio: 4 / 5.3;
+    aspect-ratio: 4 / 5.35;
   }
 
   .mobile-collection-entry h2 {
-    font-size: 48px;
+    font-size: clamp(1.9rem, 9vw, 2.35rem);
+  }
+
+  .mobile-collection-entry > a > div:last-child {
+    grid-template-columns: 1fr;
+    align-items: start;
+    gap: 10px;
+  }
+
+  .mobile-collection-entry > a > div:last-child > a,
+  .mobile-collection-entry > a > div:last-child > span {
+    justify-self: start;
   }
 
   .mobile-collection-notes {
@@ -542,26 +565,28 @@ a {
   }
 
   .mobile-collection-notes > div:last-child {
-    display: grid;
-    grid-template-columns: repeat(12, minmax(0, 1fr));
-    gap: 28px 0;
+    display: flex;
+    gap: 12px;
+    overflow-x: auto;
+    overscroll-behavior-inline: contain;
+    scroll-snap-type: x proximity;
+    scrollbar-width: none;
+    padding-right: 18vw;
   }
 
-  .mobile-collection-notes > div:last-child > a:nth-child(1) {
-    grid-column: 1 / 12;
+  .mobile-collection-notes > div:last-child::-webkit-scrollbar {
+    display: none;
   }
 
-  .mobile-collection-notes > div:last-child > a:nth-child(2) {
-    grid-column: 3 / 13;
-  }
-
-  .mobile-collection-notes > div:last-child > a:nth-child(3) {
-    grid-column: 1 / 11;
+  .mobile-collection-notes > div:last-child > a {
+    width: 72vw;
+    flex: 0 0 72vw;
+    scroll-snap-align: start;
   }
 
   .mobile-catalog-shell {
     padding-inline: 16px;
-    padding-top: 94px;
+    padding-top: 86px;
   }
 
   .mobile-catalog-header {
@@ -569,12 +594,12 @@ a {
   }
 
   .mobile-catalog-header h1 {
-    margin-top: 24px;
-    font-size: clamp(5.4rem, 27vw, 7rem);
+    margin-top: 18px;
+    font-size: clamp(4rem, 18vw, 4.7rem);
   }
 
   .mobile-catalog-women .mobile-catalog-header h1 {
-    font-size: clamp(4.8rem, 23.5vw, 6rem);
+    font-size: clamp(3.7rem, 16.5vw, 4.35rem);
   }
 
   .mobile-filter-bar {
@@ -599,33 +624,42 @@ a {
   }
 
   .mobile-campaign-rail {
-    height: 50svh !important;
-    min-height: 330px !important;
-    max-height: 440px !important;
-    margin: 0 -16px 34px;
+    height: 30svh !important;
+    min-height: 220px !important;
+    max-height: 270px !important;
+    margin: 0 -16px 28px;
     border-left: 0;
     border-right: 0;
   }
 
   .mobile-product-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     column-gap: 12px;
-    row-gap: 46px;
+    row-gap: 30px;
   }
 
-  .mobile-product-card:nth-child(4n + 1) {
-    grid-column: 1 / 12 !important;
+  .mobile-product-card:nth-child(n) {
+    grid-column: auto !important;
   }
 
-  .mobile-product-card:nth-child(4n + 2) {
-    grid-column: 4 / 13 !important;
+  .mobile-product-card > div:first-of-type {
+    aspect-ratio: 4 / 5 !important;
   }
 
+  .mobile-product-card:nth-child(4n + 2),
   .mobile-product-card:nth-child(4n + 3) {
-    grid-column: 1 / 10 !important;
+    margin-top: 18px;
   }
 
-  .mobile-product-card:nth-child(4n + 4) {
-    grid-column: 2 / 13 !important;
+  .mobile-size-picker {
+    position: fixed;
+    inset: auto 0 0;
+    z-index: 70;
+    width: 100%;
+    max-width: none;
+    padding: 20px;
+    border-inline: 0;
+    background: rgb(229 230 225 / 0.98);
   }
 
   .mobile-product-card h2 {
@@ -635,7 +669,7 @@ a {
   }
 
   .mobile-product-page {
-    padding: 64px 0 96px;
+    padding: 64px 0 84px;
   }
 
   .mobile-product-gallery {
@@ -643,33 +677,46 @@ a {
   }
 
   .mobile-product-lead {
-    min-height: 82svh;
+    min-height: 62svh;
+    max-height: 540px;
     border-left: 0;
     border-right: 0;
   }
 
   .mobile-product-thumbnails {
     width: calc(100% - 32px);
-    margin: -34px 16px 0;
+    margin: -24px 16px 0;
     position: relative;
     z-index: 2;
     gap: 8px;
+    overscroll-behavior-inline: contain;
+    scrollbar-width: none;
   }
 
   .mobile-product-thumbnails > div {
     border-color: rgb(231 231 225 / 0.7);
   }
 
+  .mobile-product-thumbnails::-webkit-scrollbar {
+    display: none;
+  }
+
   .mobile-product-information {
-    padding: 42px 20px 0;
+    padding: 30px 20px 0;
   }
 
   .mobile-product-information h1 {
-    font-size: clamp(2.7rem, 13.2vw, 3.5rem);
+    font-size: clamp(2.5rem, 11.5vw, 3rem);
+  }
+
+  .mobile-add-to-cart-button {
+    position: sticky;
+    bottom: 12px;
+    z-index: 20;
   }
 
   .mobile-lookbook-hero-image {
-    min-height: 76svh;
+    min-height: 64svh;
   }
 
   .mobile-lookbook-hero-copy {
@@ -682,7 +729,7 @@ a {
   }
 
   .mobile-lookbook-hero-copy h1 {
-    font-size: clamp(3.2rem, 13.6vw, 4rem);
+    font-size: clamp(2.85rem, 12vw, 3.45rem);
   }
 
   .mobile-lookbook-chapter {
@@ -757,12 +804,12 @@ a {
   }
 
   .mobile-about-statement {
-    min-height: calc(100svh - 64px);
+    min-height: min(80svh, 680px);
     padding: 40px 20px;
   }
 
   .mobile-about-statement h1 {
-    font-size: clamp(4rem, 18vw, 5.3rem);
+    font-size: clamp(3.55rem, 15.5vw, 4.25rem);
   }
 
   .mobile-about-principles {
@@ -815,9 +862,9 @@ a {
   }
 
   .mobile-menu-composition {
-    min-height: calc(100svh - 190px);
+    min-height: 0;
     display: grid;
-    grid-template-columns: 56% 44%;
+    grid-template-columns: 1fr;
   }
 
   .mobile-menu-primary {
@@ -827,21 +874,95 @@ a {
   }
 
   .mobile-menu-primary a {
-    min-height: 58px;
-    padding-inline: 16px 8px;
+    min-height: 56px;
+  }
+
+  .mobile-menu-cart-link::before {
+    content: "06";
+    font-size: 8px;
+    color: rgb(0 0 0 / 0.42);
+  }
+
+  .mobile-menu-cart-link::after {
+    content: "→";
+    justify-self: end;
+    font-size: 10px;
+    color: rgb(0 0 0 / 0.44);
   }
 
   .mobile-menu-campaign {
     display: block;
-    min-height: 100%;
+    min-height: 144px;
     border: 0;
-    border-left: 1px solid rgb(0 0 0 / 0.16);
+    border-bottom: 1px solid rgb(0 0 0 / 0.16);
   }
 
   .mobile-menu-secondary {
     margin: 0;
-    padding: 22px 16px;
-    border-top: 1px solid rgb(0 0 0 / 0.16);
+    padding: 12px 16px;
     background: #dfe0da;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 1023.98px) {
+  .mobile-home-root {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .mobile-home-root > section,
+  .mobile-home-root > footer {
+    flex-shrink: 0;
+  }
+
+  .mobile-menu-panel {
+    padding: 0;
+    background: #dfe0da;
+  }
+
+  .mobile-menu-composition {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 38%;
+  }
+
+  .mobile-menu-primary {
+    align-content: start;
+  }
+
+  .mobile-menu-primary a {
+    min-height: 58px;
+  }
+
+  .mobile-menu-cart-link::before {
+    content: "06";
+    font-size: 8px;
+    color: rgb(0 0 0 / 0.42);
+  }
+
+  .mobile-menu-cart-link::after {
+    content: "→";
+    justify-self: end;
+    font-size: 10px;
+    color: rgb(0 0 0 / 0.44);
+  }
+
+  .mobile-menu-campaign {
+    min-height: calc(100svh - 260px);
+    border-left: 1px solid rgb(0 0 0 / 0.16);
+  }
+
+  .mobile-menu-secondary {
+    padding: 14px 20px;
+    border-top: 1px solid rgb(0 0 0 / 0.16);
+  }
+
+  .mobile-selected-editorial .mobile-selected-card {
+    width: 42vw;
+  }
+
+  .mobile-selected-editorial .mobile-selected-card > div:first-child {
+    height: 48svh;
+    min-height: 390px;
+    max-height: 520px;
   }
 }

@@ -138,7 +138,7 @@ export function ProductPurchasePanel({
       </div>
 
       <button
-        className="add-to-cart-label mt-6 flex min-h-14 w-full items-center justify-center gap-4 bg-[#171614] px-6 py-5 text-[12px] uppercase text-[#ecece5] transition-opacity duration-300 hover:opacity-82 disabled:cursor-not-allowed disabled:opacity-45"
+        className="mobile-add-to-cart-button add-to-cart-label mt-6 flex min-h-14 w-full items-center justify-center gap-4 bg-[#171614] px-6 py-5 text-[12px] uppercase text-[#ecece5] transition-opacity duration-300 hover:opacity-82 disabled:cursor-not-allowed disabled:opacity-45"
         disabled={!selectedSize || selectedStock <= 0}
         type="button"
         onClick={addToCart}
@@ -171,7 +171,8 @@ export function ProductPurchasePanel({
         <div aria-live="polite" className="mt-4 grid gap-3 border-t border-black/12 pt-4 text-[12px] uppercase tracking-[0.14em]">
           <p>Added to your cart.</p>
           <div className="flex flex-wrap gap-5">
-            <Link className="border-b border-black/60 pb-1" href="/cart">View cart →</Link>
+            <Link className="border-b border-black/60 pb-1 lg:hidden" href="/cart?guest=1">View cart →</Link>
+            <Link className="hidden border-b border-black/60 pb-1 lg:inline" href="/cart">View cart →</Link>
             <Link className="border-b border-black/36 pb-1 text-black/62" href={`/collections/${product.gender}`}>Continue shopping</Link>
           </div>
         </div>

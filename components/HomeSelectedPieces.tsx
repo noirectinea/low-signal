@@ -111,7 +111,10 @@ export function HomeSelectedPieces() {
   const scheduleAutoAdvance = useCallback((delay = 7000) => {
     clearAutoTimer();
 
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+    if (
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches ||
+      window.matchMedia("(max-width: 1023.98px)").matches
+    ) {
       return;
     }
 
@@ -323,7 +326,6 @@ export function HomeSelectedPieces() {
               ref={railRef}
               tabIndex={0}
             >
-              <CampaignRailCard />
               {railItems.map((item, index) => (
                 <RailCard
                   index={index + 1}
@@ -376,34 +378,6 @@ export function HomeSelectedPieces() {
         </div>
       </div>
     </section>
-  );
-}
-
-function CampaignRailCard() {
-  return (
-    <Link
-      aria-label="Open men's Spring 2026 collection"
-      className="mobile-selected-card group w-[36vw] shrink-0 snap-start sm:w-[22vw] lg:hidden"
-      href="/collections/men"
-    >
-      <div className="relative h-[48svh] min-h-[300px] max-h-[480px] overflow-hidden border border-black/14 bg-[#c8cbc5]">
-        <Image
-          alt="LOW SIGNAL men's Spring 2026 campaign"
-          className="object-cover object-[48%_52%] brightness-[0.82] contrast-[1.06] saturate-[0.62] transition-transform duration-700 group-hover:scale-[1.012]"
-          fill
-          sizes="(min-width: 640px) 22vw, 36vw"
-          src="/images/low-signal/selected-collection/material-form-original.png"
-        />
-        <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/42 via-black/16 to-transparent p-5 text-[#f1f1ea]">
-          <p className="font-[var(--font-archivo)] text-[20px] font-medium uppercase leading-[0.92] tracking-[-0.02em] text-white/90 sm:text-[26px]">
-            SPRING<br />2026
-          </p>
-        </div>
-      </div>
-      <div className="grid min-h-[58px] content-start border-b border-black/16 py-3 text-[9px] font-medium uppercase tracking-[0.12em]">
-        <span className="selected-rail-link w-fit whitespace-nowrap">Shop collection ↗</span>
-      </div>
-    </Link>
   );
 }
 
@@ -475,12 +449,16 @@ function RailCard({
           sizes="(min-width: 1024px) 25vw, (min-width: 640px) 40vw, 68vw"
           src={product.image}
         />
-        <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/62 via-black/18 to-transparent p-4 pt-16 text-white lg:hidden">
-          <div className="grid grid-cols-[1fr_auto] items-end gap-3">
-            <h3 className="text-[11px] font-medium uppercase tracking-[0.12em]">{product.name}</h3>
-            <span className="text-[11px] font-medium">${product.price}</span>
-          </div>
-          <span className="mt-3 inline-block h-px w-8 bg-white/58" />
+      </div>
+
+      <div className="mobile-selected-product-info grid min-h-[78px] grid-cols-[1fr_auto] content-center gap-x-4 border-b border-white/14 py-3 text-[#ecece5] lg:hidden">
+        <div>
+          <h3 className="text-[12px] font-medium uppercase tracking-[0.1em]">{product.name}</h3>
+          <p className="mt-2 text-[9px] uppercase tracking-[0.13em] text-white/48">{product.category}</p>
+        </div>
+        <div className="grid justify-items-end">
+          <span className="text-[12px] font-medium">${product.price}</span>
+          <span className="mt-2 border-b border-white/48 pb-1 text-[9px] uppercase tracking-[0.12em]">View product →</span>
         </div>
       </div>
 

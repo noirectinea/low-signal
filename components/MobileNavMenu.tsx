@@ -21,6 +21,7 @@ export function MobileNavMenu({
   const [open, setOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
   const firstLinkRef = useRef<HTMLAnchorElement>(null);
+  const triggerRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
     if (new URLSearchParams(window.location.search).get("menu") === "open") {
@@ -37,9 +38,14 @@ export function MobileNavMenu({
   useEffect(() => {
     if (!open) return;
     firstLinkRef.current?.focus();
+    const previousOverflow = document.documentElement.style.overflow;
+    document.documentElement.style.overflow = "hidden";
 
     function onKeyDown(event: KeyboardEvent) {
-      if (event.key === "Escape") setOpen(false);
+      if (event.key === "Escape") {
+        setOpen(false);
+        triggerRef.current?.focus();
+      }
       if (event.key !== "Tab" || !menuRef.current) return;
       const focusable = Array.from(menuRef.current.querySelectorAll<HTMLElement>("a, button"));
       const first = focusable[0];
@@ -60,6 +66,7 @@ export function MobileNavMenu({
     document.addEventListener("keydown", onKeyDown);
     document.addEventListener("pointerdown", onPointerDown);
     return () => {
+      document.documentElement.style.overflow = previousOverflow;
       document.removeEventListener("keydown", onKeyDown);
       document.removeEventListener("pointerdown", onPointerDown);
     };
@@ -70,7 +77,8 @@ export function MobileNavMenu({
       <button
         aria-controls="mobile-site-menu"
         aria-expanded={open}
-        className="min-h-11 px-1 text-[12px] uppercase tracking-[0.12em]"
+        className="mobile-menu-trigger min-h-11 px-1 text-[12px] uppercase tracking-[0.12em]"
+        ref={triggerRef}
         type="button"
         onClick={() => setOpen((value) => !value)}
       >
@@ -91,7 +99,7 @@ export function MobileNavMenu({
             <nav aria-label="Mobile navigation" className="mobile-menu-primary grid divide-y divide-black/16 border-y border-black/16">
               {links.map(([label, href], index) => (
                 <Link
-                  className="grid grid-cols-[30px_1fr] items-center py-4 text-[14px] uppercase tracking-[0.14em]"
+                  className="grid min-h-14 grid-cols-[36px_1fr_auto] items-center px-4 text-[13px] uppercase tracking-[0.14em]"
                   href={href}
                   key={href}
                   ref={index === 0 ? firstLinkRef : undefined}
@@ -99,34 +107,36 @@ export function MobileNavMenu({
                 >
                   <span className="text-[8px] text-black/42">{String(index + 1).padStart(2, "0")}</span>
                   <span>{label}</span>
+                  <span aria-hidden="true" className="text-[10px] text-black/44">→</span>
                 </Link>
               ))}
               <CartCountLink
-                className="grid grid-cols-[30px_1fr] items-center py-4 pl-[30px] text-[14px] uppercase tracking-[0.14em]"
+                className="mobile-menu-cart-link grid min-h-14 grid-cols-[36px_1fr_auto] items-center px-4 text-[13px] uppercase tracking-[0.14em]"
+                href="/cart?guest=1"
                 onClick={() => setOpen(false)}
               />
             </nav>
-            <Link className="mobile-menu-campaign relative min-h-[260px] overflow-hidden border-y border-black/16 text-[#f0eee7]" href="/collections" onClick={() => setOpen(false)}>
+            <Link className="mobile-menu-campaign relative min-h-[144px] overflow-hidden border-b border-black/16 text-[#f0eee7]" href="/collections" onClick={() => setOpen(false)}>
               <Image
                 alt="LOW SIGNAL Spring 2026 collection"
-                className="object-cover object-[50%_42%] brightness-[0.68] contrast-[1.08] saturate-[0.62]"
+                className="object-cover object-[50%_38%] brightness-[0.72] contrast-[1.06] saturate-[0.66]"
                 fill
-                sizes="46vw"
+                sizes="100vw"
                 src="/images/low-signal/products/product-01.jpg"
               />
               <div className="absolute inset-0 bg-black/22" />
-              <div className="absolute inset-0 grid content-between p-4 text-[9px] uppercase tracking-[0.14em]">
-                <span>01 / 05</span>
-                <span className="controlled-display-title text-[28px]">Spring<br />2026</span>
-                <span className="w-fit border-b border-white/60 pb-1">Shop →</span>
+              <div className="absolute inset-0 grid grid-cols-[1fr_auto] content-between items-end gap-4 p-4 text-[9px] uppercase tracking-[0.14em]">
+                <span className="col-span-2 self-start">Spring 2026 / current rail</span>
+                <span className="controlled-display-title text-[24px] leading-[0.92]">Selected<br />garments</span>
+                <span className="flex min-h-11 items-center border-b border-white/60">Shop collection →</span>
               </div>
             </Link>
           </div>
-          <nav aria-label="Secondary navigation" className="mobile-menu-secondary mt-6 grid grid-cols-2 gap-4 text-[12px] uppercase tracking-[0.12em] text-black/62">
-            <Link href="/collections" onClick={() => setOpen(false)}>Search</Link>
-            <Link href="/account" onClick={() => setOpen(false)}>Account</Link>
-            <a href="https://instagram.com">Instagram</a>
-            <a href="mailto:studio@lowsignal.com">Contact</a>
+          <nav aria-label="Secondary navigation" className="mobile-menu-secondary grid grid-cols-2 text-[11px] uppercase tracking-[0.12em] text-black/62">
+            <Link className="flex min-h-11 items-center" href="/collections" onClick={() => setOpen(false)}>Search</Link>
+            <Link className="flex min-h-11 items-center" href="/account" onClick={() => setOpen(false)}>Account</Link>
+            <a className="flex min-h-11 items-center" href="https://instagram.com">Instagram</a>
+            <a className="flex min-h-11 items-center" href="mailto:studio@lowsignal.com">Contact</a>
           </nav>
         </div>
       ) : null}

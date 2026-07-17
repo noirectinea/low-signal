@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useMemo, useState, useSyncExternalStore } from "react";
+import { useEffect, useMemo, useState, useSyncExternalStore } from "react";
 import { MobileHomeHeader } from "@/components/MobileHomeHeader";
 import {
   cartStorageKey,
@@ -131,6 +131,7 @@ export function CollectionShoppingPage({
   });
   const [searchQuery, setSearchQuery] = useState("");
   const [sortOrder, setSortOrder] = useState<SortOrder>("newest");
+  const [mobilePanel, setMobilePanel] = useState<"filters" | "sort" | null>(null);
   const cartSnapshot = useSyncExternalStore(
     subscribeCartStore,
     readCartSnapshot,
@@ -147,6 +148,8 @@ export function CollectionShoppingPage({
   const advancedFilterCount = Object.values(advancedFilters).filter(
     (value) => value !== "all",
   ).length;
+  const totalFilterCount =
+    advancedFilterCount + (activeCategory === "all" ? 0 : 1);
   const visibleProducts = useMemo(() => {
     const categoryProducts =
       activeCategory === "all"
@@ -207,6 +210,21 @@ export function CollectionShoppingPage({
       return 0;
     });
   }, [activeCategory, advancedFilters, normalizedSearchQuery, products, sortOrder]);
+
+  useEffect(() => {
+    if (!mobilePanel) return;
+    const previousOverflow = document.documentElement.style.overflow;
+    document.documentElement.style.overflow = "hidden";
+    const closeOnEscape = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setMobilePanel(null);
+    };
+    document.addEventListener("keydown", closeOnEscape);
+
+    return () => {
+      document.documentElement.style.overflow = previousOverflow;
+      document.removeEventListener("keydown", closeOnEscape);
+    };
+  }, [mobilePanel]);
 
   function clearAdvancedFilters() {
     setAdvancedFilters({
@@ -320,18 +338,47 @@ export function CollectionShoppingPage({
         <div className="lg:hidden">
           <FilterIntro gender={gender} note={collectionNote} />
           <div className="mobile-filter-bar sticky top-[64px] z-20 -mx-4 border-y border-black/16 bg-[#e5e6e1]/95 px-4 backdrop-blur-sm sm:-mx-6 sm:px-6">
-          <MobileFilters
-            activeCategory={activeCategory}
-            advancedFilterCount={advancedFilterCount}
-            advancedFilters={advancedFilters}
-            allLabel={allLabel}
-            clearAdvancedFilters={clearAdvancedFilters}
-            products={products}
-            setAdvancedFilters={setAdvancedFilters}
-            setActiveCategory={setActiveCategory}
-          />
-          <MobileSort sortOrder={sortOrder} setSortOrder={setSortOrder} />
+            <button
+              className="flex min-h-13 items-center justify-between pr-4 text-[12px] uppercase tracking-[0.14em]"
+              type="button"
+              onClick={() => setMobilePanel("filters")}
+            >
+              <span>Filters{totalFilterCount > 0 ? ` / ${totalFilterCount}` : ""}</span>
+              <span>+</span>
+            </button>
+            <button
+              className="flex min-h-13 items-center justify-between pl-4 text-[12px] uppercase tracking-[0.14em]"
+              type="button"
+              onClick={() => setMobilePanel("sort")}
+            >
+              <span>Sort / {sortOrder === "newest" ? "Newest" : sortOrder === "price-asc" ? "Price low" : "Price high"}</span>
+              <span>+</span>
+            </button>
           </div>
+          {totalFilterCount > 0 ? (
+            <div className="mobile-active-filters flex min-h-12 items-center justify-between border-b border-black/14 text-[9px] uppercase tracking-[0.15em] text-black/58">
+              <span>{String(visibleProducts.length).padStart(2, "0")} pieces / {totalFilterCount} active</span>
+              <button className="flex min-h-11 items-center border-b border-black/44 text-black" type="button" onClick={clearAllFilters}>Clear all</button>
+            </div>
+          ) : null}
+
+          {mobilePanel ? (
+            <MobileCatalogPanel
+              activeCategory={activeCategory}
+              advancedFilterCount={advancedFilterCount}
+              advancedFilters={advancedFilters}
+              allLabel={allLabel}
+              clearAdvancedFilters={clearAdvancedFilters}
+              onClose={() => setMobilePanel(null)}
+              panel={mobilePanel}
+              products={products}
+              resultCount={visibleProducts.length}
+              setAdvancedFilters={setAdvancedFilters}
+              setActiveCategory={setActiveCategory}
+              setSortOrder={setSortOrder}
+              sortOrder={sortOrder}
+            />
+          ) : null}
         </div>
 
         <div
@@ -378,21 +425,6 @@ export function CollectionShoppingPage({
         </div>
       </section>
     </main>
-  );
-}
-
-function MobileSort({ sortOrder, setSortOrder }: Readonly<{ sortOrder: SortOrder; setSortOrder: (value: SortOrder) => void }>) {
-  return (
-    <details className="border-b border-black/16 py-4 text-[12px] uppercase tracking-[0.14em]">
-      <summary className="flex cursor-pointer list-none items-center justify-between"><span>Sort / {sortOrder === "newest" ? "Newest" : sortOrder === "price-asc" ? "Price low" : "Price high"}</span><span>+</span></summary>
-      <div className="mt-4 grid gap-2">
-        {(["newest", "price-asc", "price-desc"] as const).map((value) => (
-          <button className={`py-2 text-left ${sortOrder === value ? "text-black" : "text-black/54"}`} key={value} type="button" onClick={() => setSortOrder(value)}>
-            {value === "newest" ? "Newest first" : value === "price-asc" ? "Price: low to high" : "Price: high to low"}
-          </button>
-        ))}
-      </div>
-    </details>
   );
 }
 
@@ -463,7 +495,7 @@ function ProductSearch({
         <span className="grid grid-cols-[1fr_auto] items-center gap-3 border-b border-transparent transition-colors duration-300 focus-within:border-black/28">
           <input
             autoComplete="off"
-            className="min-w-0 bg-transparent py-1.5 text-[11px] uppercase tracking-[0.16em] text-black outline-none placeholder:text-black/42"
+            className="min-w-0 bg-transparent py-2 text-[16px] uppercase tracking-[0.12em] text-black outline-none placeholder:text-black/42 lg:py-1.5 lg:text-[11px] lg:tracking-[0.16em]"
             id="collection-search"
             placeholder="PRODUCT NAME..."
             type="search"
@@ -548,50 +580,75 @@ function CollectionBreadcrumb({
   );
 }
 
-function MobileFilters({
+function MobileCatalogPanel({
   activeCategory,
   advancedFilterCount,
   advancedFilters,
   allLabel,
   clearAdvancedFilters,
+  onClose,
+  panel,
   products,
+  resultCount,
   setAdvancedFilters,
   setActiveCategory,
+  setSortOrder,
+  sortOrder,
 }: Readonly<{
   activeCategory: Category | "all";
   advancedFilterCount: number;
   advancedFilters: AdvancedFilters;
   allLabel: string;
   clearAdvancedFilters: () => void;
+  onClose: () => void;
+  panel: "filters" | "sort";
   products: Product[];
+  resultCount: number;
   setAdvancedFilters: (filters: AdvancedFilters) => void;
   setActiveCategory: (category: Category | "all") => void;
+  setSortOrder: (value: SortOrder) => void;
+  sortOrder: SortOrder;
 }>) {
   return (
-    <details className="py-4 text-[12px] uppercase tracking-[0.14em]">
-      <summary className="flex cursor-pointer list-none items-center justify-between text-black/62">
-        <span>
-          Filters
-          {advancedFilterCount > 0 ? ` / ${advancedFilterCount}` : ""}
-        </span>
-        <span className="text-[13px] leading-none">+</span>
-      </summary>
-      <div className="mt-5">
-        <CategoryFilters
-          activeCategory={activeCategory}
-          allLabel={allLabel}
-          products={products}
-          setActiveCategory={setActiveCategory}
-        />
-        <AdvancedFilterPanel
-          activeFilters={advancedFilters}
-          clearFilters={clearAdvancedFilters}
-          filterCount={advancedFilterCount}
-          products={products}
-          setActiveFilters={setAdvancedFilters}
-        />
+    <div aria-label={panel === "filters" ? "Collection filters" : "Collection sorting"} aria-modal="true" className="mobile-catalog-panel fixed inset-x-0 bottom-0 top-16 z-40 grid grid-rows-[auto_1fr_auto] bg-[#e5e6e1] text-[#121211]" role="dialog">
+      <div className="flex min-h-14 items-center justify-between border-b border-black/16 px-5 text-[12px] uppercase tracking-[0.14em]">
+        <span>{panel === "filters" ? `Filters${advancedFilterCount > 0 ? ` / ${advancedFilterCount}` : ""}` : "Sort garments"}</span>
+        <button className="min-h-11 px-2" type="button" onClick={onClose}>Close</button>
       </div>
-    </details>
+      <div className="overflow-y-auto px-5 py-6">
+        {panel === "filters" ? (
+          <div className="grid gap-7">
+            <CategoryFilters
+              activeCategory={activeCategory}
+              allLabel={allLabel}
+              products={products}
+              setActiveCategory={setActiveCategory}
+            />
+            <AdvancedFilterPanel
+              activeFilters={advancedFilters}
+              clearFilters={clearAdvancedFilters}
+              filterCount={advancedFilterCount}
+              products={products}
+              setActiveFilters={setAdvancedFilters}
+            />
+          </div>
+        ) : (
+          <div className="divide-y divide-black/14 border-y border-black/14 text-[12px] uppercase tracking-[0.14em]">
+            {(["newest", "price-asc", "price-desc"] as const).map((value) => (
+              <button className={`flex min-h-14 w-full items-center justify-between text-left ${sortOrder === value ? "text-black" : "text-black/50"}`} key={value} type="button" onClick={() => setSortOrder(value)}>
+                <span>{value === "newest" ? "Newest first" : value === "price-asc" ? "Price: low to high" : "Price: high to low"}</span>
+                <span>{sortOrder === value ? "●" : "○"}</span>
+              </button>
+            ))}
+          </div>
+        )}
+      </div>
+      <div className="border-t border-black/16 bg-[#dedfd9] p-4">
+        <button className="flex min-h-14 w-full items-center justify-center bg-[#171614] px-5 text-[12px] uppercase tracking-[0.14em] text-[#ecece5]" type="button" onClick={onClose}>
+          {panel === "filters" ? `Show ${String(resultCount).padStart(2, "0")} pieces` : "Apply sorting"} →
+        </button>
+      </div>
+    </div>
   );
 }
 
@@ -1033,12 +1090,12 @@ function ProductCard({
       </div>
 
       {isSizePickerOpen && !cartItem ? (
-        <div className="absolute bottom-[62px] right-0 z-30 w-full max-w-[220px] border border-black/18 bg-[#e5e6e1]/96 p-3 text-[8px] uppercase tracking-[0.14em] text-black shadow-none backdrop-blur-sm sm:bottom-[68px]">
+        <div className="mobile-size-picker absolute bottom-[62px] right-0 z-30 w-full max-w-[220px] border border-black/18 bg-[#e5e6e1]/96 p-3 text-[9px] uppercase tracking-[0.14em] text-black shadow-none backdrop-blur-sm sm:bottom-[68px]">
           <div className="mb-3 flex items-center justify-between border-b border-black/14 pb-2 text-black/64">
             <span>Select size</span>
             <button
               aria-label={`Close size selector for ${product.name}`}
-              className="text-black/58"
+              className="min-h-11 min-w-11 text-black/58"
               type="button"
               onClick={() => setIsSizePickerOpen(false)}
             >
@@ -1048,7 +1105,7 @@ function ProductCard({
           <div className="grid grid-cols-5 gap-px bg-black/14">
             {sizeOptions.map((size) => (
               <button
-                className="bg-[#dedfd9] px-2 py-3 text-black/70 transition-colors duration-300 hover:bg-[#cfd0ca] hover:text-black disabled:cursor-not-allowed disabled:text-black/26"
+                className="min-h-11 bg-[#dedfd9] px-2 py-3 text-black/70 transition-colors duration-300 hover:bg-[#cfd0ca] hover:text-black disabled:cursor-not-allowed disabled:text-black/26"
                 disabled={size.stock <= 0}
                 key={size.label}
                 type="button"
@@ -1084,7 +1141,7 @@ function ProductCard({
             <div className="flex items-center gap-3 border-b border-black/22 pb-1 text-[10px] text-black/76">
               <button
                 aria-label={`Remove one ${product.name}`}
-                className="px-1 transition-opacity duration-300 hover:opacity-55"
+                className="min-h-11 min-w-11 px-1 transition-opacity duration-300 hover:opacity-55"
                 type="button"
                 onClick={() => onQuantity(product, activeSize, -1)}
               >
@@ -1093,7 +1150,7 @@ function ProductCard({
               <span className="min-w-3 text-center">{cartItem.quantity}</span>
               <button
                 aria-label={`Add one ${product.name}`}
-                className="px-1 transition-opacity duration-300 hover:opacity-55 disabled:cursor-not-allowed disabled:opacity-30"
+                className="min-h-11 min-w-11 px-1 transition-opacity duration-300 hover:opacity-55 disabled:cursor-not-allowed disabled:opacity-30"
                 disabled={cartItem.quantity >= selectedStock}
                 type="button"
                 onClick={() => onQuantity(product, activeSize, 1)}
@@ -1108,7 +1165,7 @@ function ProductCard({
         ) : (
           <button
             aria-label={`Choose size for ${product.name}`}
-            className={`relative z-20 self-end border-b border-black/18 px-1 pb-1 text-[18px] leading-none text-black/70 transition duration-300 ease-out hover:border-black/60 hover:text-black group-hover:text-black ${
+            className={`relative z-20 flex min-h-11 min-w-11 self-end items-center justify-center border-b border-black/18 px-1 pb-1 text-[18px] leading-none text-black/70 transition duration-300 ease-out hover:border-black/60 hover:text-black group-hover:text-black ${
               isWomen ? "group-hover:rotate-45" : ""
             } disabled:cursor-not-allowed disabled:opacity-30`}
             disabled={isSoldOut}
@@ -1125,7 +1182,7 @@ function ProductCard({
 
 function ViewIcons() {
   return (
-    <span className="flex items-center gap-4 text-black/58">
+    <span className="hidden items-center gap-4 text-black/58 lg:flex">
       <span className="grid grid-cols-2 gap-[3px]" aria-label="Grid view">
         <span className="size-[5px] border border-black/62" />
         <span className="size-[5px] border border-black/62" />

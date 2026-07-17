@@ -271,7 +271,7 @@ function CartLine({
             </p>
           ) : null}
           <button
-            className="mt-5 border-b border-black/40 pb-1 text-[9px] text-black/54 sm:mt-6 sm:text-[12px]"
+            className="mt-3 flex min-h-11 items-center border-b border-black/40 text-[10px] text-black/54 sm:mt-6 sm:text-[12px]"
             type="button"
             onClick={() => onRemove(item.id)}
           >
@@ -281,6 +281,7 @@ function CartLine({
 
         <div className="flex items-start gap-6 border-t border-black/12 pt-4 sm:border-t-0 sm:pt-0 sm:justify-end">
           <button
+            className="min-h-11 min-w-11"
             type="button"
             onClick={() => onQuantity(item.id, -1)}
             aria-label={`Remove one ${item.name}`}
@@ -289,11 +290,11 @@ function CartLine({
           </button>
           <span>{item.quantity}</span>
           <button
+            className={`min-h-11 min-w-11 ${plusDisabled ? "text-black/24" : ""}`}
             type="button"
             onClick={() => onQuantity(item.id, 1)}
             aria-label={`Add one ${item.name}`}
             disabled={plusDisabled}
-            className={plusDisabled ? "text-black/24" : undefined}
           >
             +
           </button>
