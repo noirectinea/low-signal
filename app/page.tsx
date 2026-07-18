@@ -117,7 +117,7 @@ function HeroPanel() {
         <p className="min-w-0 text-[10px] uppercase leading-[1.55] tracking-[0.1em] text-black/76">
           Washed black.
           <br />
-          Made for daily wear.
+          Daily wear.
         </p>
         <div className="grid min-w-0 text-[11px] uppercase tracking-[0.11em] text-[#f5f2ed]/88">
           <Link className="flex min-h-11 items-center whitespace-nowrap border-b border-[#f5f2ed]/62" href="/collections">Shop Spring 2026 →</Link>

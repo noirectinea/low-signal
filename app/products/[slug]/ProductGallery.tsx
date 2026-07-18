@@ -118,7 +118,7 @@ export function ProductGallery({
               className={`${imageFit} ${index === 0 ? objectPosition : "object-center"} brightness-[0.9] contrast-[1.04] saturate-[0.7]`}
               fill
               priority={index === 0}
-              sizes="100vw"
+              sizes="(min-width: 1024px) 1px, 100vw"
               src={image.src}
             />
           </button>

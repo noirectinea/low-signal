@@ -1,38 +1,54 @@
-import Link from "next/link";
-import { CartCountLink } from "@/components/CartCountLink";
-import { LogoMark } from "@/components/LogoMark";
+import { MobileHomeHeader } from "@/components/MobileHomeHeader";
 
 export default function ProductLoading() {
   return (
-    <main className="min-h-screen overflow-x-hidden bg-[#e7e7e1] text-[#141311]">
-      <nav className="fixed left-0 right-0 top-0 z-30 grid min-h-[64px] grid-cols-[1fr_auto] items-start gap-6 border-b border-black/16 bg-[#e3e3dc]/92 px-5 py-5 text-[9px] uppercase tracking-[0.18em] text-[#141311] backdrop-blur-sm md:grid-cols-[1fr_auto_1fr] lg:px-12">
-        <LogoMark />
-        <div className="hidden justify-center gap-14 md:flex">
-          <Link href="/">Home</Link>
-          <Link href="/collections">Collections</Link>
-          <Link href="/lookbook">Lookbook</Link>
-          <Link href="/about">About</Link>
-        </div>
-        <div className="flex justify-end">
-          <CartCountLink />
-        </div>
-      </nav>
+    <main
+      aria-busy="true"
+      aria-live="polite"
+      className="min-h-screen overflow-x-hidden bg-[#e7e7e1] text-[#141311]"
+    >
+      <MobileHomeHeader mode="paper" />
 
-      <section className="grid px-5 pb-16 pt-[92px] lg:min-h-screen lg:grid-cols-[58%_42%] lg:px-0 lg:pb-0 lg:pt-[64px]">
-        <div className="grid gap-4 lg:grid-cols-[104px_1fr] lg:border-r lg:border-black/16 lg:p-8 xl:grid-cols-[124px_1fr] xl:p-10">
-          <div className="order-2 grid grid-cols-3 gap-3 lg:order-1 lg:grid-cols-1">
+      <section className="mobile-product-page grid pb-16 pt-[64px] lg:min-h-screen lg:grid-cols-[58%_42%] lg:pb-0">
+        <div className="mobile-product-gallery grid gap-4 lg:grid-cols-[104px_1fr] lg:border-r lg:border-black/16 lg:p-8 xl:grid-cols-[124px_1fr] xl:p-10">
+          <div className="order-2 mx-5 grid grid-cols-3 gap-3 lg:order-1 lg:mx-0 lg:grid-cols-1">
             {[0, 1, 2].map((item) => (
               <div
-                className="aspect-[4/5] border border-black/12 bg-black/[0.04]"
+                className="aspect-[4/5] animate-pulse border border-black/12 bg-black/[0.045]"
                 key={item}
               />
             ))}
           </div>
-          <div className="order-1 min-h-[68vh] border border-black/12 bg-black/[0.04] lg:order-2 lg:min-h-0" />
+          <div className="mobile-product-lead order-1 min-h-[62svh] animate-pulse border-y border-black/12 bg-black/[0.045] lg:order-2 lg:min-h-0 lg:border" />
         </div>
-        <div className="pt-10 lg:bg-[#ddddd6] lg:px-12 lg:py-12 xl:px-16">
-          <div className="border-y border-black/16 py-10 text-[9px] uppercase tracking-[0.16em] text-black/64">
-            Loading garment.
+
+        <div className="mobile-product-information px-5 pt-7 lg:bg-[#ddddd6] lg:px-10 lg:py-9 xl:px-14">
+          <div className="border-b border-black/16 pb-4">
+            <div className="h-11 w-32 animate-pulse bg-black/[0.045]" />
+          </div>
+          <div className="border-b border-black/16 py-7">
+            <div className="h-10 w-[min(78%,360px)] animate-pulse bg-black/[0.055]" />
+            <div className="mt-5 h-3 w-28 animate-pulse bg-black/10" />
+          </div>
+          <div className="grid gap-4 border-b border-black/16 py-6">
+            <div className="h-3 w-24 animate-pulse bg-black/10" />
+            <div className="grid grid-cols-5 gap-px">
+              {[0, 1, 2, 3, 4].map((item) => (
+                <div className="h-11 animate-pulse bg-black/[0.045]" key={item} />
+              ))}
+            </div>
+            <div className="h-14 animate-pulse bg-black/[0.065]" />
+          </div>
+          <div className="divide-y divide-black/14 border-b border-black/16">
+            {["Product details", "Size guide", "Material & care"].map((label) => (
+              <div
+                className="flex min-h-12 items-center justify-between text-[10px] uppercase tracking-[0.1em] text-black/48"
+                key={label}
+              >
+                <span>{label}</span>
+                <span>+</span>
+              </div>
+            ))}
           </div>
         </div>
       </section>
