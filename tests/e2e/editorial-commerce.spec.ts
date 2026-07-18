@@ -1,27 +1,43 @@
 import { expect, test } from "@playwright/test";
 
-test("selected garments is a static desktop composition", async ({ page }) => {
+test("selected garments uses a one-row cyclical desktop rail", async ({ page }) => {
   await page.setViewportSize({ height: 900, width: 1440 });
   await page.goto("/");
 
   const section = page.locator("#selected-pieces");
   await expect(section.getByLabel("Shop selected garments")).toBeVisible();
-  await expect(section.locator("article")).toHaveCount(4);
-  await expect(section.getByRole("link", { name: "View all 6 →" })).toBeVisible();
-  await expect(section.getByText("View product →")).toHaveCount(4);
-  await expect(section.locator(".selected-rail")).toHaveCount(0);
+  await expect(section.locator("article")).toHaveCount(18);
+  await expect(section.locator(".selected-rail")).toBeVisible();
+  await expect(
+    section.getByRole("button", { name: "Next selected garment" }),
+  ).toBeVisible();
+  await expect(section.locator(".selected-rail-footer > span")).toHaveText(
+    "01 / 06",
+  );
+
+  for (let index = 0; index < 6; index += 1) {
+    await section.getByRole("button", { name: "Next selected garment" }).click();
+    await page.waitForTimeout(450);
+  }
+  await expect(section.locator(".selected-rail-footer > span")).toHaveText(
+    "01 / 06",
+  );
 });
 
-test("selected garments uses a compact two-column mobile grid", async ({ page }) => {
+test("selected garments uses a light mobile campaign and swipe rail", async ({ page }) => {
   await page.setViewportSize({ height: 844, width: 390 });
   await page.goto("/");
 
   const section = page.locator("#selected-pieces");
-  await expect(section.getByLabel("Shop selected garments")).toBeHidden();
-  await expect(section.locator("article")).toHaveCount(4);
+  await expect(section.getByLabel("Shop selected garments")).toBeVisible();
+  await expect(section.locator("article")).toHaveCount(18);
   await expect(section.getByRole("link", { name: "Men", exact: true })).toBeVisible();
   await expect(section.getByRole("link", { name: "Women", exact: true })).toBeVisible();
   await expect(section.getByText("View product →").first()).toBeVisible();
+  await section.getByRole("button", { name: "Next selected garment" }).click();
+  await expect(section.locator(".selected-rail-footer > span")).toHaveText(
+    "02 / 06",
+  );
 });
 
 test("material rows update the image, caption, and garment link", async ({

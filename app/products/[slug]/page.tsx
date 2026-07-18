@@ -216,27 +216,27 @@ export default async function ProductPage({
       </section>
 
       {relatedProducts.length ? (
-        <section className="border-t border-black/16 bg-[#deded7] px-4 py-8 sm:px-6 lg:px-12 lg:py-12">
+        <section className="related-products-section border-t border-black/16 bg-[#deded7] px-4 py-7 sm:px-6 lg:px-12 lg:py-9">
           <div className="mx-auto max-w-[1500px]">
             <div className="flex items-center justify-between border-b border-black/16 pb-4 text-[9px] uppercase tracking-[0.14em] text-black/50">
               <h2 className="font-normal text-black/72">Related products</h2>
               <span>{genderLabel} / Spring 2026</span>
             </div>
-            <div className="mt-5 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:gap-5">
+            <div className="related-products-rail mt-4 flex snap-x snap-mandatory gap-3 overflow-x-auto overscroll-x-contain sm:grid sm:grid-cols-3 lg:gap-5">
               {relatedProducts.map((relatedProduct) => (
                 <Link
-                  className="group min-w-0 border-b border-black/14 pb-4"
+                  className="related-product-card group min-w-0 shrink-0 snap-start border-b border-black/14 pb-3"
                   href={`/products/${relatedProduct.slug}?returnTo=${encodeURIComponent(
                     returnTo,
                   )}`}
                   key={relatedProduct.id}
                 >
-                  <div className="relative aspect-[4/5] overflow-hidden bg-[#cacbc5]">
+                  <div className="related-product-image relative h-[190px] overflow-hidden bg-[#cacbc5] lg:h-[250px]">
                     <Image
                       alt={relatedProduct.name}
                       className={`object-cover brightness-[0.88] contrast-[1.04] saturate-[0.7] transition duration-700 group-hover:scale-[1.015] ${relatedProduct.objectPosition ?? "object-center"}`}
                       fill
-                      sizes="(min-width: 1024px) 30vw, (min-width: 640px) 32vw, 48vw"
+                      sizes="(min-width: 1024px) 30vw, (min-width: 640px) 32vw, 44vw"
                       src={relatedProduct.image}
                     />
                   </div>

@@ -93,7 +93,7 @@ const materialFrames = [
 
 export default function LookbookPage() {
   return (
-    <main className="min-h-screen bg-[#e4e5df] text-[#141311]">
+    <main className="lookbook-page min-h-screen bg-[#e4e5df] text-[#141311]">
       <MobileHomeHeader mode="paper" />
       <LookbookHero />
       <LookbookChapterNav />

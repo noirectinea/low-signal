@@ -130,18 +130,18 @@ function EditorialGrid() {
   return (
     <section className="mobile-home-editorial border-b border-black/20">
       <div className="mobile-editorial-composition lg:hidden">
-        <div className="mobile-editorial-index grid bg-[#e8e9e3]">
-          <Link className="group grid min-h-0 grid-cols-[58%_42%] border-b border-black/18" href="/collections">
+        <div className="mobile-editorial-index bg-[#e8e9e3]">
+          <Link className="mobile-spring-teaser group grid min-h-0 grid-cols-[63%_37%] border-b border-black/18" href="/collections">
             <div className="relative min-h-0 overflow-hidden border-r border-black/18 bg-[#c9cac4]">
               <Image
                 src={collectionImage}
                 alt="LOW SIGNAL collection preview"
                 fill
-                sizes="58vw"
-                className="editorial-image object-cover object-[48%_20%] transition-transform duration-700 group-hover:scale-[1.012]"
+                sizes="63vw"
+                className="editorial-image object-cover object-[48%_24%] transition-transform duration-700 group-hover:scale-[1.012]"
               />
             </div>
-            <div className="flex min-w-0 flex-col justify-between p-4 uppercase">
+            <div className="flex min-w-0 flex-col justify-between px-4 py-5 uppercase">
               <span className="text-[9px] tracking-[0.14em] text-black/48">02</span>
               <div>
                 <p className="text-[11px] tracking-[0.1em]">Spring 2026</p>
@@ -152,24 +152,28 @@ function EditorialGrid() {
             </div>
           </Link>
 
-          <Link className="group grid min-h-0 grid-cols-[42%_58%]" href="/lookbook">
-            <div className="flex min-w-0 flex-col justify-between border-r border-black/18 p-4 uppercase">
-              <span className="text-[9px] tracking-[0.14em] text-black/48">03</span>
-              <div>
-                <p className="text-[11px] tracking-[0.1em]">Lookbook</p>
-                <span className="mt-3 flex min-h-11 items-center border-b border-black/50 text-[9px] tracking-[0.09em]">
+          <Link className="mobile-lookbook-teaser group relative block min-h-0 overflow-hidden bg-[#151413] text-[#f2f1ea]" href="/lookbook">
+            <Image
+              src={lookbookImage}
+              alt="LOW SIGNAL lookbook photograph"
+              fill
+              sizes="100vw"
+              className="editorial-image object-cover object-[54%_49%] brightness-[0.61] contrast-[1.08] saturate-[0.56] transition-transform duration-700 group-hover:scale-[1.012]"
+            />
+            <div className="absolute inset-0 bg-gradient-to-r from-black/72 via-black/18 to-black/5" />
+            <div className="absolute inset-0 grid grid-cols-[35%_1fr] p-5 uppercase">
+              <div className="flex flex-col justify-between border-r border-white/26 pr-4">
+                <span className="text-[9px] tracking-[0.14em] text-white/58">03</span>
+                <div className="grid gap-2">
+                  <p className="text-[12px] tracking-[0.11em]">Lookbook</p>
+                  <p className="text-[9px] tracking-[0.14em] text-white/62">Issue 01</p>
+                </div>
+              </div>
+              <div className="flex items-end justify-end pl-4">
+                <span className="flex min-h-11 items-center border-b border-white/58 text-[9px] tracking-[0.09em]">
                   View lookbook →
                 </span>
               </div>
-            </div>
-            <div className="relative min-h-0 overflow-hidden bg-[#c9cac4]">
-              <Image
-                src={lookbookImage}
-                alt="LOW SIGNAL lookbook photograph"
-                fill
-                sizes="42vw"
-                className="editorial-image object-cover object-[50%_54%] transition-transform duration-700 group-hover:scale-[1.012]"
-              />
             </div>
           </Link>
         </div>
