@@ -2,6 +2,7 @@ import { saveAdminProductAction } from "./actions";
 import {
   AdminSubmitButton,
   ArchiveProductButton,
+  DeleteProductButton,
   ReactivateProductButton,
 } from "./AdminFormButtons";
 import {
@@ -30,6 +31,7 @@ export function ProductForm({
     <form
       action={saveAdminProductAction}
       className="grid gap-10 text-[9px] uppercase tracking-[0.16em] lg:grid-cols-[1fr_420px]"
+      encType="multipart/form-data"
     >
       {product ? (
         <input name="existing_id" type="hidden" value={product.id} />
@@ -109,7 +111,7 @@ export function ProductForm({
           />
         </div>
         <label className="grid gap-3 border-b border-black/16 pb-3 text-black/64 focus-within:border-black/42">
-          <span>Product images, one URL per line</span>
+          <span>Product images / one URL per line / line order controls gallery order</span>
           <textarea
             className="min-h-28 resize-y bg-transparent py-1 text-[12px] uppercase leading-[1.7] tracking-[0.12em] text-black outline-none"
             defaultValue={(product?.images ?? [])
@@ -118,8 +120,25 @@ export function ProductForm({
             name="images"
           />
         </label>
+        <label className="grid gap-3 border-b border-black/16 pb-3 text-black/64 focus-within:border-black/42">
+          <span>Upload images / JPG, PNG or WebP / max 8 MB each</span>
+          <input
+            accept="image/jpeg,image/png,image/webp"
+            className="min-h-11 py-2 text-[11px] normal-case tracking-normal"
+            multiple
+            name="image_files"
+            type="file"
+          />
+        </label>
 
-        {saved ? <p className="text-black/58">Product saved.</p> : null}
+        {saved ? (
+          <p
+            className="fixed bottom-4 right-4 z-50 border border-black/18 bg-[#171614] px-5 py-4 text-[#ecece5] shadow-lg"
+            role="status"
+          >
+            Product saved.
+          </p>
+        ) : null}
         {error ? <p className="text-black/58">{error}</p> : null}
 
         <AdminSubmitButton
@@ -164,6 +183,7 @@ export function ProductForm({
           <div className="mt-6 grid gap-4 border-t border-black/16 pt-6">
             <ArchiveProductButton />
             <ReactivateProductButton />
+            <DeleteProductButton />
           </div>
         ) : null}
       </aside>

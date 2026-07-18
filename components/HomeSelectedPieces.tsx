@@ -1,6 +1,5 @@
 import Image from "next/image";
 import Link from "next/link";
-import { ProductAddAction } from "@/components/ProductAddAction";
 import { type Product, products } from "@/data/products";
 
 const selectedIds = [
@@ -106,7 +105,7 @@ function SelectedProductCard({
         className="absolute inset-0 z-10 focus:outline-none focus-visible:ring-1 focus-visible:ring-current"
         href={`/products/${product.slug}`}
       />
-      <div className="relative aspect-[4/5] overflow-hidden border border-white/14 bg-[#ccd0c9] lg:aspect-[8/5] lg:border-black/14">
+      <div className="relative aspect-[4/5] overflow-hidden border border-white/14 bg-[#ccd0c9] lg:border-black/14">
         <span className="absolute left-3 top-3 z-[1] text-[9px] uppercase tracking-[0.12em] text-white/70">
           {String(index + 1).padStart(2, "0")}
         </span>
@@ -130,14 +129,9 @@ function SelectedProductCard({
           </p>
           <p className="mt-2 text-[11px] font-normal">${product.price}</p>
         </div>
-        <div className="relative z-20 self-end">
-          <div className="lg:hidden">
-            <ProductAddAction product={product} tone="dark" />
-          </div>
-          <div className="hidden lg:block">
-            <ProductAddAction product={product} />
-          </div>
-        </div>
+        <span className="self-end border-b border-white/38 pb-1 text-[9px] tracking-[0.06em] lg:border-black/36">
+          View product →
+        </span>
       </div>
     </article>
   );

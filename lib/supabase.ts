@@ -93,6 +93,66 @@ export async function supabaseRest<T>(
   return null;
 }
 
+export async function uploadSupabasePublicFile(
+  bucket: string,
+  path: string,
+  file: File,
+) {
+  if (!supabaseUrl || !supabaseServiceRoleKey) {
+    throw new Error("Product image storage is not configured.");
+  }
+
+  const storageBase = `${supabaseUrl.replace(/\/$/, "")}/storage/v1`;
+  const headers = {
+    apikey: supabaseServiceRoleKey,
+    Authorization: `Bearer ${supabaseServiceRoleKey}`,
+  };
+  const upload = () =>
+    fetch(`${storageBase}/object/${bucket}/${path}`, {
+      body: file,
+      headers: {
+        ...headers,
+        "Content-Type": file.type || "application/octet-stream",
+        "x-upsert": "true",
+      },
+      method: "POST",
+    });
+  let response = await upload();
+
+  if (!response.ok) {
+    const message = await response.text();
+
+    if (
+      response.status === 400 &&
+      message.toLowerCase().includes("bucket not found")
+    ) {
+      const bucketResponse = await fetch(`${storageBase}/bucket`, {
+        body: JSON.stringify({
+          file_size_limit: 8 * 1024 * 1024,
+          id: bucket,
+          name: bucket,
+          public: true,
+        }),
+        headers: {
+          ...headers,
+          "Content-Type": "application/json",
+        },
+        method: "POST",
+      });
+      if (!bucketResponse.ok && bucketResponse.status !== 409) {
+        throw new Error(`Image bucket setup failed: ${bucketResponse.status}`);
+      }
+      response = await upload();
+    }
+  }
+
+  if (!response.ok) {
+    throw new Error(`Image upload failed: ${response.status}`);
+  }
+
+  return `${supabaseUrl.replace(/\/$/, "")}/storage/v1/object/public/${bucket}/${path}`;
+}
+
 function shouldRetrySupabaseJwtClockSkew(
   status: number,
   message: string,

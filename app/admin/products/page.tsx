@@ -10,9 +10,14 @@ import { getAdminAccess, getAdminProducts } from "@/lib/admin";
 
 type AdminProductsPageProps = {
   searchParams: Promise<{
+    category?: string;
+    collection?: string;
+    deleted?: string;
     gender?: string;
     q?: string;
+    sort?: string;
     status?: string;
+    stock?: string;
   }>;
 };
 
@@ -26,14 +31,19 @@ export default async function AdminProductsPage({
     return <AdminAccessDenied />;
   }
 
-  const products = filterProducts(await getAdminProducts(), params);
+  const allProducts = await getAdminProducts();
+  const products = filterProducts(allProducts, params);
+  const categories = uniqueValues(allProducts.map((product) => product.category));
+  const collections = uniqueValues(
+    allProducts.map((product) => product.collection_name),
+  );
 
   return (
     <AdminChrome eyebrow="Admin / Products" title="Catalog management">
       <div className="mb-8 flex flex-wrap items-end justify-between gap-5 text-[9px] uppercase tracking-[0.16em]">
-        <form className="flex flex-wrap gap-3" action="/admin/products">
+        <form className="grid w-full grid-cols-2 gap-2 sm:flex sm:flex-wrap" action="/admin/products">
           <input
-            className="border border-black/16 bg-transparent px-4 py-3 outline-none"
+            className="col-span-2 min-h-11 border border-black/16 bg-transparent px-3 py-2 outline-none sm:col-span-1"
             defaultValue={params.q ?? ""}
             name="q"
             placeholder="Search"
@@ -49,6 +59,46 @@ export default async function AdminProductsPage({
             <option value="archived">Archived</option>
           </select>
           <select
+            className="min-h-11 border border-black/16 bg-transparent px-3 py-2"
+            defaultValue={params.collection ?? ""}
+            name="collection"
+          >
+            <option value="">All collections</option>
+            {collections.map((collection) => (
+              <option key={collection} value={collection}>{collection}</option>
+            ))}
+          </select>
+          <select
+            className="min-h-11 border border-black/16 bg-transparent px-3 py-2"
+            defaultValue={params.category ?? ""}
+            name="category"
+          >
+            <option value="">All categories</option>
+            {categories.map((category) => (
+              <option key={category} value={category}>{category}</option>
+            ))}
+          </select>
+          <select
+            className="min-h-11 border border-black/16 bg-transparent px-3 py-2"
+            defaultValue={params.stock ?? ""}
+            name="stock"
+          >
+            <option value="">All stock</option>
+            <option value="in">In stock</option>
+            <option value="low">Low stock</option>
+            <option value="out">Out of stock</option>
+          </select>
+          <select
+            className="min-h-11 border border-black/16 bg-transparent px-3 py-2"
+            defaultValue={params.sort ?? "name"}
+            name="sort"
+          >
+            <option value="name">Name A–Z</option>
+            <option value="price-asc">Price low–high</option>
+            <option value="price-desc">Price high–low</option>
+            <option value="stock-asc">Stock low–high</option>
+          </select>
+          <select
             className="border border-black/16 bg-transparent px-4 py-3"
             defaultValue={params.gender ?? ""}
             name="gender"
@@ -58,7 +108,7 @@ export default async function AdminProductsPage({
             <option value="women">Women</option>
             <option value="unisex">Unisex</option>
           </select>
-          <button className="bg-black px-5 py-3 text-[#ecece5]" type="submit">
+          <button className="min-h-11 bg-black px-5 py-3 text-[#ecece5]" type="submit">
             Filter
           </button>
         </form>
@@ -66,6 +116,12 @@ export default async function AdminProductsPage({
           New product
         </Link>
       </div>
+
+      {params.deleted ? (
+        <p className="mb-5 border border-black/16 bg-[#d9dad4] p-4 text-[9px] uppercase tracking-[0.12em]">
+          Product deleted.
+        </p>
+      ) : null}
 
       {products.length ? (
         <div className="divide-y divide-black/16 border-t border-black/16 text-[9px] uppercase tracking-[0.16em]">
@@ -116,9 +172,13 @@ export default async function AdminProductsPage({
 function filterProducts(
   products: Awaited<ReturnType<typeof getAdminProducts>>,
   params: {
+    category?: string;
+    collection?: string;
     gender?: string;
     q?: string;
+    sort?: string;
     status?: string;
+    stock?: string;
   },
 ) {
   const query = (params.q ?? "").trim().toLowerCase();
@@ -133,7 +193,39 @@ function filterProducts(
       ? product.status === params.status
       : true;
     const matchesGender = params.gender ? product.gender === params.gender : true;
+    const matchesCategory = params.category
+      ? product.category === params.category
+      : true;
+    const matchesCollection = params.collection
+      ? product.collection_name === params.collection
+      : true;
+    const matchesStock =
+      params.stock === "low"
+        ? product.total_stock > 0 && product.total_stock <= 10
+        : params.stock === "out"
+          ? product.total_stock === 0
+          : params.stock === "in"
+            ? product.total_stock > 0
+            : true;
 
-    return matchesQuery && matchesStatus && matchesGender;
+    return (
+      matchesQuery &&
+      matchesStatus &&
+      matchesGender &&
+      matchesCategory &&
+      matchesCollection &&
+      matchesStock
+    );
+  }).sort((first, second) => {
+    if (params.sort === "price-asc") return first.price - second.price;
+    if (params.sort === "price-desc") return second.price - first.price;
+    if (params.sort === "stock-asc") return first.total_stock - second.total_stock;
+    return first.name.localeCompare(second.name);
   });
+}
+
+function uniqueValues(values: string[]) {
+  return Array.from(new Set(values)).sort((first, second) =>
+    first.localeCompare(second),
+  );
 }

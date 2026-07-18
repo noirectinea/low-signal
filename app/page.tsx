@@ -130,13 +130,9 @@ function EditorialGrid() {
   return (
     <section className="mobile-home-editorial border-b border-black/20">
       <div className="mobile-editorial-composition lg:hidden">
-        <div className="mobile-editorial-index grid grid-cols-[58%_42%] bg-[#e8e9e3]">
-          <Link className="group grid min-w-0 grid-rows-[auto_1fr_auto] border-r border-black/18 p-4" href="/collections">
-            <div className="flex items-center justify-between text-[9px] uppercase tracking-[0.14em]">
-              <span>02</span>
-              <span>Spring 2026</span>
-            </div>
-            <div className="relative mt-4 min-h-0 overflow-hidden bg-[#c9cac4]">
+        <div className="mobile-editorial-index grid bg-[#e8e9e3]">
+          <Link className="group grid min-h-0 grid-cols-[58%_42%] border-b border-black/18" href="/collections">
+            <div className="relative min-h-0 overflow-hidden border-r border-black/18 bg-[#c9cac4]">
               <Image
                 src={collectionImage}
                 alt="LOW SIGNAL collection preview"
@@ -145,17 +141,28 @@ function EditorialGrid() {
                 className="editorial-image object-cover object-[48%_20%] transition-transform duration-700 group-hover:scale-[1.012]"
               />
             </div>
-            <span className="mt-4 flex min-h-11 items-center border-b border-black/50 text-[9px] uppercase tracking-[0.12em]">
-              View collection →
-            </span>
+            <div className="flex min-w-0 flex-col justify-between p-4 uppercase">
+              <span className="text-[9px] tracking-[0.14em] text-black/48">02</span>
+              <div>
+                <p className="text-[11px] tracking-[0.1em]">Spring 2026</p>
+                <span className="mt-3 flex min-h-11 items-center border-b border-black/50 text-[9px] tracking-[0.09em]">
+                  View collection →
+                </span>
+              </div>
+            </div>
           </Link>
 
-          <Link className="group grid min-w-0 grid-rows-[auto_1fr_auto] px-3 pb-4 pt-16" href="/lookbook">
-            <div className="flex items-center justify-between text-[9px] uppercase tracking-[0.14em]">
-              <span>03</span>
-              <span>Lookbook</span>
+          <Link className="group grid min-h-0 grid-cols-[42%_58%]" href="/lookbook">
+            <div className="flex min-w-0 flex-col justify-between border-r border-black/18 p-4 uppercase">
+              <span className="text-[9px] tracking-[0.14em] text-black/48">03</span>
+              <div>
+                <p className="text-[11px] tracking-[0.1em]">Lookbook</p>
+                <span className="mt-3 flex min-h-11 items-center border-b border-black/50 text-[9px] tracking-[0.09em]">
+                  View lookbook →
+                </span>
+              </div>
             </div>
-            <div className="relative mt-4 min-h-0 overflow-hidden bg-[#c9cac4]">
+            <div className="relative min-h-0 overflow-hidden bg-[#c9cac4]">
               <Image
                 src={lookbookImage}
                 alt="LOW SIGNAL lookbook photograph"
@@ -164,9 +171,6 @@ function EditorialGrid() {
                 className="editorial-image object-cover object-[50%_54%] transition-transform duration-700 group-hover:scale-[1.012]"
               />
             </div>
-            <span className="mt-4 flex min-h-11 items-center border-b border-black/50 text-[9px] uppercase tracking-[0.1em]">
-              View lookbook →
-            </span>
           </Link>
         </div>
       </div>

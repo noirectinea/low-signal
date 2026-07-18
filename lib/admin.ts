@@ -6,7 +6,11 @@ import {
   type AccountSession,
   type SupabaseAuthUser,
 } from "@/lib/account";
-import { isSupabaseServiceConfigured, supabaseRest } from "@/lib/supabase";
+import {
+  isSupabaseServiceConfigured,
+  supabaseRest,
+  uploadSupabasePublicFile,
+} from "@/lib/supabase";
 
 export const adminOrderStatuses = [
   "pending",
@@ -286,6 +290,8 @@ export async function getAdminOrder(id: string) {
 
 export async function saveProductFromForm(formData: FormData, existingId?: string) {
   const product = parseProductForm(formData, existingId);
+  const uploadedImages = await uploadProductFiles(product.id, formData);
+  product.images.push(...uploadedImages);
   const existing = existingId ? await getAdminProduct(existingId) : null;
 
   if (!existingId) {
@@ -343,6 +349,32 @@ export async function saveProductFromForm(formData: FormData, existingId?: strin
   return product.id;
 }
 
+async function uploadProductFiles(productId: string, formData: FormData) {
+  const files = formData
+    .getAll("image_files")
+    .filter(
+      (value): value is File =>
+        value instanceof File && value.size > 0,
+    );
+  const urls: string[] = [];
+
+  for (const file of files) {
+    if (!file.type.startsWith("image/")) {
+      throw new Error("Only image files can be uploaded.");
+    }
+    if (file.size > 8 * 1024 * 1024) {
+      throw new Error("Each image must be smaller than 8 MB.");
+    }
+    const extension = file.name.split(".").pop()?.toLowerCase() || "jpg";
+    const path = `${productId}/${Date.now()}-${crypto.randomUUID()}.${extension}`;
+    urls.push(
+      await uploadSupabasePublicFile("product-images", path, file),
+    );
+  }
+
+  return urls;
+}
+
 export async function updateOrderStatus(orderId: string, status: string) {
   if (!adminOrderStatuses.includes(status as (typeof adminOrderStatuses)[number])) {
     throw new Error("Invalid order status.");
@@ -354,6 +386,31 @@ export async function updateOrderStatus(orderId: string, status: string) {
       updated_at: new Date().toISOString(),
     },
     method: "PATCH",
+    requireServiceRole: true,
+  });
+}
+
+export async function deleteAdminProduct(productId: string) {
+  const product = await getAdminProduct(productId);
+  if (!product) throw new Error("Product not found.");
+
+  const variantIds = product.variants.map((variant) => variant.id);
+  for (const variantId of variantIds) {
+    await supabaseRest(`inventory?variant_id=eq.${variantId}`, {
+      method: "DELETE",
+      requireServiceRole: true,
+    });
+  }
+  await supabaseRest(`product_images?product_id=eq.${productId}`, {
+    method: "DELETE",
+    requireServiceRole: true,
+  });
+  await supabaseRest(`product_variants?product_id=eq.${productId}`, {
+    method: "DELETE",
+    requireServiceRole: true,
+  });
+  await supabaseRest(`products?id=eq.${productId}`, {
+    method: "DELETE",
     requireServiceRole: true,
   });
 }

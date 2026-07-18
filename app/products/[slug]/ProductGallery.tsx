@@ -97,7 +97,7 @@ export function ProductGallery({
 
       <div
         aria-label={`${productName} image gallery`}
-        className="mobile-product-swipe-gallery flex snap-x snap-mandatory overflow-x-auto lg:hidden"
+        className="mobile-product-swipe-gallery flex snap-x snap-mandatory overflow-x-auto overscroll-x-contain [scrollbar-width:none] [&::-webkit-scrollbar]:hidden lg:hidden"
         ref={mobileRailRef}
         role="region"
         onScroll={updateMobileIndex}
@@ -105,7 +105,7 @@ export function ProductGallery({
         {images.map((image, index) => (
           <button
             aria-label={`Zoom image ${index + 1} of ${images.length}`}
-            className="mobile-product-lead relative min-h-[68vh] w-full shrink-0 snap-center overflow-hidden border-y border-black/12 bg-[#d0d0c8]"
+            className="mobile-product-lead relative min-h-[58svh] w-full shrink-0 snap-center overflow-hidden border-y border-black/12 bg-[#d0d0c8]"
             key={`${image.src}-${index}`}
             type="button"
             onClick={() => {
@@ -125,9 +125,8 @@ export function ProductGallery({
         ))}
       </div>
 
-      <div className="pointer-events-none absolute bottom-4 right-4 z-10 flex items-center gap-3 bg-black/68 px-3 py-2 text-[10px] uppercase tracking-[0.12em] text-white lg:hidden">
-        <span>{String(activeIndex + 1).padStart(2, "0")} / {String(images.length).padStart(2, "0")}</span>
-        <span>Swipe</span>
+      <div className="pointer-events-none absolute bottom-4 right-4 z-10 bg-black/68 px-3 py-2 text-[10px] uppercase tracking-[0.12em] text-white lg:hidden">
+        {String(activeIndex + 1).padStart(2, "0")} / {String(images.length).padStart(2, "0")}
       </div>
 
       {zoomed ? (

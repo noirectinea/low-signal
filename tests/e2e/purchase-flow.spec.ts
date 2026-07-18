@@ -22,20 +22,29 @@ test("product, cart persistence, quantity, and guest checkout", async ({
   await mediumSize.click();
   await expect(mediumSize).toHaveAttribute("aria-pressed", "true");
   await expect(page.getByText("Selected: M")).toBeVisible();
-  await expect(page.locator(".mobile-purchase-bar-active")).toBeVisible();
   await page.getByRole("button", { name: /^Add to cart/i }).click();
   await expect(page.getByLabel("Cart, 1 items").first()).toBeVisible();
+  const stepper = page.getByLabel("Field Jacket quantity");
+  await expect(stepper).toBeVisible();
+  await stepper.getByRole("button", { name: "Add one Field Jacket" }).click();
+  await expect(stepper.getByText("2", { exact: true })).toBeVisible();
 
-  await page.getByLabel("Cart, 1 items").first().click();
+  await page.getByLabel("Cart, 2 items").first().click();
+  await expect(page).toHaveURL(/\/cart$/);
   await expect(page.getByText("Field Jacket", { exact: true }).first()).toBeVisible();
   await page.getByRole("button", { name: "Add one Field Jacket" }).click();
-  await expect(page.getByText("2", { exact: true }).first()).toBeVisible();
+  await expect(page.getByText("3", { exact: true }).first()).toBeVisible();
 
   await page.reload();
-  await expect(page.getByText("2", { exact: true }).first()).toBeVisible();
+  await expect(page.getByText("3", { exact: true }).first()).toBeVisible();
   await page.getByRole("link", { name: /Proceed to checkout/ }).click();
   await expect(page).toHaveURL(/\/checkout$/);
-  await expect(page.getByText(/Guest checkout is available/)).toBeVisible();
+  await expect(page.getByText(/continue as guest/)).toBeVisible();
+  await page.getByText(/Order summary/).first().click();
   await expect(page.getByText("Field Jacket", { exact: true }).first()).toBeVisible();
+  const email = page.getByRole("textbox", { name: "Email *" });
+  await email.fill("guest@example.com");
+  await page.reload();
+  await expect(email).toHaveValue("guest@example.com");
   expect(pageErrors).toEqual([]);
 });

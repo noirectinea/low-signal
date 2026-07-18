@@ -6,7 +6,7 @@ import { SiteFooter } from "@/components/SiteFooter";
 import {
   getProductBySlug,
   getProductSlugs,
-  getRelatedProduct,
+  getRelatedProducts,
 } from "@/lib/shop";
 import { ProductPurchasePanel } from "./ProductPurchasePanel";
 import { ProductGallery } from "./ProductGallery";
@@ -16,6 +16,9 @@ export const dynamicParams = true;
 type ProductPageProps = {
   params: Promise<{
     slug: string;
+  }>;
+  searchParams: Promise<{
+    returnTo?: string;
   }>;
 };
 
@@ -57,7 +60,10 @@ export async function generateMetadata({ params }: ProductPageProps) {
   };
 }
 
-export default async function ProductPage({ params }: ProductPageProps) {
+export default async function ProductPage({
+  params,
+  searchParams,
+}: ProductPageProps) {
   const { slug } = await params;
   const product = await getProductBySlug(slug);
 
@@ -89,7 +95,11 @@ export default async function ProductPage({ params }: ProductPageProps) {
     (image, index, images) =>
       images.findIndex((candidate) => candidate.src === image.src) === index,
   );
-  const relatedProduct = await getRelatedProduct(product);
+  const relatedProducts = await getRelatedProducts(product, 3);
+  const query = await searchParams;
+  const fallbackCollection = `/collections/${product.gender}`;
+  const returnTo = getSafeReturnTo(query.returnTo, fallbackCollection);
+  const genderLabel = product.gender === "women" ? "Women" : "Men";
   const structuredData = [
     {
       "@context": "https://schema.org",
@@ -160,116 +170,85 @@ export default async function ProductPage({ params }: ProductPageProps) {
           productName={product.name}
         />
 
-        <div className="mobile-product-information flex flex-col justify-between border-black/16 pt-10 lg:border-t-0 lg:bg-[#ddddd6] lg:px-12 lg:py-12 xl:px-16">
+        <div className="mobile-product-information flex flex-col border-black/16 pt-6 lg:border-t-0 lg:bg-[#ddddd6] lg:px-10 lg:py-9 xl:px-14">
           <div>
-            <nav aria-label="Product breadcrumb" className="flex items-center justify-between border-b border-black/16 pb-5 text-[10px] uppercase tracking-[0.08em] text-black/68">
-              <Link className="border-b border-black/30 pb-1" href="/collections">
-                Collections / Spring 2026
+            <nav aria-label="Product breadcrumb" className="flex items-center justify-between gap-4 border-b border-black/16 pb-3 text-[10px] uppercase tracking-[0.08em] text-black/68">
+              <Link className="flex min-h-11 items-center border-b border-black/38" href={returnTo}>
+                ← Back to {genderLabel}
               </Link>
-              <Link className="border-b border-black/30 pb-1" href={`/collections/${product.gender}`}>
-                {product.gender} / {product.category}
-              </Link>
+              <span className="text-right text-black/48">{product.category}</span>
             </nav>
 
-            <div className="border-b border-black/16 py-10">
-              <h1 className="product-display-title max-w-[600px] text-[44px] text-black/94 sm:text-[62px] lg:text-[76px]">
+            <div className="border-b border-black/16 py-6 lg:py-8">
+              <h1 className="product-display-title max-w-[600px] text-[38px] text-black/94 sm:text-[54px] lg:text-[62px]">
                 {product.name}
               </h1>
-              <div className="mt-7 grid gap-4 text-[14px] uppercase tracking-[0.05em] sm:grid-cols-[1fr_auto] sm:items-end">
-                <span className="font-medium">${product.price}</span>
-                <div className="grid gap-2 text-left text-[12px] text-black/72 sm:text-right">
-                  <span>{product.color ?? "Washed Black"}</span>
-                  <span>{product.materials}</span>
-                </div>
+              <div className="mt-5 grid gap-3 text-[13px] uppercase tracking-[0.05em] sm:grid-cols-[auto_1fr] sm:items-center">
+                <span>${product.price}</span>
+                <span className="text-black/58 sm:text-right">
+                  {product.materials || product.color || "Washed material"}
+                </span>
               </div>
-            </div>
-
-            <div className="border-b border-black/16 py-7">
-              <p className="max-w-[520px] text-[14px] uppercase leading-[1.55] tracking-[0.06em] text-black/74 lg:text-[13px]">
-                {product.description}
-              </p>
             </div>
 
             <ProductPurchasePanel product={product} />
 
             <div className="divide-y divide-black/16 border-b border-black/16">
-              <details className="group py-6 text-[13px] uppercase leading-[1.55] tracking-[0.06em] text-black/70">
-                <summary className="flex min-h-11 cursor-pointer list-none items-center justify-between text-[12px] text-black">
-                  <span>Material & Care</span>
-                  <span className="transition-transform duration-300 group-open:rotate-45">
-                    +
-                  </span>
-                </summary>
-                <div className="mt-5 grid max-w-[520px] gap-4">
-                  <p>{product.materials}</p>
-                  <p>A quiet everyday shape with room for layering and a washed surface that softens through wear. Wash cold and dry naturally.</p>
-                </div>
-              </details>
-
-              <details className="group py-6 text-[13px] uppercase leading-[1.55] tracking-[0.06em] text-black/70">
-                <summary className="flex min-h-11 cursor-pointer list-none items-center justify-between text-[12px] text-black">
-                  <span>Shipping & Returns</span>
-                  <span className="transition-transform duration-300 group-open:rotate-45">
-                    +
-                  </span>
-                </summary>
-                <div className="mt-5 grid max-w-[520px] gap-4">
-                  <p>Ships in 2-4 days when available.</p>
-                  <p>Returns accepted on unworn pieces within 14 days.</p>
-                </div>
-              </details>
+              <ProductDetail label="Product details">
+                <p>{product.description}</p>
+                <p>Relaxed everyday shape with room for a light layer.</p>
+              </ProductDetail>
+              <ProductDetail label="Size guide">
+                <p>XS 28–30 / S 30–32 / M 32–34 / L 34–36 / XL 36–38.</p>
+                <p>Measure a garment you wear often for the closest comparison.</p>
+              </ProductDetail>
+              <ProductDetail label="Material & care">
+                <p>{product.materials}</p>
+                <p>Wash cold and dry naturally. The surface softens through wear.</p>
+              </ProductDetail>
+              <ProductDetail label="Shipping & returns">
+                <p>Ships in 2–4 days when available.</p>
+                <p>Returns accepted on unworn pieces within 14 days.</p>
+              </ProductDetail>
             </div>
-          </div>
-
-          <div className="mt-10 grid gap-5 border-t border-black/16 pt-6 text-[9px] uppercase tracking-[0.18em] sm:grid-cols-[1fr_auto]">
-            <Link
-              href={`/collections/${product.gender}`}
-              className="w-fit border-b border-black/60 pb-1"
-            >
-              Back to {product.gender} collection
-            </Link>
-            {relatedProduct && (
-              <Link
-                href={`/products/${relatedProduct.slug}`}
-                className="w-fit border-b border-black/40 pb-1 text-black/54 sm:justify-self-end"
-              >
-                Related piece / {relatedProduct.name}
-              </Link>
-            )}
           </div>
         </div>
       </section>
 
-      {relatedProduct ? (
-        <section className="border-t border-black/16 bg-[#deded7] px-5 py-12 sm:px-6 lg:px-12 lg:py-16">
+      {relatedProducts.length ? (
+        <section className="border-t border-black/16 bg-[#deded7] px-4 py-8 sm:px-6 lg:px-12 lg:py-12">
           <div className="mx-auto max-w-[1500px]">
-            <div className="flex items-center justify-between border-b border-black/16 pb-5 text-[9px] uppercase tracking-[0.16em] text-black/50">
-              <span>Related product</span>
-              <span>Same rail / {relatedProduct.category}</span>
+            <div className="flex items-center justify-between border-b border-black/16 pb-4 text-[9px] uppercase tracking-[0.14em] text-black/50">
+              <h2 className="font-normal text-black/72">Related products</h2>
+              <span>{genderLabel} / Spring 2026</span>
             </div>
-            <Link
-              className="group mt-6 grid gap-5 sm:grid-cols-[minmax(260px,440px)_1fr] sm:items-end"
-              href={`/products/${relatedProduct.slug}`}
-            >
-              <div className="relative aspect-[4/5] overflow-hidden bg-[#cacbc5]">
-                <Image
-                  alt={relatedProduct.name}
-                  className={`object-cover brightness-[0.88] contrast-[1.04] saturate-[0.7] transition duration-700 group-hover:scale-[1.015] ${relatedProduct.objectPosition ?? "object-center"}`}
-                  fill
-                  sizes="(min-width: 640px) 440px, 100vw"
-                  src={relatedProduct.image}
-                />
-              </div>
-              <div className="border-y border-black/16 py-7 uppercase">
-                <h2 className="controlled-display-title text-[44px] sm:text-[62px]">
-                  {relatedProduct.name}
-                </h2>
-                <div className="mt-7 flex items-center justify-between gap-5 text-[10px] tracking-[0.16em]">
-                  <span>${relatedProduct.price}</span>
-                  <span className="border-b border-black/55 pb-2">View product →</span>
-                </div>
-              </div>
-            </Link>
+            <div className="mt-5 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:gap-5">
+              {relatedProducts.map((relatedProduct) => (
+                <Link
+                  className="group min-w-0 border-b border-black/14 pb-4"
+                  href={`/products/${relatedProduct.slug}?returnTo=${encodeURIComponent(
+                    returnTo,
+                  )}`}
+                  key={relatedProduct.id}
+                >
+                  <div className="relative aspect-[4/5] overflow-hidden bg-[#cacbc5]">
+                    <Image
+                      alt={relatedProduct.name}
+                      className={`object-cover brightness-[0.88] contrast-[1.04] saturate-[0.7] transition duration-700 group-hover:scale-[1.015] ${relatedProduct.objectPosition ?? "object-center"}`}
+                      fill
+                      sizes="(min-width: 1024px) 30vw, (min-width: 640px) 32vw, 48vw"
+                      src={relatedProduct.image}
+                    />
+                  </div>
+                  <div className="mt-3 grid gap-2 uppercase">
+                    <h3 className="text-[11px] font-normal tracking-[0.05em] sm:text-[12px]">
+                      {relatedProduct.name}
+                    </h3>
+                    <span className="text-[10px] text-black/64">${relatedProduct.price}</span>
+                  </div>
+                </Link>
+              ))}
+            </div>
           </div>
         </section>
       ) : null}
@@ -284,4 +263,30 @@ function getProductImageFit(product: { category: string }) {
   }
 
   return "object-cover";
+}
+
+function ProductDetail({
+  children,
+  label,
+}: Readonly<{
+  children: React.ReactNode;
+  label: string;
+}>) {
+  return (
+    <details className="group py-2 text-[12px] uppercase leading-[1.55] tracking-[0.05em] text-black/68">
+      <summary className="flex min-h-11 cursor-pointer list-none items-center justify-between text-[11px] text-black">
+        <span>{label}</span>
+        <span className="transition-transform duration-300 group-open:rotate-45">+</span>
+      </summary>
+      <div className="grid max-w-[520px] gap-3 pb-4 pt-2">{children}</div>
+    </details>
+  );
+}
+
+function getSafeReturnTo(value: string | undefined, fallback: string) {
+  if (!value?.startsWith("/collections/") || value.startsWith("//")) {
+    return fallback;
+  }
+
+  return value;
 }

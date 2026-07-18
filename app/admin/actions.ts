@@ -2,6 +2,7 @@
 
 import { redirect } from "next/navigation";
 import {
+  deleteAdminProduct,
   getAdminAccess,
   saveProductFromForm,
   updateOrderStatus,
@@ -40,6 +41,25 @@ export async function archiveProductAction(formData: FormData) {
 export async function reactivateProductAction(formData: FormData) {
   formData.set("status", "active");
   await saveAdminProductAction(formData);
+}
+
+export async function deleteProductAction(formData: FormData) {
+  const productId = cleanValue(formData.get("existing_id"));
+  const access = await getAdminAccess(`/admin/products/${productId}`);
+
+  if (!access.isAdmin) redirect("/admin?denied=1");
+
+  try {
+    await deleteAdminProduct(productId);
+  } catch (error) {
+    redirect(
+      `/admin/products/${productId}?error=${encodeURIComponent(
+        error instanceof Error ? error.message : "Product could not be deleted.",
+      )}`,
+    );
+  }
+
+  redirect("/admin/products?deleted=1");
 }
 
 export async function updateOrderStatusAction(formData: FormData) {

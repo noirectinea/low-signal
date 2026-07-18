@@ -71,6 +71,7 @@ export function SiteFooter() {
             <Link href="/privacy">Privacy</Link>
             <Link href="/terms">Terms</Link>
             <Link href="/cookies">Cookies</Link>
+            <Link className="text-black/42" href="/admin">Admin ↗</Link>
           </nav>
         </div>
       </div>

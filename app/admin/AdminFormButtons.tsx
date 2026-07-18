@@ -1,7 +1,11 @@
 "use client";
 
 import { useFormStatus } from "react-dom";
-import { archiveProductAction, reactivateProductAction } from "./actions";
+import {
+  archiveProductAction,
+  deleteProductAction,
+  reactivateProductAction,
+} from "./actions";
 
 export function AdminSubmitButton({
   children,
@@ -52,6 +56,49 @@ export function ReactivateProductButton() {
       type="submit"
     >
       {pending ? "Reactivating..." : "Reactivate product"}
+    </button>
+  );
+}
+
+export function DeleteProductButton() {
+  const { pending } = useFormStatus();
+
+  return (
+    <button
+      className="border border-black/28 px-5 py-4 text-left text-black/68 disabled:opacity-45"
+      disabled={pending}
+      formAction={deleteProductAction}
+      type="submit"
+      onClick={(event) => {
+        if (
+          !window.confirm(
+            "Permanently delete this product, its images, variants, and stock?",
+          )
+        ) {
+          event.preventDefault();
+        }
+      }}
+    >
+      {pending ? "Deleting..." : "Delete permanently"}
+    </button>
+  );
+}
+
+export function ConfirmOrderStatusButton() {
+  const { pending } = useFormStatus();
+
+  return (
+    <button
+      className="mt-5 min-h-11 w-full bg-black px-5 py-3 text-[#ecece5] disabled:opacity-45"
+      disabled={pending}
+      type="submit"
+      onClick={(event) => {
+        if (!window.confirm("Save this order status change?")) {
+          event.preventDefault();
+        }
+      }}
+    >
+      {pending ? "Updating..." : "Update status →"}
     </button>
   );
 }

@@ -6,7 +6,7 @@ import {
   formatAdminDate,
   formatAdminMoney,
 } from "../../AdminChrome";
-import { AdminSubmitButton } from "../../AdminFormButtons";
+import { ConfirmOrderStatusButton } from "../../AdminFormButtons";
 import { updateOrderStatusAction } from "../../actions";
 import { getOrderStatusLabel } from "@/lib/availability";
 import { adminOrderStatuses, getAdminAccess, getAdminOrder } from "@/lib/admin";
@@ -129,12 +129,7 @@ export default async function AdminOrderDetailPage({
             {query.error ? (
               <p className="mt-5 leading-[1.7] text-black/58">{query.error}</p>
             ) : null}
-            <AdminSubmitButton
-              className="mt-6 w-full bg-black px-5 py-4 text-[#ecece5]"
-              pendingLabel="Updating..."
-            >
-              Update status -&gt;
-            </AdminSubmitButton>
+            <ConfirmOrderStatusButton />
           </form>
 
           <div>

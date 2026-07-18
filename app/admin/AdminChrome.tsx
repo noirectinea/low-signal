@@ -15,15 +15,15 @@ export function AdminChrome({
   return (
     <main className="min-h-screen overflow-x-hidden bg-[#e5e6e1] text-[#121211]">
       <AdminNav />
-      <section className="mx-auto max-w-[1500px] px-5 pb-16 pt-[104px] lg:px-12">
-        <div className="border-y border-black/16 py-12">
+      <section className="mx-auto max-w-[1500px] px-4 pb-12 pt-[124px] sm:px-6 lg:px-12 lg:pt-[112px]">
+        <div className="border-y border-black/16 py-6 lg:py-8">
           <p className="text-[9px] uppercase tracking-[0.16em] text-black/64">
             {eyebrow}
           </p>
-          <h1 className="controlled-display-title mt-8 max-w-[980px] text-[52px] uppercase sm:text-[74px]">
+          <h1 className="controlled-display-title mt-3 max-w-[980px] text-[34px] uppercase sm:text-[48px] lg:text-[56px]">
             {title}
           </h1>
-          <div className="mt-12">{children}</div>
+          <div className="mt-6 lg:mt-8">{children}</div>
         </div>
       </section>
     </main>
@@ -32,20 +32,18 @@ export function AdminChrome({
 
 export function AdminNav() {
   return (
-    <nav className="fixed left-0 right-0 top-0 z-30 grid min-h-[64px] grid-cols-[1fr_auto] items-start gap-6 border-b border-black/16 bg-[#e3e3dc]/92 px-5 py-5 text-[9px] uppercase tracking-[0.16em] text-[#141311] backdrop-blur-sm md:grid-cols-[1fr_auto_1fr] lg:px-12">
-      <LogoMark />
-
-      <div className="hidden justify-center gap-10 md:flex">
-        <Link href="/admin">Overview</Link>
-        <Link href="/admin/products">Products</Link>
-        <Link href="/admin/orders">Orders</Link>
-        <Link href="/collections">Public site</Link>
-      </div>
-
-      <div className="flex justify-end">
+    <nav className="fixed inset-x-0 top-0 z-30 border-b border-black/16 bg-[#e3e3dc]/96 text-[9px] uppercase tracking-[0.12em] text-[#141311] backdrop-blur-sm">
+      <div className="flex h-14 items-center justify-between px-4 sm:px-6 lg:px-12">
+        <LogoMark />
         <form action={logoutAction}>
-          <button type="submit">Logout</button>
+          <button className="min-h-11 border-b border-black/30" type="submit">Logout</button>
         </form>
+      </div>
+      <div className="flex min-h-11 items-center gap-7 overflow-x-auto border-t border-black/12 px-4 [scrollbar-width:none] sm:px-6 lg:justify-center lg:px-12">
+        <Link className="flex min-h-11 shrink-0 items-center" href="/admin">Overview</Link>
+        <Link className="flex min-h-11 shrink-0 items-center" href="/admin/products">Products</Link>
+        <Link className="flex min-h-11 shrink-0 items-center" href="/admin/orders">Orders</Link>
+        <Link className="flex min-h-11 shrink-0 items-center" href="/collections">Public site ↗</Link>
       </div>
     </nav>
   );
@@ -78,7 +76,7 @@ export function AdminEmpty({
 }
 
 export function formatAdminMoney(currency: string, value: number) {
-  return `${currency} ${value}`;
+  return `${currency} ${value.toLocaleString("en")}`;
 }
 
 export function formatAdminDate(value: string) {

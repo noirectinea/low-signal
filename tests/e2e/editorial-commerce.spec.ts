@@ -8,7 +8,7 @@ test("selected garments is a static desktop composition", async ({ page }) => {
   await expect(section.getByLabel("Shop selected garments")).toBeVisible();
   await expect(section.locator("article")).toHaveCount(4);
   await expect(section.getByRole("link", { name: "View all 6 →" })).toBeVisible();
-  await expect(section.getByText("View product")).toHaveCount(0);
+  await expect(section.getByText("View product →")).toHaveCount(4);
   await expect(section.locator(".selected-rail")).toHaveCount(0);
 });
 
@@ -21,9 +21,7 @@ test("selected garments uses a compact two-column mobile grid", async ({ page })
   await expect(section.locator("article")).toHaveCount(4);
   await expect(section.getByRole("link", { name: "Men", exact: true })).toBeVisible();
   await expect(section.getByRole("link", { name: "Women", exact: true })).toBeVisible();
-  await expect(section.getByRole("button", { name: /Add Field Jacket/ })).toHaveText(
-    "Add +",
-  );
+  await expect(section.getByText("View product →").first()).toBeVisible();
 });
 
 test("material rows update the image, caption, and garment link", async ({
@@ -45,22 +43,24 @@ test("material rows update the image, caption, and garment link", async ({
   await expect(image).toHaveAttribute("alt", "Worn nylon material detail");
 });
 
-test("catalog Add + chooses a size inline and confirms the addition", async ({
+test("catalog opens a product and preserves its return state", async ({
   page,
 }) => {
   await page.goto("/collections/men");
-  const add = page.getByRole("button", {
-    name: /Add Field Jacket; choose a size/,
-  });
+  await page.getByLabel("Sort products").selectOption("popular");
+  await page.getByLabel("Collection category").selectOption("Outerwear");
+  await page.evaluate(() => window.scrollTo(0, 420));
+  await page.getByRole("link", { name: "Open Field Jacket" }).click();
+  await expect(page).toHaveURL(/returnTo=.*sort%3Dpopular/);
 
-  await expect(add).toHaveText("Add +");
-  await add.click();
-  await expect(
-    page.getByLabel("Choose a size for Field Jacket"),
-  ).toBeVisible();
-  await page.getByRole("button", { name: "Add size M" }).first().click();
-  await expect(add).toHaveText("Added");
-  await expect(page).toHaveURL(/\/collections\/men/);
+  const back = page.getByRole("link", { name: "← Back to Men" });
+  await expect(back).toHaveAttribute(
+    "href",
+    "/collections/men?type=Outerwear&sort=popular",
+  );
+  await back.click();
+  await expect(page).toHaveURL(/type=Outerwear&sort=popular/);
+  await expect.poll(() => page.evaluate(() => window.scrollY)).toBeGreaterThan(100);
 });
 
 test("catalog toolbar sorts, filters, switches categories, and persists view", async ({

@@ -32,16 +32,16 @@ export default async function AdminOrdersPage({
     <AdminChrome eyebrow="Admin / Orders" title="Order management">
       <form
         action="/admin/orders"
-        className="mb-8 flex flex-wrap gap-3 text-[9px] uppercase tracking-[0.16em]"
+        className="mb-6 grid grid-cols-[1fr_auto] gap-2 text-[9px] uppercase tracking-[0.12em] sm:flex sm:flex-wrap"
       >
         <input
-          className="border border-black/16 bg-transparent px-4 py-3 outline-none"
+          className="col-span-2 min-h-11 border border-black/16 bg-transparent px-3 py-2 outline-none sm:col-span-1"
           defaultValue={params.q ?? ""}
           name="q"
           placeholder="Order/email"
         />
         <select
-          className="border border-black/16 bg-transparent px-4 py-3"
+          className="min-h-11 border border-black/16 bg-transparent px-3 py-2"
           defaultValue={params.status ?? ""}
           name="status"
         >
@@ -52,7 +52,7 @@ export default async function AdminOrdersPage({
             </option>
           ))}
         </select>
-        <button className="bg-black px-5 py-3 text-[#ecece5]" type="submit">
+        <button className="min-h-11 bg-black px-5 py-3 text-[#ecece5]" type="submit">
           Filter
         </button>
       </form>
@@ -61,7 +61,7 @@ export default async function AdminOrdersPage({
         <div className="divide-y divide-black/16 border-t border-black/16 text-[9px] uppercase tracking-[0.16em]">
           {orders.map((order) => (
             <Link
-              className="grid gap-4 py-6 md:grid-cols-[1fr_1.2fr_0.8fr_0.7fr_0.7fr_0.7fr] md:items-center"
+              className="grid grid-cols-2 gap-x-4 gap-y-2 py-4 transition-opacity hover:opacity-60 md:grid-cols-[1fr_1.2fr_0.8fr_0.7fr_0.7fr_0.7fr] md:items-center"
               href={`/admin/orders/${order.id}`}
               key={order.id}
             >

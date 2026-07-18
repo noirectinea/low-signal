@@ -105,19 +105,31 @@ export async function getProductSlugs() {
 }
 
 export async function getRelatedProduct(product: Product) {
-  const products = await getProducts();
+  return (await getRelatedProducts(product, 1))[0];
+}
 
-  return (
-    products.find(
-      (item) =>
-        item.gender === product.gender &&
-        item.category === product.category &&
-        item.id !== product.id,
-    ) ??
-    products.find(
-      (item) => item.gender === product.gender && item.id !== product.id,
-    )
+export async function getRelatedProducts(product: Product, limit = 3) {
+  const products = (await getProducts()).filter(
+    (item) => item.id !== product.id,
   );
+  const ranked = [
+    ...products.filter(
+      (item) =>
+        item.gender === product.gender && item.category === product.category,
+    ),
+    ...products.filter(
+      (item) =>
+        item.gender === product.gender && item.category !== product.category,
+    ),
+    ...products.filter((item) => item.gender !== product.gender),
+  ];
+
+  return ranked
+    .filter(
+      (item, index, items) =>
+        items.findIndex((candidate) => candidate.id === item.id) === index,
+    )
+    .slice(0, limit);
 }
 
 function getFallbackProductBySlug(slug: string) {

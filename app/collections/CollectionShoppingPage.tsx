@@ -4,7 +4,6 @@ import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { MobileHomeHeader } from "@/components/MobileHomeHeader";
-import { ProductAddAction } from "@/components/ProductAddAction";
 import { SiteFooter } from "@/components/SiteFooter";
 import {
   type Product,
@@ -63,7 +62,11 @@ export function CollectionShoppingPage({
   const [viewMode, setViewMode] = useState<ViewMode>("grid");
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [urlStateReady, setUrlStateReady] = useState(false);
+  const [catalogReturnTo, setCatalogReturnTo] = useState(
+    `/collections/${gender}`,
+  );
   const panelRef = useRef<HTMLDivElement>(null);
+  const restoredScrollRef = useRef(false);
   const genderLabel = gender.toUpperCase();
   const filterCount = Object.values(advancedFilters).filter(
     (value) => value !== "all",
@@ -180,11 +183,24 @@ export function CollectionShoppingPage({
     if (advancedFilters.price !== "all") params.set("price", advancedFilters.price);
     if (sortOrder !== "newest") params.set("sort", sortOrder);
     const query = params.toString();
-    window.history.replaceState(
-      null,
-      "",
-      `${window.location.pathname}${query ? `?${query}` : ""}`,
+    const returnTo = `${window.location.pathname}${query ? `?${query}` : ""}`;
+    window.history.replaceState(null, "", returnTo);
+    const returnToTimer = window.setTimeout(
+      () => setCatalogReturnTo(returnTo),
+      0,
     );
+
+    if (!restoredScrollRef.current) {
+      restoredScrollRef.current = true;
+      const storedPosition = Number(
+        window.sessionStorage.getItem(`low-signal-scroll:${returnTo}`),
+      );
+      if (Number.isFinite(storedPosition) && storedPosition > 0) {
+        window.requestAnimationFrame(() => window.scrollTo(0, storedPosition));
+      }
+    }
+
+    return () => window.clearTimeout(returnToTimer);
   }, [activeCategory, advancedFilters, sortOrder, urlStateReady]);
 
   useEffect(() => {
@@ -223,6 +239,12 @@ export function CollectionShoppingPage({
       <section className="mobile-catalog-shell mx-auto max-w-[1760px] px-4 pb-14 pt-[82px] sm:px-6 lg:px-10 lg:pt-[90px] xl:px-14">
         <header className="mobile-catalog-header border-b border-black/16 pb-5">
           <CollectionBreadcrumb gender={gender} genderLabel={genderLabel} />
+          <Link
+            className="mt-4 flex min-h-11 w-fit items-center border-b border-black/38 text-[10px] uppercase tracking-[0.08em]"
+            href="/collections"
+          >
+            ← Back to collections
+          </Link>
           <div className="mt-4 flex flex-wrap items-end justify-between gap-4">
             <div>
               <h1 className="fashion-rail-title text-[25vw] text-black/94 sm:text-[66px] lg:text-[82px] xl:text-[92px]">
@@ -259,6 +281,7 @@ export function CollectionShoppingPage({
         ) : null}
 
         <ProductCollection
+          catalogReturnTo={catalogReturnTo}
           gender={gender}
           onClear={() => {
             setActiveCategory("all");
@@ -594,11 +617,13 @@ function FilterGroup<Value extends string>({
 }
 
 function ProductCollection({
+  catalogReturnTo,
   gender,
   onClear,
   products,
   viewMode,
 }: Readonly<{
+  catalogReturnTo: string;
   gender: ProductGender;
   onClear: () => void;
   products: Product[];
@@ -626,6 +651,7 @@ function ProductCollection({
     >
       {products.map((product, index) => (
         <ProductCard
+          catalogReturnTo={catalogReturnTo}
           index={index}
           key={product.id}
           product={product}
@@ -637,15 +663,20 @@ function ProductCollection({
 }
 
 function ProductCard({
+  catalogReturnTo,
   index,
   product,
   viewMode,
 }: Readonly<{
+  catalogReturnTo: string;
   index: number;
   product: Product;
   viewMode: ViewMode;
 }>) {
   const isList = viewMode === "list";
+  const productHref = `/products/${product.slug}?returnTo=${encodeURIComponent(
+    catalogReturnTo,
+  )}`;
 
   return (
     <article
@@ -659,7 +690,13 @@ function ProductCard({
       <Link
         aria-label={`Open ${product.name}`}
         className="absolute inset-0 z-10 focus:outline-none focus-visible:ring-1 focus-visible:ring-black"
-        href={`/products/${product.slug}`}
+        href={productHref}
+        onClick={() => {
+          window.sessionStorage.setItem(
+            `low-signal-scroll:${catalogReturnTo}`,
+            String(window.scrollY),
+          );
+        }}
       />
 
       <div
@@ -710,7 +747,9 @@ function ProductCard({
           isList ? "self-center" : "absolute bottom-4 right-0"
         }`}
       >
-        <ProductAddAction product={product} />
+        <span className="flex min-h-11 items-center border-b border-black/36 text-[9px] uppercase tracking-[0.06em] text-black/70 sm:text-[10px]">
+          View product →
+        </span>
       </div>
     </article>
   );

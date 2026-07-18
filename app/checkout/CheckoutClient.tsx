@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { FormEvent, useEffect, useState } from "react";
+import { FormEvent, useEffect, useRef, useState } from "react";
 import { MobileHomeHeader } from "@/components/MobileHomeHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 import {
@@ -25,6 +25,8 @@ type CheckoutProfile = {
   phone?: string | null;
 };
 
+const checkoutDraftKey = "low-signal-checkout-draft";
+
 export function CheckoutClient() {
   const router = useRouter();
   const { hydrated, items, subtotal } = useCart();
@@ -37,6 +39,7 @@ export function CheckoutClient() {
   );
   const [message, setMessage] = useState("");
   const [debugMessage, setDebugMessage] = useState("");
+  const formRef = useRef<HTMLFormElement>(null);
 
   useEffect(() => {
     let active = true;
@@ -80,6 +83,12 @@ export function CheckoutClient() {
       value: subtotal,
     });
   }, [hydrated, items, subtotal]);
+
+  useEffect(() => {
+    if (!hydrated || !items.length || !formRef.current) return;
+    const draft = readCheckoutDraft();
+    if (draft) restoreCheckoutDraft(formRef.current, draft);
+  }, [hydrated, items.length, profile]);
 
   async function submitOrder(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -168,6 +177,7 @@ export function CheckoutClient() {
     }
 
     clearCart();
+    window.localStorage.removeItem(checkoutDraftKey);
     trackEcommerce("purchase", {
       currency: result.order.currency,
       transaction_id: result.order.order_number,
@@ -190,12 +200,12 @@ export function CheckoutClient() {
     <main className="min-h-screen overflow-x-hidden bg-[#e5e6e1] text-[#121211]">
       <MobileHomeHeader mode="paper" />
 
-      <section className="mx-auto grid max-w-[1320px] gap-10 px-5 pb-16 pt-[104px] lg:grid-cols-[1fr_380px] lg:px-12">
+      <section className="mx-auto grid max-w-[1320px] gap-7 px-5 pb-12 pt-[84px] lg:grid-cols-[1fr_360px] lg:gap-10 lg:px-12 lg:pb-16 lg:pt-[96px]">
         <div>
-          <p className="text-[12px] uppercase tracking-[0.14em] text-black/64">
-            Checkout / Spring 2026
+          <p className="text-[10px] uppercase tracking-[0.12em] text-black/58">
+            Checkout
           </p>
-          <h1 className="controlled-display-title mt-8 text-[52px] uppercase sm:text-[74px]">
+          <h1 className="controlled-display-title mt-3 text-[36px] uppercase sm:text-[58px] lg:mt-5 lg:text-[66px]">
             Complete order
           </h1>
 
@@ -204,37 +214,47 @@ export function CheckoutClient() {
               Preparing checkout.
             </div>
           ) : items.length ? (
+            <>
+            <div className="mt-5 lg:hidden">
+              <OrderSummary items={items} subtotal={subtotal} />
+            </div>
             <form
-              className="mt-10 grid gap-7 border-t border-black/16 pt-8"
+              className="mt-6 grid gap-4 border-t border-black/16 pt-5 lg:mt-8 lg:gap-5 lg:pt-6"
               onSubmit={submitOrder}
+              onInput={(event) =>
+                saveCheckoutDraft(event.currentTarget)
+              }
+              ref={formRef}
             >
               {profile ? (
-                <p className="text-[12px] uppercase leading-[1.7] tracking-[0.14em] text-black/54">
-                  Account details loaded for {profile.email}.
+                <p className="text-[10px] uppercase leading-[1.5] tracking-[0.08em] text-black/54">
+                  Using saved details / {profile.email}
                 </p>
               ) : (
-                <p className="text-[12px] uppercase leading-[1.7] tracking-[0.14em] text-black/60">
+                <p className="text-[10px] uppercase leading-[1.5] tracking-[0.08em] text-black/58">
                   <Link className="border-b border-black/50 pb-1 text-black" href="/account/login?next=%2Fcheckout">Sign in</Link>{" "}
-                  to save your details and view previous orders. Guest checkout is available.
+                  or continue as guest.
                 </p>
               )}
               <CheckoutStepHeading number="01" title="Contact" />
-              <CheckoutField
-                defaultValue={profile?.email ?? ""}
-                label="Email"
-                name="email"
-                required
-                type="email"
-              />
-              <CheckoutField
-                defaultValue={profile?.phone ?? ""}
-                label="Phone"
-                name="phone"
-                type="tel"
-              />
+              <div className="grid grid-cols-2 gap-3">
+                <CheckoutField
+                  defaultValue={profile?.email ?? ""}
+                  label="Email"
+                  name="email"
+                  required
+                  type="email"
+                />
+                <CheckoutField
+                  defaultValue={profile?.phone ?? ""}
+                  label="Phone"
+                  name="phone"
+                  type="tel"
+                />
+              </div>
 
               <CheckoutStepHeading number="02" title="Shipping address" />
-              <div className="grid gap-5 sm:grid-cols-2">
+              <div className="grid grid-cols-2 gap-3">
                 <CheckoutField
                   defaultValue={splitName(profile?.full_name).firstName}
                   label="First name"
@@ -254,17 +274,16 @@ export function CheckoutClient() {
                 name="addressLine1"
                 required
               />
-              <CheckoutField label="Address line 2" name="addressLine2" />
-              <div className="grid gap-5 sm:grid-cols-2">
+              <div className="grid grid-cols-2 gap-3">
                 <CheckoutField
                   defaultValue={profile?.default_city ?? ""}
                   label="City"
                   name="city"
                   required
                 />
-                <CheckoutField label="Region" name="region" />
+                <CheckoutField label="Region / optional" name="region" />
               </div>
-              <div className="grid gap-5 sm:grid-cols-2">
+              <div className="grid grid-cols-2 gap-3">
                 <CheckoutField
                   defaultValue={profile?.default_postal_code ?? ""}
                   label="Postal code"
@@ -280,7 +299,7 @@ export function CheckoutClient() {
               </div>
 
               <CheckoutStepHeading number="03" title="Delivery method" />
-              <div className="grid gap-px bg-black/14 text-[13px] uppercase tracking-[0.06em] sm:grid-cols-2">
+              <div className="grid grid-cols-2 gap-px bg-black/14 text-[13px] uppercase tracking-[0.06em]">
                 <CheckoutChoice
                   defaultChecked
                   detail="Tracked / calculated at checkout"
@@ -307,8 +326,7 @@ export function CheckoutClient() {
                 />
               </div>
 
-              <CheckoutStepHeading number="05" title="Billing address" />
-              <label className="flex min-h-12 items-center gap-3 border-y border-black/14 text-[13px] uppercase tracking-[0.06em] text-black/72">
+              <label className="flex min-h-11 items-center gap-3 border-y border-black/14 text-[11px] uppercase tracking-[0.05em] text-black/68">
                 <input
                   className="accent-black"
                   defaultChecked
@@ -318,7 +336,7 @@ export function CheckoutClient() {
                 <span>Use shipping address for billing</span>
               </label>
 
-              <CheckoutStepHeading number="06" title="Review order" />
+              <CheckoutStepHeading number="05" title="Order note / optional" />
               <CheckoutField label="Notes" name="notes" />
 
               <button
@@ -340,6 +358,7 @@ export function CheckoutClient() {
                 </p>
               ) : null}
             </form>
+            </>
           ) : (
             <div className="mt-10 border-y border-black/16 py-10 text-[13px] uppercase leading-[1.5] tracking-[0.05em] text-black/72">
               Your cart is empty.{" "}
@@ -350,35 +369,9 @@ export function CheckoutClient() {
           )}
         </div>
 
-        <details open className="h-fit border border-black/16 p-5 text-[13px] uppercase tracking-[0.06em] lg:sticky lg:top-[96px] lg:p-6">
-          <summary className="flex min-h-11 cursor-pointer list-none items-center justify-between border-b border-black/16 pb-4 text-black/76">
-            <span>Order summary</span>
-            <span className="lg:hidden">+</span>
-          </summary>
-          <div className="divide-y divide-black/12">
-            {items.map((item) => (
-              <div className="grid gap-2 py-5" key={item.id}>
-                <div className="flex items-center justify-between gap-5">
-                  <span>{item.name}</span>
-                  <span>Qty {item.quantity}</span>
-                </div>
-                <p className="text-[12px] text-black/68">
-                  Size {item.size ?? "M"}
-                </p>
-              </div>
-            ))}
-          </div>
-          <div className="grid gap-3 border-t border-black/16 pt-5">
-            <div className="flex items-center justify-between text-black/72">
-              <span>Delivery</span>
-              <span>Calculated after address</span>
-            </div>
-            <div className="flex items-center justify-between text-[16px] font-medium text-black">
-              <span>Total</span>
-              <span>${subtotal}</span>
-            </div>
-          </div>
-        </details>
+        <div className="hidden lg:block">
+          <OrderSummary desktop items={items} subtotal={subtotal} />
+        </div>
       </section>
       <SiteFooter />
     </main>
@@ -410,12 +403,12 @@ function CheckoutField({
   const errorId = `${name}-error`;
 
   return (
-    <label className="grid gap-3 border-b border-black/16 pb-3 text-[13px] uppercase tracking-[0.06em] text-black/72 focus-within:border-black/52">
+    <label className="grid gap-1 border-b border-black/16 pb-2 text-[11px] uppercase tracking-[0.05em] text-black/68 focus-within:border-black/52">
       <span>{label}{required ? " *" : ""}</span>
       <input
         aria-describedby={error ? errorId : undefined}
         aria-invalid={Boolean(error)}
-        className="min-h-11 bg-transparent py-2 text-[15px] tracking-[0.02em] text-black outline-none placeholder:text-black/42"
+        className="min-h-11 bg-transparent py-1 text-[14px] tracking-[0.02em] text-black outline-none placeholder:text-black/42"
         defaultValue={defaultValue}
         name={name}
         onInput={() => setError("")}
@@ -446,7 +439,7 @@ function CheckoutStepHeading({
   title: string;
 }) {
   return (
-    <div className="mt-3 flex items-center gap-5 border-b border-black/16 pb-4 text-[13px] uppercase tracking-[0.06em]">
+    <div className="mt-2 flex min-h-11 items-center gap-4 border-b border-black/16 pb-2 text-[11px] uppercase tracking-[0.05em]">
       <span className="text-black/42">{number}</span>
       <h2>{title}</h2>
     </div>
@@ -467,7 +460,7 @@ function CheckoutChoice({
   value: string;
 }) {
   return (
-    <label className="grid min-h-[84px] cursor-pointer grid-cols-[auto_1fr] items-start gap-3 bg-[#e5e6e1] p-4">
+    <label className="grid min-h-[68px] cursor-pointer grid-cols-[auto_1fr] items-start gap-3 bg-[#e5e6e1] p-3">
       <input
         className="mt-1 accent-black"
         defaultChecked={defaultChecked}
@@ -482,6 +475,109 @@ function CheckoutChoice({
       </span>
     </label>
   );
+}
+
+function OrderSummary({
+  desktop = false,
+  items,
+  subtotal,
+}: Readonly<{
+  desktop?: boolean;
+  items: ReturnType<typeof useCart>["items"];
+  subtotal: number;
+}>) {
+  return (
+    <details
+      className="h-fit border border-black/16 p-4 text-[11px] uppercase tracking-[0.05em] lg:sticky lg:top-[96px] lg:p-5"
+      open={desktop}
+    >
+      <summary className="flex min-h-11 cursor-pointer list-none items-center justify-between border-b border-black/16 text-black/76">
+        <span>Order summary / {items.length} pieces</span>
+        <span>{desktop ? `$${subtotal}` : "+"}</span>
+      </summary>
+      <div className="divide-y divide-black/12">
+        {items.map((item) => (
+          <div className="grid gap-1 py-3" key={item.id}>
+            <div className="flex items-center justify-between gap-5">
+              <span>{item.name}</span>
+              <span>× {item.quantity}</span>
+            </div>
+            <p className="text-[10px] text-black/58">Size {item.size ?? "M"}</p>
+          </div>
+        ))}
+      </div>
+      <div className="flex items-center justify-between border-t border-black/16 pt-4 text-[15px] text-black">
+        <span>Total</span>
+        <span>${subtotal}</span>
+      </div>
+    </details>
+  );
+}
+
+type CheckoutDraft = Record<
+  string,
+  {
+    checked?: boolean;
+    value: string;
+  }
+>;
+
+function saveCheckoutDraft(form: HTMLFormElement) {
+  const draft = Array.from(
+    form.elements,
+  ).reduce<CheckoutDraft>((values, element) => {
+    if (
+      !(element instanceof HTMLInputElement) &&
+      !(element instanceof HTMLSelectElement) &&
+      !(element instanceof HTMLTextAreaElement)
+    ) {
+      return values;
+    }
+    if (!element.name) return values;
+    values[element.name] = {
+      checked:
+        element instanceof HTMLInputElement
+          ? element.checked
+          : undefined,
+      value: element.value,
+    };
+    return values;
+  }, {});
+
+  window.localStorage.setItem(checkoutDraftKey, JSON.stringify(draft));
+}
+
+function readCheckoutDraft(): CheckoutDraft | null {
+  try {
+    return JSON.parse(
+      window.localStorage.getItem(checkoutDraftKey) ?? "null",
+    ) as CheckoutDraft | null;
+  } catch {
+    return null;
+  }
+}
+
+function restoreCheckoutDraft(form: HTMLFormElement, draft: CheckoutDraft) {
+  for (const [name, saved] of Object.entries(draft)) {
+    const elements = Array.from(
+      form.querySelectorAll<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>(
+        `[name="${CSS.escape(name)}"]`,
+      ),
+    );
+    for (const element of elements) {
+      if (
+        element instanceof HTMLInputElement &&
+        (element.type === "radio" || element.type === "checkbox")
+      ) {
+        element.checked =
+          element.type === "radio"
+            ? element.value === saved.value && Boolean(saved.checked)
+            : Boolean(saved.checked);
+      } else {
+        element.value = saved.value;
+      }
+    }
+  }
 }
 
 function splitName(value?: string | null) {
