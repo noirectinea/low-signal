@@ -26,6 +26,10 @@ test("product, cart persistence, quantity, and guest checkout", async ({
   await expect(page.getByLabel("Cart, 1 items").first()).toBeVisible();
   const stepper = page.getByLabel("Field Jacket quantity");
   await expect(stepper).toBeVisible();
+  await expect(stepper.getByText("In cart", { exact: true })).toBeVisible();
+  await expect(
+    page.locator(".related-product-card").filter({ visible: true }),
+  ).toHaveCount(2);
   await stepper.getByRole("button", { name: "Add one Field Jacket" }).click();
   await expect(stepper.getByText("2", { exact: true })).toBeVisible();
 

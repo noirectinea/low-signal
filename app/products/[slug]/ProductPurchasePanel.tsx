@@ -137,8 +137,9 @@ export function ProductPurchasePanel({
             >
               −
             </button>
-            <span className="grid place-items-center text-[12px]">
-              {cartItem.quantity}
+            <span className="grid place-items-center gap-1 py-2 text-[10px] uppercase tracking-[0.1em]">
+              <span className="text-white/58">In cart</span>
+              <span className="text-[12px] text-white">{cartItem.quantity}</span>
             </span>
             <button
               aria-label={`Add one ${product.name}`}

@@ -8,8 +8,9 @@ const shopLinks = [
 ] as const;
 
 const serviceLinks = [
-  ["Shipping & Returns", "/shipping"],
-  ["Contact", "/contact"],
+  ["Shipping", "/info#shipping"],
+  ["Returns", "/info#returns"],
+  ["Contact", "/info#contact"],
 ] as const;
 
 export function SiteFooter() {
@@ -68,9 +69,9 @@ export function SiteFooter() {
             aria-label="Legal links"
             className="flex flex-wrap items-center gap-x-5 gap-y-2"
           >
-            <Link href="/privacy">Privacy</Link>
-            <Link href="/terms">Terms</Link>
-            <Link href="/cookies">Cookies</Link>
+            <Link href="/info#privacy">Privacy</Link>
+            <Link href="/info#terms">Terms</Link>
+            <Link href="/info#cookies">Cookies</Link>
             <Link className="text-black/42" href="/admin">Admin ↗</Link>
           </nav>
         </div>

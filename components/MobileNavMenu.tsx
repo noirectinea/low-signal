@@ -128,9 +128,10 @@ export function MobileNavMenu({
               <CartCountLink onClick={() => setOpen(false)} />
             </nav>
             <nav aria-label="Service navigation" className="mobile-menu-secondary">
-              <Link href="/shipping" onClick={() => setOpen(false)}>Shipping</Link>
-              <Link href="/returns" onClick={() => setOpen(false)}>Returns</Link>
-              <Link href="/contact" onClick={() => setOpen(false)}>Contact</Link>
+              <Link href="/info#shipping" onClick={() => setOpen(false)}>Shipping</Link>
+              <Link href="/info#returns" onClick={() => setOpen(false)}>Returns</Link>
+              <Link href="/info#contact" onClick={() => setOpen(false)}>Contact</Link>
+              <Link href="/info#cookies" onClick={() => setOpen(false)}>Cookies</Link>
               <a
                 href="https://www.instagram.com/lowsignal/"
                 rel="noreferrer"
@@ -140,8 +141,8 @@ export function MobileNavMenu({
               </a>
             </nav>
             <div className="mobile-menu-legal">
-              <Link href="/privacy" onClick={() => setOpen(false)}>Privacy</Link>
-              <Link href="/terms" onClick={() => setOpen(false)}>Terms</Link>
+              <Link href="/info#privacy" onClick={() => setOpen(false)}>Privacy</Link>
+              <Link href="/info#terms" onClick={() => setOpen(false)}>Terms</Link>
               <span>© 2026</span>
             </div>
           </div>

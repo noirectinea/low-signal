@@ -42,7 +42,7 @@ export function CartPageClient() {
     const timeoutId = window.setTimeout(() => {
       timedOut = true;
       controller.abort();
-    }, 5_000);
+    }, 2_500);
 
     async function resolveAvailability() {
       setAvailabilityStatus("loading");
@@ -154,7 +154,7 @@ export function CartPageClient() {
               <p className="text-[12px] uppercase tracking-[0.14em] text-black/50">
                 Cart / Current rail
               </p>
-              <h1 className="controlled-display-title mt-7 text-[23vw] uppercase text-black/92 sm:text-[76px] lg:text-[96px]">
+              <h1 className="controlled-display-title mt-7 text-[20.5vw] uppercase text-black/92 sm:text-[76px] lg:text-[96px]">
                 Your cart
               </h1>
             </div>
@@ -173,7 +173,7 @@ export function CartPageClient() {
             </div>
           ) : items.length > 0 ? (
             <div className="grid gap-9 pt-8 lg:grid-cols-[1fr_360px] lg:pt-10 xl:grid-cols-[1fr_420px]">
-              <div className="border-t border-black/16">
+              <div className="order-2 border-t border-black/16 lg:order-none">
                 {items.map((item) => (
                   <CartLine
                     availability={availability[item.id]}
@@ -325,7 +325,7 @@ function OrderSummary({
   subtotal: number;
 }>) {
   return (
-    <aside className="h-fit border-y border-black/16 bg-[#dedfd9] py-6 text-[13px] uppercase tracking-[0.06em] sm:border sm:p-6 lg:sticky lg:top-[96px]">
+    <aside className="order-first h-fit border-y border-black/16 bg-[#dedfd9] py-6 text-[13px] uppercase tracking-[0.06em] sm:border sm:p-6 lg:order-none lg:sticky lg:top-[96px]">
       <p className="border-b border-black/16 pb-5 text-black/58">
         Order summary
       </p>

@@ -102,14 +102,16 @@ export function SearchClient({
 
         <div
           aria-live="polite"
-          className="flex min-h-14 items-center justify-between border-b border-black/14 text-[12px] uppercase tracking-[0.06em] text-black/68"
+          className="grid min-h-14 grid-cols-[auto_1fr] items-center gap-6 border-b border-black/14 py-3 text-[11px] uppercase tracking-[0.06em] text-black/68 sm:text-[12px]"
         >
-          <span>
+          <span className="whitespace-nowrap">
             {normalizedQuery
               ? `${String(results.length).padStart(2, "0")} results`
-              : "All garments"}
+              : `${String(results.length).padStart(2, "0")} / All garments`}
           </span>
-          <span>{loading ? "Searching..." : "Name / Type / Material / Color"}</span>
+          <span className="text-right leading-[1.45] text-black/52">
+            {loading ? "Searching..." : "Name / Type / Material / Color"}
+          </span>
         </div>
 
         {!normalizedQuery ? (

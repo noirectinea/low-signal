@@ -50,8 +50,8 @@ export default async function RegisterPage({
             <label className="mt-5 flex min-h-11 items-center gap-3 leading-[1.6] text-black/58">
               <input className="accent-black" name="terms" required type="checkbox" />
               <span>
-                I accept the <Link className="border-b border-black/40" href="/terms">Terms</Link> and{" "}
-                <Link className="border-b border-black/40" href="/privacy">Privacy Policy</Link>.
+                I accept the <Link className="border-b border-black/40" href="/info#terms">Terms</Link> and{" "}
+                <Link className="border-b border-black/40" href="/info#privacy">Privacy Policy</Link>.
               </span>
             </label>
 

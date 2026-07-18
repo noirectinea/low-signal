@@ -209,6 +209,14 @@ export default async function ProductPage({
               <ProductDetail label="Shipping & returns">
                 <p>Ships in 2–4 days when available.</p>
                 <p>Returns accepted on unworn pieces within 14 days.</p>
+                <div className="flex flex-wrap gap-6">
+                  <Link className="border-b border-black/42 pb-1 text-black" href="/info#shipping">
+                    Shipping information →
+                  </Link>
+                  <Link className="border-b border-black/42 pb-1 text-black" href="/info#returns">
+                    Returns information →
+                  </Link>
+                </div>
               </ProductDetail>
             </div>
           </div>
@@ -223,9 +231,11 @@ export default async function ProductPage({
               <span>{genderLabel} / Spring 2026</span>
             </div>
             <div className="related-products-rail mt-4 flex snap-x snap-mandatory gap-3 overflow-x-auto overscroll-x-contain sm:grid sm:grid-cols-3 lg:gap-5">
-              {relatedProducts.map((relatedProduct) => (
+              {relatedProducts.map((relatedProduct, index) => (
                 <Link
-                  className="related-product-card group min-w-0 shrink-0 snap-start border-b border-black/14 pb-3"
+                  className={`related-product-card group min-w-0 shrink-0 snap-start border-b border-black/14 pb-3 ${
+                    index > 1 ? "hidden sm:block" : ""
+                  }`}
                   href={`/products/${relatedProduct.slug}?returnTo=${encodeURIComponent(
                     returnTo,
                   )}`}

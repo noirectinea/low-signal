@@ -134,7 +134,10 @@ function LookbookHero() {
             01-12 Frames / Spring 2026
           </p>
           <h1 className="controlled-display-title mt-8 max-w-[560px] text-[50px] text-black/94 sm:text-[66px] lg:text-[80px]">
-            Lookbook 01
+            <span className="inline-flex gap-[0.16em]">
+              <span>Lookbook</span>
+              <span>01</span>
+            </span>
             <br />
             Coastal Light
             <br />

@@ -1373,6 +1373,10 @@ a {
   width: 43.5vw;
 }
 
+.lookbook-page {
+  overflow-x: clip;
+}
+
 @media (max-width: 767.98px) {
   .mobile-editorial-index {
     display: grid;
@@ -1490,6 +1494,10 @@ a {
   }
 
   .lookbook-page .mobile-lookbook-hero-copy p {
+    color: rgb(233 233 225 / 0.62);
+  }
+
+  .lookbook-page .mobile-lookbook-hero-copy > div > p:last-child {
     color: rgb(233 233 225 / 0.62);
   }
 
@@ -1777,5 +1785,194 @@ a {
   .related-products-section {
     max-height: 440px;
     overflow: hidden;
+  }
+}
+
+/* Final public-site polish. */
+@media (max-width: 767.98px) {
+  .mobile-home-hero {
+    height: 96svh;
+    min-height: 94svh;
+  }
+
+  .mobile-home-hero > div:first-child {
+    width: 24.5%;
+  }
+
+  .mobile-home-hero > div:nth-child(2) {
+    left: 24.5%;
+  }
+
+  .mobile-home-hero .hero-printed-title {
+    left: 4.5%;
+    top: 47%;
+    max-width: 92%;
+    font-size: clamp(5.15rem, 22.5vw, 6.2rem);
+  }
+
+  .mobile-hero-season {
+    left: 16px;
+    top: 96px;
+    max-width: 86px;
+  }
+
+  .mobile-hero-title-gradient {
+    background:
+      radial-gradient(
+        ellipse at 14% 57%,
+        rgb(11 11 10 / 0.22) 0,
+        rgb(11 11 10 / 0.08) 28%,
+        transparent 56%
+      );
+    pointer-events: none;
+  }
+
+  .mobile-hero-actions {
+    inset-inline: 16px;
+    bottom: 16px;
+    grid-template-columns: 24.5% minmax(0, 1fr);
+    gap: 12px;
+  }
+
+  .mobile-editorial-index {
+    height: 530px;
+    grid-template-rows: 230px 300px;
+  }
+
+  .mobile-collections-hero {
+    min-height: 0;
+    padding-bottom: 16px;
+    padding-top: 84px;
+  }
+
+  .mobile-collections-intro {
+    padding-bottom: 12px;
+  }
+
+  .mobile-collection-entries {
+    gap: 10px;
+    padding-top: 6px;
+  }
+
+  .mobile-collection-entry > a > div:last-child {
+    min-height: 112px;
+    padding-block: 12px 10px;
+  }
+
+  .mobile-collection-entry h2 {
+    font-size: clamp(1.55rem, 7.4vw, 2rem);
+  }
+
+  .mobile-catalog-shell {
+    padding-top: 72px;
+  }
+
+  .mobile-catalog-header {
+    padding-bottom: 12px;
+  }
+
+  .mobile-catalog-header > a {
+    min-height: 38px;
+    margin-top: 8px;
+  }
+
+  .mobile-catalog-header > div {
+    margin-top: 7px;
+  }
+
+  .mobile-catalog-header h1 {
+    font-size: clamp(3rem, 14vw, 3.7rem);
+  }
+
+  .mobile-catalog-header h1 + p {
+    margin-top: 6px;
+  }
+
+  .mobile-campaign-rail {
+    height: 132px !important;
+    margin-block: 12px;
+  }
+
+  .related-product-card:nth-child(n + 3) {
+    display: none;
+  }
+
+  .lookbook-page .mobile-lookbook-hero-copy {
+    padding-block: 26px 30px;
+  }
+
+  .lookbook-page .mobile-lookbook-hero-copy h1 {
+    margin-top: 26px;
+  }
+
+  .lookbook-page .mobile-lookbook-hero-copy > div > p:last-child {
+    margin-top: 30px;
+  }
+
+  .lookbook-page .mobile-lookbook-hero-copy > div:last-child {
+    margin-top: 48px;
+  }
+
+  .lookbook-page .mobile-lookbook-chapter {
+    padding-block: 32px 40px;
+  }
+
+  .lookbook-page .mobile-lookbook-chapter-heading {
+    margin-bottom: 22px;
+  }
+
+  .lookbook-page .mobile-lookbook-coastal-primary,
+  .lookbook-page .mobile-lookbook-coastal-secondary,
+  .lookbook-page .mobile-lookbook-material-lead,
+  .lookbook-page .mobile-lookbook-material-grid {
+    gap-block: 25px;
+  }
+
+  .lookbook-page .mobile-lookbook-coastal-secondary,
+  .lookbook-page .mobile-lookbook-material-grid {
+    margin-top: 28px;
+  }
+
+  .lookbook-page .mobile-lookbook-concrete {
+    gap: 28px;
+  }
+}
+
+@media (max-width: 379.98px) {
+  .mobile-hero-image {
+    object-position: 55% 50%;
+  }
+}
+
+@media (min-width: 380px) and (max-width: 410.98px) {
+  .mobile-hero-image {
+    object-position: 51% 50%;
+  }
+}
+
+@media (min-width: 411px) and (max-width: 767.98px) {
+  .mobile-hero-image {
+    object-position: 47% 50%;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 1023.98px) {
+  .mobile-editorial-index {
+    height: 540px;
+    grid-template-rows: 240px 300px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .lookbook-page .mobile-lookbook-hero-copy h1 {
+    font-size: clamp(64px, 4.5vw, 80px);
+  }
+
+  .lookbook-page .mobile-lookbook-chapter {
+    padding-block: 52px;
+  }
+
+  .lookbook-page .mobile-lookbook-chapter-heading {
+    margin-bottom: 26px;
   }
 }

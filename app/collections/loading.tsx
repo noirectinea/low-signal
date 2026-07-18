@@ -1,26 +1,37 @@
-import Link from "next/link";
-import { CartCountLink } from "@/components/CartCountLink";
-import { LogoMark } from "@/components/LogoMark";
+import { MobileHomeHeader } from "@/components/MobileHomeHeader";
 
 export default function CollectionsLoading() {
   return (
-    <main className="min-h-screen overflow-x-hidden bg-[#e6e7e2] text-[#121211]">
-      <nav className="fixed left-0 right-0 top-0 z-30 grid min-h-[64px] grid-cols-[1fr_auto] items-start gap-6 border-b border-black/14 bg-[#e1e2dd]/94 px-5 py-5 text-[9px] uppercase tracking-[0.18em] text-[#121211] backdrop-blur-sm md:grid-cols-[1fr_auto_1fr] lg:px-12">
-        <LogoMark />
-        <div className="hidden justify-center gap-14 md:flex">
-          <Link href="/">Home</Link>
-          <Link href="/collections">Collections</Link>
-          <Link href="/lookbook">Lookbook</Link>
-          <Link href="/about">About</Link>
-        </div>
-        <div className="flex justify-end">
-          <CartCountLink />
-        </div>
-      </nav>
+    <main
+      aria-busy="true"
+      aria-live="polite"
+      className="min-h-screen overflow-x-hidden bg-[#e6e7e2] text-[#121211]"
+    >
+      <MobileHomeHeader mode="paper" />
 
-      <section className="mx-auto grid min-h-screen max-w-[1320px] content-center px-5 py-[104px] lg:px-12">
-        <div className="border-y border-black/16 py-12 text-[9px] uppercase tracking-[0.16em] text-black/64">
-          Loading collection.
+      <section className="mx-auto max-w-[1680px] px-4 pb-14 pt-[88px] sm:px-6 lg:px-12 lg:pt-[104px]">
+        <div className="border-b border-black/16 pb-5">
+          <div className="h-2 w-40 animate-pulse bg-black/10" />
+          <div className="mt-5 h-14 w-52 animate-pulse bg-black/[0.055] lg:h-20" />
+        </div>
+
+        <div className="my-5 h-[150px] animate-pulse border-y border-black/12 bg-black/[0.045] lg:h-[205px]" />
+
+        <div className="grid min-h-12 grid-cols-2 gap-px border-y border-black/14 bg-black/10 sm:grid-cols-4">
+          {[0, 1, 2, 3].map((item) => (
+            <div className="bg-[#e6e7e2] p-4" key={item}>
+              <div className="h-2 w-20 animate-pulse bg-black/10" />
+            </div>
+          ))}
+        </div>
+
+        <div className="mt-6 grid grid-cols-2 gap-3 lg:grid-cols-4 lg:gap-5">
+          {[0, 1, 2, 3].map((item) => (
+            <div className="grid gap-3" key={item}>
+              <div className="aspect-[4/5] animate-pulse bg-black/[0.055]" />
+              <div className="h-3 w-2/3 animate-pulse bg-black/10" />
+            </div>
+          ))}
         </div>
       </section>
     </main>

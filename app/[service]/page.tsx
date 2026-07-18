@@ -5,39 +5,6 @@ import { MobileHomeHeader } from "@/components/MobileHomeHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 
 const services = {
-  contact: {
-    eyebrow: "Service / Contact",
-    title: "Contact",
-    intro:
-      "Questions about garments, sizing, delivery, returns, or an existing order.",
-    sections: [
-      ["Customer care", "Email studio@lowsignal.com. Include your order number when asking about an existing order."],
-      ["Response time", "Messages are answered Monday to Friday, normally within two working days."],
-      ["Press and studio", "For editorial, wholesale, and studio enquiries use the same address with a clear subject line."],
-    ],
-  },
-  shipping: {
-    eyebrow: "Service / Delivery",
-    title: "Shipping",
-    intro:
-      "Orders are checked, packed, and dispatched from the LOW SIGNAL studio.",
-    sections: [
-      ["Processing", "Available pieces normally leave the studio within 2–4 working days."],
-      ["Delivery", "Available methods, timing, and final cost are shown during checkout for the entered address."],
-      ["Tracking", "A dispatch email includes the carrier and tracking reference when the parcel leaves the studio."],
-    ],
-  },
-  returns: {
-    eyebrow: "Service / Returns",
-    title: "Returns",
-    intro:
-      "Unworn garments can be returned within 14 days of delivery.",
-    sections: [
-      ["Condition", "Pieces must be unworn, unwashed, and returned with original tags and packaging."],
-      ["Start a return", "Email studio@lowsignal.com with the order number and the piece you want to return."],
-      ["Refund", "Approved refunds are issued to the original payment method after the garment is inspected."],
-    ],
-  },
   faq: {
     eyebrow: "Service / Index",
     title: "FAQ",
@@ -58,36 +25,6 @@ const services = {
       ["XL", "XL: 36–38 inch waist. Product-specific fit notes take priority over this general guide."],
     ],
   },
-  privacy: {
-    eyebrow: "Legal / Data",
-    title: "Privacy",
-    intro: "LOW SIGNAL uses personal information only to operate the store and fulfil orders.",
-    sections: [
-      ["Information", "Contact, delivery, account, and order details are collected when you use the store."],
-      ["Use", "Data is used for authentication, fulfilment, customer care, fraud prevention, and required records."],
-      ["Control", "Contact studio@lowsignal.com to request access, correction, or deletion where legally available."],
-    ],
-  },
-  terms: {
-    eyebrow: "Legal / Store",
-    title: "Terms",
-    intro: "These terms apply to purchases and use of the LOW SIGNAL store.",
-    sections: [
-      ["Orders", "An order is accepted after stock and payment details are verified and confirmation is issued."],
-      ["Product information", "Color and texture can vary slightly across displays and garment-washed production runs."],
-      ["Liability", "Nothing in these terms limits rights that cannot legally be excluded."],
-    ],
-  },
-  cookies: {
-    eyebrow: "Legal / Browser",
-    title: "Cookies",
-    intro: "Essential browser storage keeps account sessions and the shopping cart working.",
-    sections: [
-      ["Essential", "Authentication cookies protect signed-in areas. Local storage preserves the current cart."],
-      ["Measurement", "Performance and ecommerce measurement may be used to improve the store without changing its visual experience."],
-      ["Control", "Browser settings can remove stored data, but doing so may sign you out or clear the cart."],
-    ],
-  },
   "order-tracking": {
     eyebrow: "Service / Orders",
     title: "Order tracking",
@@ -96,17 +33,6 @@ const services = {
       ["Account orders", "Open My Account → Orders to see current order status and order details."],
       ["Guest orders", "Use the dispatch email tracking link, or contact the studio with your order number and checkout email."],
       ["Need help?", "Email studio@lowsignal.com if a tracking update has not changed for several working days."],
-    ],
-  },
-  journal: {
-    eyebrow: "Journal / Issue 01",
-    title: "Field notes",
-    intro:
-      "Notes kept between weather, cloth, concrete rooms, and garments in daily rotation.",
-    sections: [
-      ["01 / Field note", "Coastal light, washed wool, empty roads, and the distance between weather and clothing."],
-      ["02 / Material log", "Dry cotton, matte hardware, rib texture, and the slow record made through repeated wear."],
-      ["03 / Coastal light", "A quiet horizon and garments cut with enough volume to move before the body."],
     ],
   },
 } as const;

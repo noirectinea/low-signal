@@ -8,7 +8,7 @@ import { SiteFooter } from "@/components/SiteFooter";
 const heroImage = "/images/hero/ch1.png";
 const collectionImage = "/images/hero/ch3.png";
 const lookbookImage = "/images/low-signal/lookbook-coast.jpg";
-const journalImages = [
+const lookbookDetailImages = [
   ["/images/low-signal/journal/fabric-detail.jpg", "Fabric detail"],
   ["/images/low-signal/journal/road-coast.jpg", "Road / cloudy coast"],
   ["/images/low-signal/journal/garment-chair.jpg", "Garment on chair"],
@@ -16,11 +16,11 @@ const journalImages = [
   ["/images/low-signal/journal/studio-table.jpg", "Studio table note"],
 ];
 
-const journalRows = [
-  ["01", "Field note"],
-  ["02", "Material log"],
-  ["03", "Coastal light"],
-  ["04", "Road note"],
+const lookbookRows = [
+  ["01", "Coastal light"],
+  ["02", "Material detail"],
+  ["03", "Concrete room"],
+  ["04", "Final look"],
 ];
 export default function Home() {
   return (
@@ -32,7 +32,7 @@ export default function Home() {
       </section>
       <HomeSelectedPieces />
       <MaterialForm />
-      <JournalSection />
+      <LookbookContinuation />
       <SiteFooter />
     </main>
   );
@@ -50,6 +50,7 @@ function HeroPanel() {
           priority
           sizes="(min-width: 1024px) 70vw, 68vw"
           className="hero-image hidden object-cover object-[50%_20%] lg:block"
+          unoptimized
         />
         <Image
           src="/images/hero/ch1-mobile-2x.png"
@@ -58,9 +59,10 @@ function HeroPanel() {
           priority
           quality={95}
           sizes="72vw"
-          className="hero-image object-cover object-center lg:hidden"
+          className="mobile-hero-image hero-image object-cover object-center lg:hidden"
         />
         <div className="absolute inset-0 bg-[#d8cfc1]/10 mix-blend-screen" />
+        <div className="mobile-hero-title-gradient absolute inset-0 lg:hidden" />
       </div>
 
       <div className="absolute left-[5.15vw] top-1/2 z-20 hidden w-[210px] -translate-y-1/2 flex-col items-start lg:flex">
@@ -99,8 +101,8 @@ function HeroPanel() {
         <span>Low signal</span>
       </div>
 
-      <p className="absolute left-5 top-[104px] z-30 max-w-[104px] text-[9px] uppercase leading-[1.45] tracking-[0.18em] text-black/68 lg:left-auto lg:right-[74px] lg:max-w-[74px] lg:leading-[1.34]">
-        Spring 2026 / Washed black.
+      <p className="mobile-hero-season absolute left-5 top-[104px] z-30 max-w-[112px] text-[9px] uppercase leading-[1.45] tracking-[0.18em] text-black/68 lg:left-auto lg:right-[74px] lg:max-w-[84px] lg:leading-[1.34]">
+        Spring 2026 / Washed Black
       </p>
 
       <h1
@@ -112,10 +114,14 @@ function HeroPanel() {
       </h1>
 
       <div className="mobile-hero-actions absolute inset-x-5 bottom-5 z-30 grid grid-cols-[29%_1fr] gap-4 border-t border-black/34 pt-3 lg:hidden">
-        <p className="min-w-0 text-[10px] uppercase leading-[1.55] tracking-[0.1em] text-black/76">Washed black clothing for daily wear.</p>
+        <p className="min-w-0 text-[10px] uppercase leading-[1.55] tracking-[0.1em] text-black/76">
+          Washed black.
+          <br />
+          Made for daily wear.
+        </p>
         <div className="grid min-w-0 text-[11px] uppercase tracking-[0.11em] text-[#f5f2ed]/88">
           <Link className="flex min-h-11 items-center whitespace-nowrap border-b border-[#f5f2ed]/62" href="/collections">Shop Spring 2026 →</Link>
-          <Link className="flex min-h-10 w-fit items-center border-b border-[#f5f2ed]/38 text-[#f5f2ed]/72" href="/lookbook">View Lookbook</Link>
+          <Link className="flex min-h-11 w-fit items-center border-b border-[#f5f2ed]/38 text-[#f5f2ed]/72" href="/lookbook">View Lookbook</Link>
         </div>
       </div>
 
@@ -229,36 +235,36 @@ function EditorialGrid() {
 }
 
 
-function JournalSection() {
+function LookbookContinuation() {
   return (
-    <section id="journal" className="mobile-journal order-4 w-full overflow-hidden border-t border-black/18 bg-[#d4d5cf] px-5 py-9 text-[#111] lg:order-none lg:px-[4.5vw] lg:py-[5vh]">
+    <section id="lookbook-continuation" className="mobile-journal order-4 w-full overflow-hidden border-t border-black/18 bg-[#d4d5cf] px-5 py-9 text-[#111] lg:order-none lg:px-[4.5vw] lg:py-[5vh]">
       <div className="grid gap-6 lg:grid-cols-[28vw_1fr] lg:gap-9">
         <aside className="mobile-journal-intro grid max-w-[360px] grid-cols-[auto_1fr] gap-x-8 lg:flex lg:flex-col">
           <Kicker number="06" />
           <h2 className="text-[11px] uppercase leading-[1.45] tracking-[0.22em] lg:mt-[34px]">
-            Journal
+            Lookbook
           </h2>
           <p className="col-span-2 mt-6 text-[22px] uppercase leading-[1.18] tracking-[0.15em] lg:text-[26px] lg:mt-[32px]">
-            Notes kept
+            Coastal light
             <br />
             between weather
             <br />
             and cloth.
           </p>
           <p className="mt-[22px] hidden max-w-[330px] text-[10px] uppercase leading-[1.72] tracking-[0.16em] text-black/52 lg:block">
-            Garments, road light, studio notes, and fabric details from the
-            current season.
+            Campaign frames, material details, and quiet movement from Issue
+            01.
           </p>
           <Link
-            href="/journal"
+            href="/lookbook"
             className="col-span-2 mt-5 hidden w-fit border-b border-black/55 pb-[6px] text-[9px] uppercase tracking-[0.18em] transition-opacity duration-300 hover:opacity-55 lg:mt-[28px] lg:inline-flex"
           >
-            Read journal →
+            View lookbook →
           </Link>
 
           <div className="mt-9 hidden border-y border-black/18 py-4 text-[9px] uppercase leading-[1.65] tracking-[0.17em] text-black/50 lg:block">
-            <p className="text-black/68">Current entry</p>
-            <p className="mt-4">Road note / 01</p>
+            <p className="text-black/68">Lookbook / Issue 01</p>
+            <p className="mt-4">Coastal light / 01</p>
             <p className="mt-4 max-w-[275px]">
               Coastal light, washed wool, empty roads.
             </p>
@@ -279,12 +285,12 @@ function JournalSection() {
               <span>Road note / 01</span>
               <span>Field note / coastal light</span>
             </div>
-            <Link href="/journal" className="absolute bottom-5 left-5 border-b border-white/70 pb-2 text-[9px] uppercase tracking-[0.18em] text-white lg:hidden">Read journal →</Link>
+            <Link href="/lookbook" className="absolute bottom-5 left-5 border-b border-white/70 pb-2 text-[9px] uppercase tracking-[0.18em] text-white lg:hidden">View lookbook →</Link>
           </div>
 
           <div className="mobile-journal-details grid gap-6 border-l border-black/15 pl-3 lg:mt-6 lg:grid-cols-[1fr_170px] lg:border-l-0 lg:pl-0">
             <div className="mobile-journal-thumbs grid grid-rows-2 gap-3 lg:grid-cols-5 lg:grid-rows-none lg:gap-4">
-              {journalImages.map(([src, label], index) => (
+              {lookbookDetailImages.map(([src, label], index) => (
                 <div key={label} className={`${index > 1 ? "hidden lg:block" : ""} ${index === 1 ? "lg:mt-7" : ""}`}>
                   <div className="relative h-full min-h-[190px] overflow-hidden border border-black/14 bg-[#151413] lg:h-[92px] lg:min-h-0">
                     <Image
@@ -315,16 +321,16 @@ function JournalSection() {
           </div>
 
           <div className="mt-7 hidden border-t border-black/20 text-[9px] uppercase tracking-[0.17em] text-black/58 lg:block">
-            {journalRows.map(([number, label]) => (
-              <a
+            {lookbookRows.map(([number, label]) => (
+              <Link
                 key={number}
-                href={`/journal?entry=${number}`}
+                href="/lookbook"
                 className="grid grid-cols-[42px_1fr_auto] border-b border-black/16 py-4 transition-opacity duration-300 hover:opacity-55"
               >
                 <span>{number}</span>
                 <span>{label}</span>
-                <span>Read -&gt;</span>
-              </a>
+                <span>View -&gt;</span>
+              </Link>
             ))}
           </div>
         </div>

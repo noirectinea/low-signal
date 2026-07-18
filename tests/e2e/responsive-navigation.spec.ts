@@ -22,6 +22,9 @@ test("mobile header and menu expose ecommerce navigation", async ({ page }) => {
     "Shipping",
     "Returns",
     "Contact",
+    "Cookies",
+    "Privacy",
+    "Terms",
     "Instagram ↗",
   ]) {
     await expect(menu.getByText(label, { exact: true })).toBeVisible();

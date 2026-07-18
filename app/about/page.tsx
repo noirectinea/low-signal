@@ -12,38 +12,34 @@ export const metadata: Metadata = {
 const approachBlocks = [
   {
     title: "Daily repeat",
-    text: "Pieces are cut for ordinary days: walking, working, waiting, moving through the same routes again.",
+    text: "Pieces are cut for ordinary days and the same routes taken again.",
   },
   {
     title: "Washed black",
-    text: "The palette sits between black, charcoal, stone, and paper. It softens through light, wash, and wear.",
+    text: "Black, charcoal, stone, and paper tones soften through wash and wear.",
   },
   {
     title: "Quiet volume",
-    text: "Outer layers, knit pieces, shirts, and trousers keep room around the body without turning loud.",
-  },
-  {
-    title: "Small batches",
-    text: "New pieces arrive in small seasonal runs, with attention to fabric, proportion, and repeat use.",
+    text: "Outer layers, knitwear, shirts, and trousers keep room around the body.",
   },
 ];
 
 const materialLanguage = [
   {
     title: "Dry cotton",
-    text: "A crisp hand that creases naturally and settles into routine.",
+    text: "A crisp hand that creases naturally.",
   },
   {
     title: "Wool texture",
-    text: "Soft structure, matte surface, and warmth without weight.",
+    text: "Matte structure and warmth without weight.",
   },
   {
     title: "Raw canvas",
-    text: "Dense plain weave for jackets, bags, and everyday outer layers.",
+    text: "Dense plain weave for everyday outer layers.",
   },
   {
     title: "Worn nylon",
-    text: "Light protection with a softened, low-shine finish.",
+    text: "Light protection with a low-shine finish.",
   },
 ];
 
@@ -68,8 +64,7 @@ export default function AboutPage() {
           </div>
 
           <p className="mt-12 max-w-[460px] border-t border-black/16 pt-6 text-[11px] uppercase leading-[1.76] tracking-[0.15em] text-black/66">
-            LOW SIGNAL works with washed black garments, dry cotton, dense
-            knitwear and wide everyday shapes.
+            Material, proportion, and pieces made to settle into repeat wear.
           </p>
         </div>
 
@@ -80,8 +75,8 @@ export default function AboutPage() {
                 Material, form, routine
               </p>
               <p className="mt-8 max-w-[650px] text-[13px] uppercase leading-[1.75] tracking-[0.15em] text-black/76">
-                The brand focuses on outer layers, shirts, knit pieces and
-                trousers in black, charcoal, concrete and wool tones.
+                Outer layers, shirts, knitwear, and trousers shaped around
+                daily routine.
               </p>
             </div>
 
@@ -135,8 +130,7 @@ export default function AboutPage() {
 
             <div className="px-5 py-6 text-[9px] uppercase leading-[1.8] tracking-[0.16em] text-black/54">
               <p>
-                Fabrics are chosen for texture, weight and the way they age
-                through use.
+                Fabrics are chosen for texture, weight, and how they age.
               </p>
             </div>
           </aside>
@@ -169,8 +163,8 @@ function AboutExpansion() {
             <section className="border-b border-black/14 py-7 text-[9px] uppercase leading-[1.8] tracking-[0.15em]">
               <p className="text-black">B. Daily uniform</p>
               <p className="mt-7 max-w-[560px] text-black/62">
-                The collection moves between outerwear, knitwear, shirting and
-                trousers. Each piece is made to work alone or in simple layers.
+                Outerwear, knitwear, shirts, and trousers work alone or in
+                simple layers.
               </p>
             </section>
 
@@ -197,9 +191,8 @@ function AboutExpansion() {
           <section className="border-y border-black/16 py-7 text-[9px] uppercase leading-[1.8] tracking-[0.15em]">
             <p className="text-black">D. Wear notes</p>
             <p className="mt-7 max-w-[700px] text-black/62">
-              Wash cold, dry naturally, and let the surface change. Creases,
-              fading, and softened edges are part of how the garment records
-              use.
+              Wash cold and dry naturally. Creases, fading, and softened edges
+              record use.
             </p>
             <div className="mt-8 grid gap-px bg-black/12 sm:grid-cols-3">
               {["Layer often", "Wash gently", "Wear repeatedly"].map((detail) => (
