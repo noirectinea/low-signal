@@ -1,15 +1,18 @@
 "use client";
 
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { AccountHeaderLink } from "./AccountHeaderLink";
+import { CartCountLink } from "./CartCountLink";
 
 const links = [
-  ["Shop all", "16 pieces", "/collections"],
-  ["Men", "08 pieces", "/collections/men"],
-  ["Women", "08 pieces", "/collections/women"],
-  ["Lookbook", "Issue 01", "/lookbook"],
-  ["About", "Brand notes", "/about"],
+  ["Home", "/"],
+  ["Collections", "/collections"],
+  ["Men", "/collections/men"],
+  ["Women", "/collections/women"],
+  ["Lookbook", "/lookbook"],
+  ["About", "/about"],
 ] as const;
 
 export function MobileNavMenu({
@@ -18,6 +21,7 @@ export function MobileNavMenu({
   onOpenChange?: (open: boolean) => void;
 }>) {
   const [open, setOpen] = useState(false);
+  const pathname = usePathname();
   const menuRef = useRef<HTMLDivElement>(null);
   const firstLinkRef = useRef<HTMLAnchorElement>(null);
   const triggerRef = useRef<HTMLButtonElement>(null);
@@ -101,8 +105,9 @@ export function MobileNavMenu({
 
           <div className="mobile-menu-composition">
             <nav aria-label="Mobile navigation" className="mobile-menu-primary">
-              {links.map(([label, note, href], index) => (
+              {links.map(([label, href], index) => (
                 <Link
+                  aria-current={pathname === href ? "page" : undefined}
                   className="mobile-menu-primary-link"
                   href={href}
                   key={href}
@@ -111,7 +116,6 @@ export function MobileNavMenu({
                 >
                   <span className="mobile-menu-index">{String(index + 1).padStart(2, "0")}</span>
                   <span className="mobile-menu-label">{label}</span>
-                  <span className="mobile-menu-note">{note}</span>
                   <span aria-hidden="true" className="mobile-menu-arrow">→</span>
                 </Link>
               ))}
@@ -122,20 +126,18 @@ export function MobileNavMenu({
             <nav aria-label="Secondary navigation" className="mobile-menu-secondary">
               <Link href="/search" onClick={() => setOpen(false)}>Search</Link>
               <AccountHeaderLink onClick={() => setOpen(false)} />
-              <Link href="/account/orders" onClick={() => setOpen(false)}>Orders</Link>
-              <Link href="/shipping" onClick={() => setOpen(false)}>Shipping & Returns</Link>
+              <CartCountLink onClick={() => setOpen(false)} />
+              <Link href="/shipping" onClick={() => setOpen(false)}>Shipping</Link>
+              <Link href="/returns" onClick={() => setOpen(false)}>Returns</Link>
               <Link href="/contact" onClick={() => setOpen(false)}>Contact</Link>
+              <a
+                href="https://www.instagram.com/lowsignal/"
+                rel="noreferrer"
+                target="_blank"
+              >
+                Instagram ↗
+              </a>
             </nav>
-
-            <Link
-              className="mobile-menu-current"
-              href="/collections"
-              onClick={() => setOpen(false)}
-            >
-              <span>Current selection</span>
-              <strong>Spring 2026</strong>
-              <span>Shop collection →</span>
-            </Link>
           </div>
         </div>
       ) : null}

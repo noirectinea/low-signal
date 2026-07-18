@@ -239,18 +239,15 @@ export function CheckoutClient() {
                   defaultValue={splitName(profile?.full_name).firstName}
                   label="First name"
                   name="firstName"
+                  required
                 />
                 <CheckoutField
                   defaultValue={splitName(profile?.full_name).lastName}
                   label="Last name"
                   name="lastName"
+                  required
                 />
               </div>
-              <CheckoutField
-                defaultValue={profile?.full_name ?? ""}
-                label="Shipping name"
-                name="shippingName"
-              />
               <CheckoutField
                 defaultValue={profile?.default_address ?? ""}
                 label="Address line 1"
@@ -272,6 +269,7 @@ export function CheckoutClient() {
                   defaultValue={profile?.default_postal_code ?? ""}
                   label="Postal code"
                   name="postalCode"
+                  required
                 />
                 <CheckoutField
                   defaultValue={profile?.default_country ?? ""}
@@ -282,7 +280,7 @@ export function CheckoutClient() {
               </div>
 
               <CheckoutStepHeading number="03" title="Delivery method" />
-              <div className="grid gap-px bg-black/14 text-[10px] uppercase tracking-[0.14em] sm:grid-cols-2">
+              <div className="grid gap-px bg-black/14 text-[13px] uppercase tracking-[0.06em] sm:grid-cols-2">
                 <CheckoutChoice
                   defaultChecked
                   detail="Tracked / calculated at checkout"
@@ -310,7 +308,7 @@ export function CheckoutClient() {
               </div>
 
               <CheckoutStepHeading number="05" title="Billing address" />
-              <label className="flex min-h-12 items-center gap-3 border-y border-black/14 text-[10px] uppercase tracking-[0.14em] text-black/62">
+              <label className="flex min-h-12 items-center gap-3 border-y border-black/14 text-[13px] uppercase tracking-[0.06em] text-black/72">
                 <input
                   className="accent-black"
                   defaultChecked
@@ -332,7 +330,7 @@ export function CheckoutClient() {
               </button>
 
               {message ? (
-                <p className="text-[9px] uppercase tracking-[0.16em] text-black/64">
+                <p className="text-[13px] uppercase leading-[1.5] tracking-[0.05em] text-black/72">
                   {message}
                 </p>
               ) : null}
@@ -343,7 +341,7 @@ export function CheckoutClient() {
               ) : null}
             </form>
           ) : (
-            <div className="mt-10 border-y border-black/16 py-10 text-[9px] uppercase leading-[1.8] tracking-[0.16em] text-black/64">
+            <div className="mt-10 border-y border-black/16 py-10 text-[13px] uppercase leading-[1.5] tracking-[0.05em] text-black/72">
               Your cart is empty.{" "}
               <Link className="border-b border-black/50 pb-1" href="/collections">
                 Return to collections
@@ -352,10 +350,11 @@ export function CheckoutClient() {
           )}
         </div>
 
-        <aside className="h-fit border border-black/16 p-6 text-[12px] uppercase tracking-[0.14em] lg:sticky lg:top-[96px]">
-          <p className="border-b border-black/16 pb-5 text-black/72">
-            Order summary
-          </p>
+        <details open className="h-fit border border-black/16 p-5 text-[13px] uppercase tracking-[0.06em] lg:sticky lg:top-[96px] lg:p-6">
+          <summary className="flex min-h-11 cursor-pointer list-none items-center justify-between border-b border-black/16 pb-4 text-black/76">
+            <span>Order summary</span>
+            <span className="lg:hidden">+</span>
+          </summary>
           <div className="divide-y divide-black/12">
             {items.map((item) => (
               <div className="grid gap-2 py-5" key={item.id}>
@@ -363,17 +362,23 @@ export function CheckoutClient() {
                   <span>{item.name}</span>
                   <span>Qty {item.quantity}</span>
                 </div>
-                <p className="text-black/58">
-                  {item.size ?? "M"} / verified at order
+                <p className="text-[12px] text-black/68">
+                  Size {item.size ?? "M"}
                 </p>
               </div>
             ))}
           </div>
-          <div className="flex items-center justify-between border-t border-black/16 pt-5 text-black">
-            <span>Total</span>
-            <span>${subtotal}</span>
+          <div className="grid gap-3 border-t border-black/16 pt-5">
+            <div className="flex items-center justify-between text-black/72">
+              <span>Delivery</span>
+              <span>Calculated after address</span>
+            </div>
+            <div className="flex items-center justify-between text-[16px] font-medium text-black">
+              <span>Total</span>
+              <span>${subtotal}</span>
+            </div>
           </div>
-        </aside>
+        </details>
       </section>
       <SiteFooter />
     </main>
@@ -401,16 +406,34 @@ function CheckoutField({
   required?: boolean;
   type?: string;
 }>) {
+  const [error, setError] = useState("");
+  const errorId = `${name}-error`;
+
   return (
-    <label className="grid gap-3 border-b border-black/16 pb-3 text-[12px] uppercase tracking-[0.14em] text-black/64 focus-within:border-black/42">
-      <span>{label}</span>
+    <label className="grid gap-3 border-b border-black/16 pb-3 text-[13px] uppercase tracking-[0.06em] text-black/72 focus-within:border-black/52">
+      <span>{label}{required ? " *" : ""}</span>
       <input
-        className="bg-transparent py-1 text-[12px] uppercase tracking-[0.12em] text-black outline-none placeholder:text-black/42"
+        aria-describedby={error ? errorId : undefined}
+        aria-invalid={Boolean(error)}
+        className="min-h-11 bg-transparent py-2 text-[15px] tracking-[0.02em] text-black outline-none placeholder:text-black/42"
         defaultValue={defaultValue}
         name={name}
+        onInput={() => setError("")}
+        onInvalid={(event) => {
+          setError(
+            event.currentTarget.validity.valueMissing
+              ? `${label} is required.`
+              : `Enter a valid ${label.toLowerCase()}.`,
+          );
+        }}
         required={required}
         type={type}
       />
+      {error ? (
+        <span className="text-[12px] normal-case tracking-normal text-black/76" id={errorId}>
+          {error}
+        </span>
+      ) : null}
     </label>
   );
 }
@@ -423,7 +446,7 @@ function CheckoutStepHeading({
   title: string;
 }) {
   return (
-    <div className="mt-3 flex items-center gap-5 border-b border-black/16 pb-4 text-[10px] uppercase tracking-[0.16em]">
+    <div className="mt-3 flex items-center gap-5 border-b border-black/16 pb-4 text-[13px] uppercase tracking-[0.06em]">
       <span className="text-black/42">{number}</span>
       <h2>{title}</h2>
     </div>
@@ -453,9 +476,9 @@ function CheckoutChoice({
         type="radio"
         value={value}
       />
-      <span className="grid gap-2 text-[10px] uppercase tracking-[0.14em]">
+      <span className="grid gap-2 text-[13px] uppercase tracking-[0.06em]">
         <span>{label}</span>
-        <span className="text-[8px] leading-[1.6] text-black/48">{detail}</span>
+        <span className="text-[12px] leading-[1.45] tracking-[0.03em] text-black/68">{detail}</span>
       </span>
     </label>
   );

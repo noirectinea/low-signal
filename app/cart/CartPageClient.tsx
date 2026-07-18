@@ -27,7 +27,7 @@ export function CartPageClient() {
   const { hydrated, items, subtotal } = useCart();
   const [availability, setAvailability] = useState<CartAvailability>({});
   const [availabilityStatus, setAvailabilityStatus] = useState<
-    "idle" | "loading"
+    "idle" | "loading" | "error"
   >("idle");
   const [removedItem, setRemovedItem] = useState<CartItem | null>(null);
   const hasBlockingWarnings = items.some((item) => availability[item.id]?.message);
@@ -38,6 +38,11 @@ export function CartPageClient() {
     }
 
     const controller = new AbortController();
+    let timedOut = false;
+    const timeoutId = window.setTimeout(() => {
+      timedOut = true;
+      controller.abort();
+    }, 5_000);
 
     async function resolveAvailability() {
       setAvailabilityStatus("loading");
@@ -75,6 +80,7 @@ export function CartPageClient() {
 
         if (!response.ok || !result.ok) {
           setAvailability({});
+          setAvailabilityStatus("error");
           return;
         }
 
@@ -97,20 +103,23 @@ export function CartPageClient() {
             return nextAvailability;
           }, {}),
         );
+        setAvailabilityStatus("idle");
       } catch (error) {
-        if ((error as Error).name !== "AbortError") {
+        if (timedOut || (error as Error).name !== "AbortError") {
           setAvailability({});
+          setAvailabilityStatus("error");
         }
       } finally {
-        if (!controller.signal.aborted) {
-          setAvailabilityStatus("idle");
-        }
+        window.clearTimeout(timeoutId);
       }
     }
 
     void resolveAvailability();
 
-    return () => controller.abort();
+    return () => {
+      window.clearTimeout(timeoutId);
+      controller.abort();
+    };
   }, [items]);
 
   function changeQuantity(id: string, delta: number) {
@@ -168,7 +177,7 @@ export function CartPageClient() {
                 {items.map((item) => (
                   <CartLine
                     availability={availability[item.id]}
-                    isChecking={availabilityStatus === "loading"}
+                    availabilityStatus={availabilityStatus}
                     item={item}
                     key={item.id}
                     onQuantity={changeQuantity}
@@ -226,13 +235,13 @@ export function CartPageClient() {
 
 function CartLine({
   availability,
-  isChecking,
+  availabilityStatus,
   item,
   onQuantity,
   onRemove,
 }: Readonly<{
   availability?: CartAvailability[string];
-  isChecking: boolean;
+  availabilityStatus: "idle" | "loading" | "error";
   item: CartItem;
   onQuantity: (id: string, delta: number) => void;
   onRemove: (id: string) => void;
@@ -241,7 +250,7 @@ function CartLine({
   const plusDisabled = typeof stock === "number" && item.quantity >= stock;
 
   return (
-    <article className="grid grid-cols-[38%_1fr] gap-x-5 gap-y-5 border-b border-black/16 py-7 text-[11px] uppercase leading-[1.55] tracking-[0.14em] sm:grid-cols-[132px_1fr_auto] sm:text-[12px] lg:grid-cols-[160px_1fr_auto]">
+    <article className="grid grid-cols-[38%_1fr] gap-x-5 gap-y-5 border-b border-black/16 py-7 text-[13px] uppercase leading-[1.45] tracking-[0.06em] sm:grid-cols-[132px_1fr_auto] lg:grid-cols-[160px_1fr_auto]">
       <div className="relative aspect-[4/5] overflow-hidden border border-black/12 bg-[#d8d3c8]">
         <Image
           src={item.image}
@@ -256,18 +265,14 @@ function CartLine({
 
       <div className="grid min-w-0 gap-5 sm:grid-cols-[1fr_auto] sm:gap-6">
         <div>
-          <h2 className="max-w-[240px] text-[12px] text-black">{item.name}</h2>
-          <div className="mt-4 grid gap-1 text-[9px] text-black/50 sm:mt-5 sm:text-[12px]">
-            <p>Category: {item.category}</p>
-            <p>Color: {item.color ?? "Black"}</p>
-            {item.materials ? <p>Material: {item.materials}</p> : null}
-            <p>Size: {item.size ?? "M"}</p>
-            <p>
-              Availability:{" "}
-              {typeof stock === "number" && !isChecking
-                ? getAvailabilityLabel(stock)
-                : "Checking"}
-            </p>
+          <h2 className="max-w-[240px] text-[15px] font-medium tracking-[0.03em] text-black">{item.name}</h2>
+          <div className="mt-4 grid gap-2 text-[12px] text-black/68 sm:mt-5">
+            <p>{item.color ?? "Black"} / Size {item.size ?? "M"}</p>
+            {availabilityStatus === "loading" ? <p>Checking stock…</p> : null}
+            {availabilityStatus === "error" ? <p>Stock will be verified at checkout.</p> : null}
+            {availabilityStatus === "idle" && typeof stock === "number" ? (
+              <p>{getAvailabilityLabel(stock)}</p>
+            ) : null}
           </div>
           {availability?.message ? (
             <p className="mt-5 max-w-[240px] text-black/72">
@@ -275,7 +280,7 @@ function CartLine({
             </p>
           ) : null}
           <button
-            className="mt-3 flex min-h-11 items-center border-b border-black/40 text-[10px] text-black/54 sm:mt-6 sm:text-[12px]"
+            className="mt-3 flex min-h-11 items-center border-b border-black/50 text-[12px] text-black/68 sm:mt-6"
             type="button"
             onClick={() => onRemove(item.id)}
           >
@@ -283,7 +288,7 @@ function CartLine({
           </button>
         </div>
 
-        <div className="flex items-start gap-6 border-t border-black/12 pt-4 sm:border-t-0 sm:pt-0 sm:justify-end">
+        <div className="flex items-center gap-3 border-t border-black/12 pt-4 text-[15px] sm:border-t-0 sm:pt-0 sm:justify-end">
           <button
             className="min-h-11 min-w-11"
             type="button"
@@ -292,7 +297,7 @@ function CartLine({
           >
             -
           </button>
-          <span>{item.quantity}</span>
+          <span className="min-w-6 text-center font-medium">{item.quantity}</span>
           <button
             className={`min-h-11 min-w-11 ${plusDisabled ? "text-black/24" : ""}`}
             type="button"
@@ -305,7 +310,7 @@ function CartLine({
         </div>
       </div>
 
-      <p className="col-span-2 border-t border-black/12 pt-4 text-right sm:col-span-1 sm:border-t-0 sm:pt-0">${item.price * item.quantity}</p>
+      <p className="col-span-2 border-t border-black/12 pt-4 text-right text-[15px] font-medium sm:col-span-1 sm:border-t-0 sm:pt-0">${item.price * item.quantity}</p>
     </article>
   );
 }
@@ -320,7 +325,7 @@ function OrderSummary({
   subtotal: number;
 }>) {
   return (
-    <aside className="h-fit border-y border-black/16 bg-[#dedfd9] py-6 text-[11px] uppercase tracking-[0.14em] sm:border sm:p-6 sm:text-[12px] lg:sticky lg:top-[96px]">
+    <aside className="h-fit border-y border-black/16 bg-[#dedfd9] py-6 text-[13px] uppercase tracking-[0.06em] sm:border sm:p-6 lg:sticky lg:top-[96px]">
       <p className="border-b border-black/16 pb-5 text-black/58">
         Order summary
       </p>
@@ -334,7 +339,7 @@ function OrderSummary({
           <span>Calculated at checkout</span>
         </div>
       </div>
-      <div className="flex items-center justify-between py-6 text-black">
+      <div className="flex items-center justify-between py-6 text-[16px] font-medium text-black">
         <span>Total</span>
         <span>${subtotal}</span>
       </div>

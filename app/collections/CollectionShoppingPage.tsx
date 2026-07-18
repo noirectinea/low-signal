@@ -330,23 +330,21 @@ export function CollectionShoppingPage({
               {genderLabel}
             </h1>
             <p className="mt-3 text-[10px] uppercase tracking-[0.18em] text-black/50">
-              Spring 2026 / {String(products.length).padStart(2, "0")} pieces
+              {String(products.length).padStart(2, "0")} pieces / Spring 2026
             </p>
           </div>
 
           <div className="grid gap-4 border-t border-black/12 pt-5 lg:border-t-0 lg:pt-0">
             <ProductSearch
-              resultCount={visibleProducts.length}
               searchQuery={searchQuery}
               setSearchQuery={setSearchQuery}
             />
 
-            <div className="grid gap-4 text-[9px] uppercase tracking-[0.18em] text-black/56 sm:grid-cols-[auto_auto_auto] sm:items-center lg:justify-end">
-              <span>
-                {String(visibleProducts.length).padStart(2, "0")} Items
-              </span>
-              <span>Newest first</span>
-              <ViewIcons />
+            <div className="flex justify-between gap-4 text-[11px] uppercase tracking-[0.1em] text-black/68 lg:justify-end">
+              {normalizedSearchQuery || totalFilterCount > 0 ? (
+                <span>{String(visibleProducts.length).padStart(2, "0")} results</span>
+              ) : null}
+              <span>{sortOrder === "newest" ? "Newest" : sortOrder === "price-asc" ? "Price low" : "Price high"}</span>
             </div>
           </div>
         </header>
@@ -372,10 +370,10 @@ export function CollectionShoppingPage({
             </button>
           </div>
           {totalFilterCount > 0 ? (
-            <div className="mobile-active-filters border-b border-black/14 py-3 text-[9px] uppercase tracking-[0.15em] text-black/58">
+            <div className="mobile-active-filters border-b border-black/14 py-3 text-[11px] uppercase tracking-[0.1em] text-black/68">
               <div className="flex items-center justify-between gap-4">
                 <span>{String(visibleProducts.length).padStart(2, "0")} pieces</span>
-                <button className="flex min-h-11 items-center border-b border-black/44 text-black" type="button" onClick={clearAllFilters}>Clear all</button>
+                <button className="flex min-h-11 items-center border-b border-black/44 text-black" type="button" onClick={clearAllFilters}>Clear filters</button>
               </div>
               <div aria-label="Selected filters" className="flex flex-wrap gap-2 pb-1">
                 {activeFilterLabels.map((label) => (
@@ -430,7 +428,7 @@ export function CollectionShoppingPage({
                 setActiveFilters={setAdvancedFilters}
               />
               {(advancedFilterCount > 0 || activeCategory !== "all" || searchQuery) ? (
-                <button className="mt-5 border-b border-black/50 pb-1 text-[12px] uppercase tracking-[0.14em]" type="button" onClick={clearAllFilters}>Clear all</button>
+                <button className="mt-5 border-b border-black/50 pb-1 text-[12px] uppercase tracking-[0.08em]" type="button" onClick={clearAllFilters}>Clear filters</button>
               ) : null}
             </div>
           </aside>
@@ -503,43 +501,34 @@ function getCartItemId(product: Product, size: string) {
 }
 
 function ProductSearch({
-  resultCount,
   searchQuery,
   setSearchQuery,
 }: Readonly<{
-  resultCount: number;
   searchQuery: string;
   setSearchQuery: (value: string) => void;
 }>) {
   return (
-    <div className="border-y border-black/14 py-3 text-[9px] uppercase tracking-[0.16em] transition-colors duration-300 focus-within:border-black/28">
-      <label className="grid gap-2" htmlFor="collection-search">
-        <span className="flex items-center justify-between text-black/52">
-          <span>Search</span>
-          <span>{String(resultCount).padStart(2, "0")} found</span>
-        </span>
-
-        <span className="grid grid-cols-[1fr_auto] items-center gap-3 border-b border-transparent transition-colors duration-300 focus-within:border-black/28">
+    <div className="border-y border-black/18 py-2 transition-colors duration-300 focus-within:border-black/42">
+      <label className="block" htmlFor="collection-search">
+        <span className="grid grid-cols-[1fr_auto] items-center gap-3">
           <input
             autoComplete="off"
-            className="min-w-0 bg-transparent py-2 text-[16px] uppercase tracking-[0.12em] text-black outline-none placeholder:text-black/42 lg:py-1.5 lg:text-[11px] lg:tracking-[0.16em]"
+            className="min-w-0 bg-transparent py-3 text-[15px] uppercase tracking-[0.06em] text-black outline-none placeholder:text-black/50 lg:text-[13px]"
             id="collection-search"
-            placeholder="PRODUCT NAME..."
+            placeholder="SEARCH GARMENTS..."
             type="search"
             value={searchQuery}
             onChange={(event) => setSearchQuery(event.target.value)}
           />
           {searchQuery ? (
             <button
-              className="border-b border-black/40 pb-1 text-black/58 transition-opacity duration-300 hover:opacity-55"
+              className="min-h-11 border-b border-black/50 text-[12px] uppercase tracking-[0.08em] text-black/72 transition-opacity duration-300 hover:opacity-55"
               type="button"
               onClick={() => setSearchQuery("")}
             >
               Clear
             </button>
-          ) : (
-          <span className="text-black/50">Type</span>
-          )}
+          ) : null}
         </span>
       </label>
     </div>
@@ -554,9 +543,9 @@ function FilterIntro({
   note: string;
 }>) {
   return (
-    <div className="mobile-filter-intro mb-6 border-y border-black/14 py-5 text-[9px] uppercase leading-[1.7] tracking-[0.18em] text-black/52 lg:mb-7">
-      <p className="text-black/78">Spring 2026 {gender}</p>
-      <p className="mt-4 max-w-[230px] text-black/50">{note}</p>
+    <div className="mobile-filter-intro mb-6 border-y border-black/14 py-5 text-[12px] uppercase leading-[1.55] tracking-[0.08em] text-black/68 lg:mb-7">
+      <p className="text-[11px] text-black/72">{gender} collection</p>
+      <p className="mt-3 max-w-[250px] text-black/68">{note}</p>
     </div>
   );
 }
@@ -574,10 +563,6 @@ function CollectionBreadcrumb({
       label: "COLLECTIONS",
     },
     {
-      href: "/collections",
-      label: "SPRING 2026",
-    },
-    {
       href: `/collections/${gender}`,
       label: genderLabel,
     },
@@ -586,7 +571,7 @@ function CollectionBreadcrumb({
   return (
     <nav
       aria-label="Collection path"
-      className="flex flex-wrap items-center gap-x-3 gap-y-2 text-[9px] uppercase tracking-[0.2em] text-black/54"
+      className="flex flex-wrap items-center gap-x-3 gap-y-2 text-[10px] uppercase tracking-[0.12em] text-black/62"
     >
       {items.map((item, index) => (
         <span className="flex items-center gap-3" key={`${item.label}-${index}`}>
@@ -646,8 +631,8 @@ function MobileCatalogPanel({
       type="button"
       onClick={onClose}
     />
-    <div ref={panelRef} aria-label={panel === "filters" ? "Collection filters" : "Collection sorting"} aria-modal="true" className="mobile-catalog-panel fixed inset-x-0 bottom-0 z-40 grid max-h-[calc(100svh-72px)] grid-rows-[auto_1fr_auto] border-t border-black/24 bg-[#e5e6e1] text-[#121211] shadow-[0_-20px_60px_rgba(0,0,0,0.16)]" role="dialog">
-      <div className="flex min-h-14 items-center justify-between border-b border-black/16 px-5 text-[12px] uppercase tracking-[0.14em]">
+    <div ref={panelRef} aria-label={panel === "filters" ? "Collection filters" : "Collection sorting"} aria-modal="true" className="mobile-catalog-panel fixed inset-x-0 bottom-0 z-40 grid max-h-[calc(100svh-72px)] grid-rows-[auto_1fr_auto] border-t border-black/24 bg-[#e5e6e1] text-[#121211]" role="dialog">
+      <div className="flex min-h-14 items-center justify-between border-b border-black/16 px-5 text-[14px] uppercase tracking-[0.08em]">
         <span>{panel === "filters" ? `Filters${advancedFilterCount > 0 ? ` / ${advancedFilterCount}` : ""}` : "Sort garments"}</span>
         <button className="min-h-11 px-2" type="button" onClick={onClose}>Close</button>
       </div>
@@ -669,7 +654,7 @@ function MobileCatalogPanel({
             />
           </div>
         ) : (
-          <div className="divide-y divide-black/14 border-y border-black/14 text-[12px] uppercase tracking-[0.14em]">
+          <div className="divide-y divide-black/14 border-y border-black/14 text-[13px] uppercase tracking-[0.08em]">
             {(["newest", "price-asc", "price-desc"] as const).map((value) => (
               <button className={`flex min-h-14 w-full items-center justify-between text-left ${sortOrder === value ? "text-black" : "text-black/50"}`} key={value} type="button" onClick={() => {
                 setSortOrder(value);
@@ -730,10 +715,9 @@ function CategoryFilters({
   ];
 
   return (
-    <div className="text-[9px] uppercase tracking-[0.18em]">
-      <div className="mb-5 flex items-center justify-between text-black/52">
-        <span>Filters —</span>
-        <span>{String(products.length).padStart(2, "0")} total</span>
+    <div className="text-[12px] uppercase tracking-[0.08em]">
+      <div className="mb-4 text-[11px] font-medium text-black/68">
+        <span>Category</span>
       </div>
 
       <div className="divide-y divide-black/12 border-y border-black/12 transition-colors duration-300 hover:border-black/18">
@@ -742,7 +726,7 @@ function CategoryFilters({
             className={`flex w-full items-center justify-between py-4 text-left transition-all duration-300 hover:bg-black/[0.025] hover:px-2 hover:opacity-70 ${
               activeCategory === filter.key
                 ? "bg-black/[0.025] px-2 text-black"
-                : "text-black/48"
+                : "text-black/62"
             }`}
             key={filter.key}
             type="button"
@@ -786,7 +770,7 @@ function AdvancedFilterPanel({
   }
 
   return (
-    <div className="mt-7 border-y border-black/12 text-[8px] uppercase tracking-[0.16em] transition-colors duration-300 hover:border-black/18">
+    <div className="mt-7 border-y border-black/12 text-[12px] uppercase tracking-[0.08em] transition-colors duration-300 hover:border-black/18">
       <div className="flex min-h-12 items-center justify-between border-b border-black/12 text-black/58">
         <span>
           Refine selection
@@ -893,8 +877,8 @@ function OptionDisclosure<Value extends string>({
           <button
             className={`flex items-center justify-between py-2 text-left transition-all duration-300 hover:px-2 hover:opacity-65 ${
               activeValue === option.key
-                ? "px-2 text-black"
-                : "text-black/46"
+                ? "bg-black/[0.06] px-2 font-medium text-black"
+                : "text-black/62"
             }`}
             key={option.key}
             type="button"
@@ -1040,11 +1024,7 @@ function CampaignRail({
         sizes="(min-width: 1024px) 72vw, 100vw"
         src={railImage}
       />
-      <div className="absolute inset-0 bg-gradient-to-r from-black/42 via-black/10 to-black/16" />
-      <div className="absolute inset-x-4 bottom-4 flex items-end justify-between gap-4 text-[8px] uppercase tracking-[0.18em] text-[#eceee8]/82 sm:inset-x-5">
-        <span>Spring 2026 rail</span>
-        <span>Available online</span>
-      </div>
+      <div className="absolute inset-0 bg-black/10" />
     </div>
   );
 }
@@ -1130,18 +1110,12 @@ function ProductCard({
           src={product.image}
         />
         <div className="absolute inset-0 bg-black/0 transition duration-500 group-hover:bg-black/12" />
-        <span className="absolute left-3 top-3 text-[8px] uppercase tracking-[0.18em] text-[#eceee8]/84 mix-blend-difference">
-          {String(index + 1).padStart(2, "0")}
-        </span>
-        <span className="absolute bottom-3 left-3 translate-y-2 border-b border-[#eceee8]/60 pb-1 text-[8px] uppercase tracking-[0.18em] text-[#eceee8]/0 transition duration-500 group-hover:translate-y-0 group-hover:text-[#eceee8]/86">
-          Open product →
-        </span>
       </div>
 
       {isSizePickerOpen && !cartItem ? (
-        <div className="mobile-size-picker absolute bottom-[62px] right-0 z-30 w-full max-w-[220px] border border-black/18 bg-[#e5e6e1]/96 p-3 text-[9px] uppercase tracking-[0.14em] text-black shadow-none backdrop-blur-sm sm:bottom-[68px]">
-          <div className="mb-3 flex items-center justify-between border-b border-black/14 pb-2 text-black/64">
-            <span>Select size</span>
+        <div className="mobile-size-picker absolute bottom-[62px] right-0 z-30 w-full max-w-[240px] border border-black/18 bg-[#e5e6e1]/96 p-4 text-[12px] uppercase tracking-[0.08em] text-black backdrop-blur-sm sm:bottom-[68px]">
+          <div className="mb-3 flex items-center justify-between border-b border-black/14 pb-2 text-black/76">
+            <span>Choose a size</span>
             <button
               aria-label={`Close size selector for ${product.name}`}
               className="min-h-11 min-w-11 text-black/58"
@@ -1164,23 +1138,23 @@ function ProductCard({
               </button>
             ))}
           </div>
-          <p className="mt-3 text-black/52">
-            {selectedStock > 0 ? "Tap size to add" : "Select available size"}
+          <p className="mt-3 text-[11px] text-black/68">
+            Select an available size to add this piece.
           </p>
         </div>
       ) : null}
 
-      <div className="grid grid-cols-[1fr_auto] gap-3 pt-4 text-[9px] uppercase tracking-[0.16em]">
+      <div className="grid grid-cols-[1fr_auto] gap-3 pt-4 uppercase tracking-[0.06em]">
         <div className="min-w-0">
           <h2
-            className={`truncate text-[12px] tracking-[0.09em] text-black transition-transform duration-300 ease-out ${
+            className={`truncate text-[14px] font-medium tracking-[0.03em] text-black transition-transform duration-300 ease-out lg:text-[13px] ${
               isWomen ? "group-hover:-translate-y-0.5" : ""
             }`}
           >
             {product.name}
           </h2>
-          <p className="mt-2 text-black/46">{product.category}</p>
-          <p className="mt-3 text-[12px] tracking-[0.08em] text-black/92">
+          <p className="mt-2 text-[11px] text-black/62">{product.category}</p>
+          <p className="mt-3 text-[14px] font-medium tracking-[0.02em] text-black">
             ${product.price}
           </p>
         </div>
@@ -1214,12 +1188,12 @@ function ProductCard({
         ) : (
           <button
             aria-label={`Quick add ${product.name}; choose a size`}
-            className="relative z-20 flex min-h-11 self-end items-center justify-center whitespace-nowrap border-b border-black/24 px-1 text-[8px] uppercase tracking-[0.11em] text-black/70 transition duration-300 ease-out hover:border-black/60 hover:text-black disabled:cursor-not-allowed disabled:opacity-30"
+            className="relative z-20 flex min-h-11 self-end items-center justify-center whitespace-nowrap border-b border-black/36 px-1 text-[11px] uppercase tracking-[0.06em] text-black/78 transition duration-300 ease-out hover:border-black/70 hover:text-black disabled:cursor-not-allowed disabled:opacity-30"
             disabled={isSoldOut}
             type="button"
             onClick={() => setIsSizePickerOpen((isOpen) => !isOpen)}
           >
-            {isSoldOut ? "Sold out" : "Quick add +"}
+            {isSoldOut ? "Sold out" : "Quick add / size +"}
           </button>
         )}
       </div>
@@ -1245,22 +1219,5 @@ function ProductCard({
         </div>
       ) : null}
     </article>
-  );
-}
-
-function ViewIcons() {
-  return (
-    <span className="hidden items-center gap-4 text-black/58 lg:flex">
-      <span className="grid grid-cols-2 gap-[3px]" aria-label="Grid view">
-        <span className="size-[5px] border border-black/62" />
-        <span className="size-[5px] border border-black/62" />
-        <span className="size-[5px] border border-black/62" />
-        <span className="size-[5px] border border-black/62" />
-      </span>
-      <span className="grid gap-[3px]" aria-label="List view">
-        <span className="h-[5px] w-[15px] border border-black/42" />
-        <span className="h-[5px] w-[15px] border border-black/42" />
-      </span>
-    </span>
   );
 }

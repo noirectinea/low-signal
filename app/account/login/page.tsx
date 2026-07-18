@@ -35,7 +35,7 @@ export default async function LoginPage({ searchParams }: LoginPageProps) {
             <h1 className="controlled-display-title mt-8 max-w-[720px] text-[52px] uppercase sm:text-[74px]">
               Sign in
             </h1>
-            <p className="mt-8 max-w-[430px] text-[10px] uppercase leading-[1.8] tracking-[0.16em] text-black/58">
+            <p className="mt-8 max-w-[460px] text-[14px] uppercase leading-[1.5] tracking-[0.05em] text-black/72">
               View previous orders and use your saved delivery
               details at checkout.
             </p>
@@ -43,7 +43,7 @@ export default async function LoginPage({ searchParams }: LoginPageProps) {
 
           <form
             action={loginAction}
-            className="h-fit border border-black/16 p-6 text-[9px] uppercase tracking-[0.14em]"
+            className="h-fit border border-black/16 p-6 text-[12px] uppercase tracking-[0.06em]"
           >
             <input name="next" type="hidden" value={next} />
             {redirectMessage ? (

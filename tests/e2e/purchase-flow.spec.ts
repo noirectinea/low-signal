@@ -13,6 +13,8 @@ test("product, cart persistence, quantity, and guest checkout", async ({
   await page.goto("/products/field-jacket");
 
   await expect(page.getByText(/01 \/ 03/).last()).toBeVisible();
+  await page.getByRole("button", { name: /^Select a size/i }).click();
+  await expect(page.getByText("Choose a size before adding this piece.")).toBeVisible();
   const mediumSize = page
     .locator("button[aria-pressed]")
     .filter({ hasText: /^M$/ })
@@ -20,6 +22,7 @@ test("product, cart persistence, quantity, and guest checkout", async ({
   await mediumSize.click();
   await expect(mediumSize).toHaveAttribute("aria-pressed", "true");
   await expect(page.getByText("Selected: M")).toBeVisible();
+  await expect(page.locator(".mobile-purchase-bar-active")).toBeVisible();
   await page.getByRole("button", { name: /^Add to cart/i }).click();
   await expect(page.getByLabel("Cart, 1 items").first()).toBeVisible();
 

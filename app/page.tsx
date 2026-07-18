@@ -7,8 +7,6 @@ import { SiteFooter } from "@/components/SiteFooter";
 const heroImage = "/images/hero/ch1.png";
 const collectionImage = "/images/hero/ch3.png";
 const lookbookImage = "/images/low-signal/lookbook-coast.jpg";
-const garmentOne = "/images/low-signal/products/product-06.jpg";
-const garmentTwo = "/images/low-signal/selected-garments-detail.jpg";
 const materialStoryImage =
   "/images/low-signal/selected-collection/material-form-original.png";
 const journalImages = [
@@ -34,8 +32,8 @@ export default function Home() {
         <HeroPanel />
         <EditorialGrid />
       </section>
-      <MaterialForm />
       <HomeSelectedPieces />
+      <MaterialForm />
       <JournalSection />
       <SiteFooter />
     </main>
@@ -72,10 +70,6 @@ function HeroPanel() {
         <p className="mt-[26px] max-w-[205px] text-[12px] uppercase leading-[1.52] tracking-[0.19em]">
           Washed black clothing for daily wear.
         </p>
-        <div className="mt-[26px] grid w-full gap-[10px] border-y border-black/18 py-[14px] text-[8px] uppercase leading-[1.5] tracking-[0.17em] text-black/48">
-          <span>Spring 2026 / Issue 01</span>
-          <span>Garment index</span>
-        </div>
         <div className="mt-[32px] grid gap-3 text-[10px] uppercase tracking-[0.18em]">
           <Link
             className="group inline-flex w-fit items-center gap-3 border-b border-black/70 pb-[6px] transition-opacity duration-300 hover:opacity-55"
@@ -220,48 +214,22 @@ function EditorialGrid() {
           </span>
         </Link>
 
-        <Link href="#selected-pieces" className="group relative grid min-h-0 grid-cols-[30%_44%_26%] bg-[#151413] text-[#f5f2ed] transition-colors duration-300 hover:bg-[#1c1b19]">
-        <div className="flex h-full min-w-0 flex-col px-5 py-9 lg:px-[30px] lg:py-[34px]">
-          <Kicker number="04" light />
+        <Link href="#selected-pieces" className="group relative grid min-h-0 grid-cols-[minmax(170px,34%)_1fr] bg-[#151413] text-[#f5f2ed] transition-colors duration-300 hover:bg-[#1c1b19]">
+        <div className="flex h-full min-w-0 flex-col border-r border-[#f5f2ed]/14 px-5 py-9 lg:px-[30px] lg:py-[34px]">
+          <span className="text-[10px] uppercase tracking-[0.12em] text-[#f5f2ed]/58">Current edit</span>
           <p className="mt-[24px] max-w-[92px] text-[10px] uppercase leading-[1.62] tracking-[0.2em]">
             Selected garments
           </p>
-          <span className="mt-auto inline-flex w-fit gap-2 border-b border-[#f5f2ed]/70 pb-[4px] text-[9px] uppercase tracking-[0.16em] transition-opacity duration-300 group-hover:opacity-60">
-            Shop selected
-            <span className="transition-transform duration-300 group-hover:translate-x-1">
-              →
-            </span>
+        </div>
+        <div className="flex h-full min-w-0 flex-col justify-between px-[clamp(28px,4vw,62px)] py-[34px]">
+          <p className="max-w-[260px] text-[12px] uppercase leading-[1.55] tracking-[0.1em] text-[#f5f2ed]/72">
+            A concise edit of outerwear, knitwear, shirts, and trousers available now.
+          </p>
+          <span className="inline-flex w-fit gap-3 border-b border-[#f5f2ed]/70 pb-[6px] text-[11px] uppercase tracking-[0.16em] transition-opacity duration-300 group-hover:opacity-60">
+            Browse the rail
+            <span className="transition-transform duration-300 group-hover:translate-x-1">↓</span>
           </span>
         </div>
-        <div className="flex h-full min-w-0 flex-col justify-center py-8 pr-5 lg:px-0 lg:py-[26px]">
-          <div className="relative h-[44svh] w-full overflow-hidden border border-[#f5f2ed]/10 bg-[#211f1c] lg:h-[clamp(148px,18vh,196px)] lg:w-[84%]">
-            <Image
-              src={garmentOne}
-              alt="LOW SIGNAL outer layer detail"
-              fill
-              sizes="24vw"
-              className="editorial-image object-cover object-center"
-            />
-          </div>
-          <p className="mt-3 text-[7px] uppercase tracking-[0.18em] text-[#f5f2ed]/42">
-            Outer layer / 01
-          </p>
-        </div>
-        <div className="hidden h-full flex-col justify-end px-[30px] pb-[34px] lg:flex lg:pl-0 lg:pr-[28px] lg:pt-[26px]">
-          <div className="relative h-[104px] w-full overflow-hidden border border-[#f5f2ed]/10 bg-[#211f1c] lg:h-[clamp(104px,14vh,152px)]">
-            <Image
-              src={garmentTwo}
-              alt="LOW SIGNAL black knit garment"
-              fill
-              sizes="16vw"
-              className="editorial-image object-cover object-center"
-            />
-          </div>
-          <p className="mt-3 text-[7px] uppercase tracking-[0.18em] text-[#f5f2ed]/42">
-            Knit texture / 02
-          </p>
-        </div>
-        <div className="pointer-events-none absolute bottom-[31px] left-[30%] hidden h-px w-[10%] bg-[#f5f2ed]/12 lg:block" />
         </Link>
       </div>
     </section>

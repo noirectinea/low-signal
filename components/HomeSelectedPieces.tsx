@@ -398,7 +398,7 @@ function RailCard({
     return (
       <div
         aria-hidden="true"
-        className="selected-campaign-card pointer-events-none w-[68vw] shrink-0 snap-start sm:w-[40vw] lg:w-[25vw]"
+        className="selected-campaign-card pointer-events-none w-[68vw] shrink-0 snap-start sm:w-[40vw] lg:w-[22.5vw]"
         data-rail-index="0"
       >
         <div className="relative h-[48svh] min-h-[300px] max-h-[480px] overflow-hidden border border-black/14 bg-[#ccd0c9] lg:h-[55vh] lg:min-h-[360px] lg:max-h-[680px]">
@@ -431,7 +431,7 @@ function RailCard({
   return (
     <Link
       aria-label={`View piece ${product.name}`}
-      className="selected-campaign-card mobile-selected-card group w-[68vw] shrink-0 snap-start sm:w-[40vw] lg:w-[25vw]"
+      className="selected-campaign-card mobile-selected-card group w-[68vw] shrink-0 snap-start sm:w-[40vw] lg:w-[22.5vw]"
       data-rail-index={index - 1}
       href={`/products/${product.slug}`}
       onClick={onClick}

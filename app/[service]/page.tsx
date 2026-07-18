@@ -111,6 +111,8 @@ const services = {
   },
 } as const;
 
+export const dynamicParams = false;
+
 export function generateStaticParams() {
   return Object.keys(services).map((service) => ({ service }));
 }
@@ -154,7 +156,7 @@ export default async function ServicePage({
               {page.title}
             </h1>
           </div>
-          <p className="max-w-[440px] text-[11px] uppercase leading-[1.8] tracking-[0.15em] text-black/60">
+          <p className="max-w-[480px] text-[15px] uppercase leading-[1.5] tracking-[0.05em] text-black/74">
             {page.intro}
           </p>
         </header>
@@ -162,18 +164,18 @@ export default async function ServicePage({
         <div className="divide-y divide-black/14 border-b border-black/16 lg:ml-[26%]">
           {page.sections.map(([title, text], index) => (
             <section
-              className="grid gap-5 py-8 text-[10px] uppercase leading-[1.8] tracking-[0.14em] sm:grid-cols-[180px_1fr] lg:py-10"
+              className="grid gap-5 py-8 uppercase sm:grid-cols-[180px_1fr] lg:py-9"
               key={title}
             >
-              <h2>
+              <h2 className="text-[12px] tracking-[0.08em]">
                 {String(index + 1).padStart(2, "0")} / {title}
               </h2>
-              <p className="max-w-[620px] text-black/58">{text}</p>
+              <p className="max-w-[680px] text-[14px] leading-[1.55] tracking-[0.03em] text-black/72">{text}</p>
             </section>
           ))}
         </div>
 
-        <div className="mt-10 flex flex-wrap gap-7 text-[10px] uppercase tracking-[0.14em]">
+        <div className="mt-10 flex flex-wrap gap-7 text-[12px] uppercase tracking-[0.06em]">
           {service === "contact" ? (
             <a className="flex min-h-11 items-center border-b border-black/55" href="mailto:studio@lowsignal.com">
               Email the studio →

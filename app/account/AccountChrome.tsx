@@ -17,7 +17,7 @@ export function AccountChrome({
       <MobileHomeHeader mode="paper" />
       <section className="mx-auto max-w-[1320px] px-5 pb-16 pt-[104px] lg:px-12">
         <div className="border-y border-black/16 py-12">
-          <p className="text-[9px] uppercase tracking-[0.16em] text-black/64">
+          <p className="text-[11px] uppercase tracking-[0.08em] text-black/68">
             {eyebrow}
           </p>
           <h1 className="controlled-display-title mt-8 max-w-[900px] text-[52px] uppercase sm:text-[74px]">
@@ -47,7 +47,7 @@ export function StatusTimeline({ status }: Readonly<{ status: string }>) {
   const steps = getOrderTimelineSteps(status);
 
   return (
-    <div className="grid gap-3 text-[9px] uppercase tracking-[0.16em] text-black/54">
+    <div className="grid gap-3 text-[12px] uppercase tracking-[0.06em] text-black/68">
       {steps.map((step) => (
         <div className="flex items-center gap-4" key={step.key}>
           <span

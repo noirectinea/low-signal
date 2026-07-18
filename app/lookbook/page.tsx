@@ -473,7 +473,7 @@ function TextPause({
 }>) {
   return (
     <div
-      className={`grid min-h-[180px] place-items-center border px-7 py-10 text-center text-[18px] uppercase leading-[1.25] tracking-[0.14em] sm:text-[22px] lg:min-h-[230px] ${
+      className={`grid min-h-[140px] place-items-center border px-7 py-8 text-center text-[17px] uppercase leading-[1.25] tracking-[0.1em] sm:text-[22px] lg:min-h-[230px] ${
         light
           ? "border-[#e6e6de]/16 text-[#e6e6de]/78"
           : "border-black/14 text-black/72"

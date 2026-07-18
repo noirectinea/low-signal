@@ -4,22 +4,25 @@ test("mobile header and menu expose ecommerce navigation", async ({ page }) => {
   await page.setViewportSize({ height: 844, width: 390 });
   await page.goto("/");
 
-  await expect(page.getByLabel("Search products")).toBeVisible();
+  await expect(page.getByLabel("Search products")).toBeHidden();
   await expect(page.getByLabel("Sign in")).toBeVisible();
   await expect(page.getByLabel(/Cart, \d+ items/).first()).toBeVisible();
   await page.getByRole("button", { name: "Menu" }).click();
 
   const menu = page.getByRole("dialog", { name: "Site menu" });
   for (const label of [
-    "Shop all",
+    "Home",
+    "Collections",
     "Men",
     "Women",
     "Lookbook",
     "About",
     "Search",
-    "Orders",
-    "Shipping & Returns",
+    "Cart (0)",
+    "Shipping",
+    "Returns",
     "Contact",
+    "Instagram ↗",
   ]) {
     await expect(menu.getByText(label, { exact: true })).toBeVisible();
   }

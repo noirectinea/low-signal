@@ -74,13 +74,13 @@ export function SearchClient({
             </h1>
           </div>
 
-          <label className="grid gap-3 border-y border-black/18 py-5 text-[9px] uppercase tracking-[0.16em] text-black/50">
+          <label className="grid gap-3 border-y border-black/18 py-5 text-[12px] uppercase tracking-[0.06em] text-black/68">
             <span>Product, category, material, or color</span>
             <span className="grid grid-cols-[1fr_auto] items-center gap-5">
               <input
                 autoComplete="off"
                 autoFocus
-                className="min-w-0 bg-transparent py-2 text-[16px] uppercase tracking-[0.12em] text-black outline-none placeholder:text-black/34"
+                className="min-w-0 bg-transparent py-2 text-[18px] uppercase tracking-[0.04em] text-black outline-none placeholder:text-black/46"
                 name="q"
                 placeholder="Search garments..."
                 type="search"
@@ -89,7 +89,7 @@ export function SearchClient({
               />
               {query ? (
                 <button
-                  className="min-h-11 border-b border-black/50 text-[10px] text-black"
+                  className="min-h-11 border-b border-black/50 text-[12px] text-black"
                   type="button"
                   onClick={() => setQuery("")}
                 >
@@ -102,7 +102,7 @@ export function SearchClient({
 
         <div
           aria-live="polite"
-          className="flex min-h-14 items-center justify-between border-b border-black/14 text-[9px] uppercase tracking-[0.16em] text-black/52"
+          className="flex min-h-14 items-center justify-between border-b border-black/14 text-[12px] uppercase tracking-[0.06em] text-black/68"
         >
           <span>
             {normalizedQuery
@@ -158,18 +158,19 @@ export function SearchClient({
                     alt={product.name}
                     className={`object-cover brightness-[0.88] contrast-[1.04] saturate-[0.7] transition duration-700 group-hover:scale-[1.015] ${product.objectPosition ?? "object-center"}`}
                     fill
+                    loading={index === 0 ? "eager" : "lazy"}
                     sizes="(min-width: 1024px) 24vw, 48vw"
                     src={product.image}
                   />
                 </div>
-                <div className="mt-4 grid grid-cols-[1fr_auto] gap-3 text-[10px] uppercase tracking-[0.12em]">
+                <div className="mt-4 grid grid-cols-[1fr_auto] gap-3 uppercase tracking-[0.04em]">
                   <div>
-                    <h2>{product.name}</h2>
-                    <p className="mt-2 text-[8px] text-black/48">
+                    <h2 className="text-[14px] font-medium">{product.name}</h2>
+                    <p className="mt-2 text-[11px] text-black/64">
                       {product.category} / {product.color}
                     </p>
                   </div>
-                  <span>${product.price}</span>
+                  <span className="text-[14px] font-medium">${product.price}</span>
                 </div>
               </Link>
             ))}

@@ -154,22 +154,7 @@ function AboutExpansion() {
   return (
     <section className="mobile-about-expansion border-b border-black/18 bg-[#deded7] px-5 py-12 lg:px-12 lg:py-16">
       <div className="mx-auto grid max-w-[1560px] gap-8 lg:grid-cols-[0.9fr_1.1fr]">
-        <div className="border-y border-black/16 py-7">
-          <p className="text-[9px] uppercase tracking-[0.18em] text-black/54">
-            A. Approach
-          </p>
-          <h2 className="controlled-display-title mt-8 max-w-[560px] text-[50px] uppercase text-black/94 sm:text-[70px] lg:text-[86px]">
-            Washed black,
-            <br />
-            cut for daily wear.
-          </h2>
-          <p className="mt-9 max-w-[540px] text-[11px] uppercase leading-[1.82] tracking-[0.15em] text-black/66">
-            Spring 2026 is built around small runs, soft structure and a
-            reduced palette of black, charcoal, concrete and wool tones.
-          </p>
-        </div>
-
-        <div className="mobile-about-uniform grid gap-4 lg:grid-cols-[0.75fr_1fr]">
+        <div className="mobile-about-uniform grid gap-4 lg:col-span-2 lg:grid-cols-[0.75fr_1fr]">
           <div className="relative min-h-[420px] overflow-hidden border border-black/14 bg-[#151413]">
             <Image
               alt="LOW SIGNAL model in washed black clothing"

@@ -73,7 +73,6 @@ export default async function ProductPage({ params }: ProductPageProps) {
     },
     ...detailImages
       .filter((image) => image.src !== product.image)
-      .slice(0, 2)
       .map((image) => ({
         alt: image.alt,
         src: image.src,
@@ -86,7 +85,10 @@ export default async function ProductPage({ params }: ProductPageProps) {
       alt: "LOW SIGNAL material detail",
       src: "/images/low-signal/journal/fabric-detail.jpg",
     },
-  ].slice(0, 3);
+  ].filter(
+    (image, index, images) =>
+      images.findIndex((candidate) => candidate.src === image.src) === index,
+  );
   const relatedProduct = await getRelatedProduct(product);
   const structuredData = [
     {
@@ -160,7 +162,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
 
         <div className="mobile-product-information flex flex-col justify-between border-black/16 pt-10 lg:border-t-0 lg:bg-[#ddddd6] lg:px-12 lg:py-12 xl:px-16">
           <div>
-            <nav aria-label="Product breadcrumb" className="flex items-center justify-between border-b border-black/16 pb-6 text-[9px] uppercase tracking-[0.14em] text-black/64">
+            <nav aria-label="Product breadcrumb" className="flex items-center justify-between border-b border-black/16 pb-5 text-[10px] uppercase tracking-[0.08em] text-black/68">
               <Link className="border-b border-black/30 pb-1" href="/collections">
                 Collections / Spring 2026
               </Link>
@@ -173,9 +175,9 @@ export default async function ProductPage({ params }: ProductPageProps) {
               <h1 className="product-display-title max-w-[600px] text-[44px] text-black/94 sm:text-[62px] lg:text-[76px]">
                 {product.name}
               </h1>
-              <div className="mt-9 grid gap-4 text-[10px] uppercase tracking-[0.18em] sm:grid-cols-[1fr_auto] sm:items-end">
-                <span>${product.price}</span>
-                <div className="grid gap-2 text-left text-black/62 sm:text-right">
+              <div className="mt-7 grid gap-4 text-[14px] uppercase tracking-[0.05em] sm:grid-cols-[1fr_auto] sm:items-end">
+                <span className="font-medium">${product.price}</span>
+                <div className="grid gap-2 text-left text-[12px] text-black/72 sm:text-right">
                   <span>{product.color ?? "Washed Black"}</span>
                   <span>{product.materials}</span>
                 </div>
@@ -183,7 +185,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
             </div>
 
             <div className="border-b border-black/16 py-7">
-              <p className="max-w-[460px] text-[10px] uppercase leading-[1.8] tracking-[0.14em] text-black/66">
+              <p className="max-w-[520px] text-[14px] uppercase leading-[1.55] tracking-[0.06em] text-black/74 lg:text-[13px]">
                 {product.description}
               </p>
             </div>
@@ -191,24 +193,21 @@ export default async function ProductPage({ params }: ProductPageProps) {
             <ProductPurchasePanel product={product} />
 
             <div className="divide-y divide-black/16 border-b border-black/16">
-              <details className="group py-6 text-[9px] uppercase leading-[1.75] tracking-[0.15em] text-black/58">
-                <summary className="flex cursor-pointer list-none items-center justify-between text-black">
-                  <span>Details</span>
+              <details className="group py-6 text-[13px] uppercase leading-[1.55] tracking-[0.06em] text-black/70">
+                <summary className="flex min-h-11 cursor-pointer list-none items-center justify-between text-[12px] text-black">
+                  <span>Material & Care</span>
                   <span className="transition-transform duration-300 group-open:rotate-45">
                     +
                   </span>
                 </summary>
                 <div className="mt-5 grid max-w-[520px] gap-4">
                   <p>{product.materials}</p>
-                  <p>
-                    A quiet everyday shape with room for layering and a washed
-                    surface that softens through wear.
-                  </p>
+                  <p>A quiet everyday shape with room for layering and a washed surface that softens through wear. Wash cold and dry naturally.</p>
                 </div>
               </details>
 
-              <details className="group py-6 text-[9px] uppercase leading-[1.75] tracking-[0.15em] text-black/58">
-                <summary className="flex cursor-pointer list-none items-center justify-between text-black">
+              <details className="group py-6 text-[13px] uppercase leading-[1.55] tracking-[0.06em] text-black/70">
+                <summary className="flex min-h-11 cursor-pointer list-none items-center justify-between text-[12px] text-black">
                   <span>Shipping & Returns</span>
                   <span className="transition-transform duration-300 group-open:rotate-45">
                     +
