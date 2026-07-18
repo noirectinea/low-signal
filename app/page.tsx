@@ -130,59 +130,45 @@ function EditorialGrid() {
   return (
     <section className="mobile-home-editorial border-b border-black/20">
       <div className="mobile-editorial-composition lg:hidden">
-        <Link className="mobile-spring-feature group block border-b border-black/18 bg-[#e8e9e3]" href="/collections">
-          <div className="mobile-spring-heading grid grid-cols-[56px_minmax(0,1fr)] border-b border-black/18">
-            <div className="flex justify-center border-r border-black/16 pt-7">
-              <Kicker number="02" />
+        <div className="mobile-editorial-index grid grid-cols-[58%_42%] bg-[#e8e9e3]">
+          <Link className="group grid min-w-0 grid-rows-[auto_1fr_auto] border-r border-black/18 p-4" href="/collections">
+            <div className="flex items-center justify-between text-[9px] uppercase tracking-[0.14em]">
+              <span>02</span>
+              <span>Spring 2026</span>
             </div>
-            <div className="grid min-w-0 grid-cols-[auto_1fr] items-start gap-5 px-5 py-7">
-              <p className="text-[12px] uppercase tracking-[0.15em]">Spring 2026</p>
-              <p className="max-w-[190px] justify-self-end text-[8px] uppercase leading-[1.65] tracking-[0.14em] text-black/52">
-                Restraint, quiet structure, and small interruptions.
-              </p>
+            <div className="relative mt-4 min-h-0 overflow-hidden bg-[#c9cac4]">
+              <Image
+                src={collectionImage}
+                alt="LOW SIGNAL collection preview"
+                fill
+                sizes="58vw"
+                className="editorial-image object-cover object-[48%_20%] transition-transform duration-700 group-hover:scale-[1.012]"
+              />
             </div>
-          </div>
-
-          <div className="mobile-spring-image relative ml-14 overflow-hidden bg-[#c9cac4]">
-            <Image
-              src={collectionImage}
-              alt="LOW SIGNAL collection preview"
-              fill
-              sizes="(min-width: 768px) calc(100vw - 90px), calc(100vw - 56px)"
-              className="editorial-image object-cover object-[48%_20%] transition-transform duration-700 group-hover:scale-[1.012]"
-            />
-            <span className="absolute left-4 top-4 text-[8px] uppercase tracking-[0.16em] text-white/72">
-              Current collection / 01
-            </span>
-          </div>
-
-          <div className="mobile-spring-footer ml-14 grid min-h-[84px] grid-cols-[1fr_auto] items-center gap-5 border-t border-black/18 px-5">
-            <p className="max-w-[180px] text-[8px] uppercase leading-[1.6] tracking-[0.14em] text-black/50">
-              Washed layers / daily repeat
-            </p>
-            <span className="flex min-h-11 items-center border-b border-black/60 text-[9px] uppercase tracking-[0.14em]">
+            <span className="mt-4 flex min-h-11 items-center border-b border-black/50 text-[9px] uppercase tracking-[0.12em]">
               View collection →
             </span>
-          </div>
-        </Link>
+          </Link>
 
-        <Link className="mobile-lookbook-feature group grid min-h-[280px] grid-cols-[66%_34%] bg-[#ebece6]" href="/lookbook">
-          <div className="relative min-w-0 overflow-hidden border-r border-black/18">
+          <Link className="group grid min-w-0 grid-rows-[auto_1fr_auto] px-3 pb-4 pt-16" href="/lookbook">
+            <div className="flex items-center justify-between text-[9px] uppercase tracking-[0.14em]">
+              <span>03</span>
+              <span>Lookbook</span>
+            </div>
+            <div className="relative mt-4 min-h-0 overflow-hidden bg-[#c9cac4]">
               <Image
                 src={lookbookImage}
                 alt="LOW SIGNAL lookbook photograph"
                 fill
-                sizes="66vw"
+                sizes="42vw"
                 className="editorial-image object-cover object-[50%_54%] transition-transform duration-700 group-hover:scale-[1.012]"
               />
-          </div>
-          <div className="flex min-w-0 flex-col px-4 py-6 text-[9px] uppercase tracking-[0.15em]">
-            <div className="flex items-center gap-3"><span>03</span><span className="h-px flex-1 bg-black/26" /></div>
-            <p className="mt-6 text-[11px]">Lookbook</p>
-            <p className="mt-4 text-[8px] leading-[1.6] text-black/52">Coastal light / issue 01</p>
-            <span className="mt-auto flex min-h-11 items-center border-b border-black/60 text-[9px]">View lookbook →</span>
-          </div>
-        </Link>
+            </div>
+            <span className="mt-4 flex min-h-11 items-center border-b border-black/50 text-[9px] uppercase tracking-[0.1em]">
+              View lookbook →
+            </span>
+          </Link>
+        </div>
       </div>
 
       <div className="hidden h-full grid-cols-[32.5vw_24vw_1fr] lg:grid">

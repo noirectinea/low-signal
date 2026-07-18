@@ -1,75 +1,29 @@
 import { expect, test } from "@playwright/test";
 
-test("selected garments loops in both directions without empty rail space", async ({
-  page,
-}) => {
+test("selected garments is a static desktop composition", async ({ page }) => {
   await page.setViewportSize({ height: 900, width: 1440 });
   await page.goto("/");
 
   const section = page.locator("#selected-pieces");
-  const counter = section.getByTestId("selected-counter");
-  const previous = section.getByRole("button", {
-    name: "Previous selected garment",
-  });
-  const next = section.getByRole("button", {
-    name: "Next selected garment",
-  });
-
-  await expect(counter).toHaveText("01 / 06");
-  await previous.click();
-  await expect(counter).toHaveText("06 / 06");
-  await next.click();
-  await expect(counter).toHaveText("01 / 06");
-
-  for (let index = 0; index < 8; index += 1) {
-    await next.click();
-    await page.waitForTimeout(260);
-    const visibleCards = await section.locator(".selected-rail").evaluate((rail) => {
-      const railRect = rail.getBoundingClientRect();
-      return Array.from(
-        rail.querySelectorAll<HTMLElement>("[data-rail-position]"),
-      ).filter((card) => {
-        const rect = card.getBoundingClientRect();
-        return rect.right > railRect.left && rect.left < railRect.right;
-      }).length;
-    });
-    expect(visibleCards).toBeGreaterThanOrEqual(3);
-  }
-
-  await section.locator(".selected-rail").focus();
-  await page.keyboard.press("ArrowLeft");
-  await expect(counter).toHaveText(/\d{2} \/ 06/);
+  await expect(section.getByLabel("Shop selected garments")).toBeVisible();
+  await expect(section.locator("article")).toHaveCount(4);
+  await expect(section.getByRole("link", { name: "View all 6 →" })).toBeVisible();
+  await expect(section.getByText("View product")).toHaveCount(0);
+  await expect(section.locator(".selected-rail")).toHaveCount(0);
 });
 
-test("selected garments wraps after a mobile swipe-sized scroll", async ({ page }) => {
+test("selected garments uses a compact two-column mobile grid", async ({ page }) => {
   await page.setViewportSize({ height: 844, width: 390 });
   await page.goto("/");
 
   const section = page.locator("#selected-pieces");
-  const rail = section.locator(".selected-rail");
-  const counter = section.getByTestId("selected-counter");
-  await expect(counter).toHaveText("01 / 06");
-  await rail.scrollIntoViewIfNeeded();
-
-  await rail.evaluate((element) => {
-    const card = element.querySelector<HTMLElement>("[data-rail-position]");
-    element.scrollBy({
-      behavior: "auto",
-      left: -(card?.offsetWidth ?? 280) - 14,
-    });
-  });
-
-  await expect(counter).toHaveText("06 / 06");
-  const visibleCards = await rail.evaluate((element) => {
-    const railRect = element.getBoundingClientRect();
-    return Array.from(
-      element.querySelectorAll<HTMLElement>("[data-rail-position]"),
-    ).filter((card) => {
-      const rect = card.getBoundingClientRect();
-      return rect.right > railRect.left && rect.left < railRect.right;
-    }).length;
-  });
-  expect(visibleCards).toBeGreaterThanOrEqual(2);
+  await expect(section.getByLabel("Shop selected garments")).toBeHidden();
+  await expect(section.locator("article")).toHaveCount(4);
+  await expect(section.getByRole("link", { name: "Men", exact: true })).toBeVisible();
+  await expect(section.getByRole("link", { name: "Women", exact: true })).toBeVisible();
+  await expect(section.getByRole("button", { name: /Add Field Jacket/ })).toHaveText(
+    "Add +",
+  );
 });
 
 test("material rows update the image, caption, and garment link", async ({
@@ -80,7 +34,7 @@ test("material rows update the image, caption, and garment link", async ({
   const image = section.getByRole("img");
 
   await section.getByRole("button", { name: "Dry wool" }).click();
-  await expect(image).toHaveAttribute("alt", "Dry wool garment detail");
+  await expect(image).toHaveAttribute("alt", "Dry wool material detail");
   await expect(section.getByText(/Dense warmth with a matte surface/)).toBeVisible();
   await expect(section.getByRole("link", { name: "View garments →" })).toHaveAttribute(
     "href",
@@ -88,7 +42,25 @@ test("material rows update the image, caption, and garment link", async ({
   );
 
   await section.getByRole("button", { name: "Worn nylon" }).focus();
-  await expect(image).toHaveAttribute("alt", "Worn nylon garment detail");
+  await expect(image).toHaveAttribute("alt", "Worn nylon material detail");
+});
+
+test("catalog Add + chooses a size inline and confirms the addition", async ({
+  page,
+}) => {
+  await page.goto("/collections/men");
+  const add = page.getByRole("button", {
+    name: /Add Field Jacket; choose a size/,
+  });
+
+  await expect(add).toHaveText("Add +");
+  await add.click();
+  await expect(
+    page.getByLabel("Choose a size for Field Jacket"),
+  ).toBeVisible();
+  await page.getByRole("button", { name: "Add size M" }).first().click();
+  await expect(add).toHaveText("Added");
+  await expect(page).toHaveURL(/\/collections\/men/);
 });
 
 test("catalog toolbar sorts, filters, switches categories, and persists view", async ({

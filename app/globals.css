@@ -1158,3 +1158,197 @@ a {
     display: none;
   }
 }
+
+/* Final product polish: compact phone compositions and utility hierarchy. */
+.mobile-menu-lower {
+  margin-top: auto;
+}
+
+.mobile-menu-utility,
+.mobile-menu-legal {
+  display: grid;
+  text-transform: uppercase;
+}
+
+.mobile-menu-utility {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.mobile-menu-utility a {
+  display: flex;
+  min-height: 44px;
+  align-items: center;
+  border-right: 1px solid rgb(0 0 0 / 0.12);
+}
+
+.mobile-menu-utility a:last-child {
+  border-right: 0;
+}
+
+.mobile-menu-legal {
+  grid-template-columns: 1fr 1fr auto;
+  align-items: center;
+  min-height: 42px;
+  font-size: 8px;
+  letter-spacing: 0.1em;
+  color: rgb(18 18 17 / 0.48);
+}
+
+@media (max-width: 767.98px) {
+  .mobile-editorial-index {
+    height: clamp(560px, 74svh, 620px);
+  }
+
+  .mobile-selected-editorial .selected-garments-section {
+    overflow: visible;
+  }
+
+  .mobile-selected-editorial header {
+    margin-bottom: 20px;
+  }
+
+  .mobile-selected-editorial article {
+    color: #ecece5;
+  }
+
+  .mobile-material-story > div {
+    height: 600px;
+    grid-template-rows: 282px 318px;
+  }
+
+  .mobile-material-copy {
+    padding: 24px 20px;
+  }
+
+  .mobile-material-image-column {
+    padding: 18px 20px;
+  }
+
+  .mobile-collections-hero {
+    min-height: calc(100svh - 64px);
+    align-content: start;
+    padding-bottom: 24px;
+    padding-top: 88px;
+  }
+
+  .mobile-collections-intro {
+    width: 100%;
+    padding-bottom: 16px;
+  }
+
+  .mobile-collections-intro h1 {
+    font-size: clamp(3.65rem, 17vw, 4.4rem);
+    line-height: 0.8;
+  }
+
+  .mobile-collection-entries {
+    padding-top: 8px;
+  }
+
+  .mobile-collection-entry {
+    padding-block: 0;
+  }
+
+  .mobile-collection-entry > a > div:first-child {
+    aspect-ratio: 4 / 5;
+  }
+
+  .mobile-collection-entry > a > div:last-child {
+    min-height: 126px;
+    padding-block: 14px 12px;
+  }
+
+  .mobile-collection-entry h2 {
+    font-size: clamp(1.7rem, 8vw, 2.15rem);
+  }
+
+  .mobile-menu-panel {
+    display: grid;
+    grid-template-rows: auto minmax(0, 1fr) auto;
+  }
+
+  .mobile-menu-meta {
+    min-height: 40px;
+  }
+
+  .mobile-menu-composition {
+    align-self: start;
+  }
+
+  .mobile-menu-primary-link {
+    min-height: clamp(46px, 7dvh, 56px);
+  }
+
+  .mobile-menu-label {
+    font-size: clamp(17px, 5vw, 21px);
+    font-weight: 400;
+  }
+
+  .mobile-menu-lower {
+    align-self: end;
+    border-top: 1px solid rgb(0 0 0 / 0.16);
+    background: #dfe0da;
+  }
+
+  .mobile-menu-utility,
+  .mobile-menu-secondary,
+  .mobile-menu-legal {
+    padding-inline: 16px;
+  }
+
+  .mobile-menu-utility {
+    font-size: 10px;
+    letter-spacing: 0.07em;
+  }
+
+  .mobile-menu-utility a {
+    justify-content: center;
+  }
+
+  .mobile-menu-utility a:first-child {
+    justify-content: flex-start;
+  }
+
+  .mobile-menu-utility a:last-child {
+    justify-content: flex-end;
+  }
+
+  .mobile-menu-secondary {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    padding-block: 0;
+    font-size: 10px;
+  }
+
+  .mobile-menu-secondary a {
+    min-height: 40px;
+  }
+
+  .mobile-menu-secondary a:nth-child(odd) {
+    border-right: 1px solid rgb(0 0 0 / 0.12);
+  }
+
+  .mobile-menu-secondary a:nth-child(even) {
+    padding-left: 16px;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 1023.98px) {
+  .mobile-menu-lower {
+    display: grid;
+    align-content: start;
+  }
+
+  .mobile-menu-utility,
+  .mobile-menu-secondary,
+  .mobile-menu-legal {
+    padding-inline: 20px;
+  }
+
+  .mobile-menu-utility {
+    font-size: 10px;
+  }
+
+  .mobile-menu-secondary {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}

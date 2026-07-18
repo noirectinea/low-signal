@@ -4,19 +4,13 @@ import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { MobileHomeHeader } from "@/components/MobileHomeHeader";
+import { ProductAddAction } from "@/components/ProductAddAction";
 import { SiteFooter } from "@/components/SiteFooter";
 import {
-  type CartItem,
   type Product,
   type ProductGender,
   type ProductSize,
 } from "@/data/products";
-import { getAvailabilityState } from "@/lib/availability";
-import {
-  addProductToCart,
-  changeCartQuantity as updateCartQuantity,
-  useCart,
-} from "@/lib/cart-store";
 import { trackEcommerce } from "@/lib/analytics";
 
 const categories = ["Outerwear", "Shirts", "Knitwear", "Trousers"] as const;
@@ -70,7 +64,6 @@ export function CollectionShoppingPage({
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [urlStateReady, setUrlStateReady] = useState(false);
   const panelRef = useRef<HTMLDivElement>(null);
-  const { items: cartItems } = useCart();
   const genderLabel = gender.toUpperCase();
   const filterCount = Object.values(advancedFilters).filter(
     (value) => value !== "all",
@@ -223,27 +216,6 @@ export function CollectionShoppingPage({
     window.localStorage.setItem(viewStorageKey, nextView);
   }
 
-  function addToCart(product: Product, size: string) {
-    const selectedSize = getProductSizeOptions(product).find(
-      (option) => option.label === size,
-    );
-    addProductToCart({ product, size, sizeOption: selectedSize });
-    trackEcommerce("add_to_cart", {
-      currency: "USD",
-      item_id: product.id,
-      item_name: product.name,
-      size,
-      value: product.price,
-    });
-  }
-
-  function changeCartQuantity(product: Product, size: string, delta: number) {
-    const selectedStock =
-      getProductSizeOptions(product).find((option) => option.label === size)
-        ?.stock ?? 1;
-    updateCartQuantity(getCartItemId(product, size), delta, selectedStock);
-  }
-
   return (
     <main className="min-h-screen bg-[#e5e6e1] text-[#121211]">
       <MobileHomeHeader mode="paper" />
@@ -287,14 +259,11 @@ export function CollectionShoppingPage({
         ) : null}
 
         <ProductCollection
-          cartItems={cartItems}
           gender={gender}
-          onAdd={addToCart}
           onClear={() => {
             setActiveCategory("all");
             setAdvancedFilters(emptyFilters);
           }}
-          onQuantity={changeCartQuantity}
           products={visibleProducts}
           viewMode={viewMode}
         />
@@ -625,19 +594,13 @@ function FilterGroup<Value extends string>({
 }
 
 function ProductCollection({
-  cartItems,
   gender,
-  onAdd,
   onClear,
-  onQuantity,
   products,
   viewMode,
 }: Readonly<{
-  cartItems: CartItem[];
   gender: ProductGender;
-  onAdd: (product: Product, size: string) => void;
   onClear: () => void;
-  onQuantity: (product: Product, size: string, delta: number) => void;
   products: Product[];
   viewMode: ViewMode;
 }>) {
@@ -663,11 +626,8 @@ function ProductCollection({
     >
       {products.map((product, index) => (
         <ProductCard
-          cartItems={cartItems}
           index={index}
           key={product.id}
-          onAdd={onAdd}
-          onQuantity={onQuantity}
           product={product}
           viewMode={viewMode}
         />
@@ -677,46 +637,15 @@ function ProductCollection({
 }
 
 function ProductCard({
-  cartItems,
   index,
-  onAdd,
-  onQuantity,
   product,
   viewMode,
 }: Readonly<{
-  cartItems: CartItem[];
   index: number;
-  onAdd: (product: Product, size: string) => void;
-  onQuantity: (product: Product, size: string, delta: number) => void;
   product: Product;
   viewMode: ViewMode;
 }>) {
-  const sizeOptions = getProductSizeOptions(product);
-  const firstAvailableSize =
-    product.size ??
-    sizeOptions.find((option) => option.stock > 0)?.label ??
-    sizeOptions[0]?.label ??
-    "M";
-  const [isSizePickerOpen, setIsSizePickerOpen] = useState(false);
-  const [selectedSize, setSelectedSize] = useState(firstAvailableSize);
-  const productCartItems = cartItems.filter((item) =>
-    item.id.startsWith(`${product.id}-`),
-  );
-  const cartItem =
-    cartItems.find(
-      (item) => item.id === getCartItemId(product, selectedSize),
-    ) ?? productCartItems[0];
-  const activeSize = cartItem?.size ?? selectedSize;
-  const selectedStock =
-    sizeOptions.find((option) => option.label === activeSize)?.stock ?? 0;
-  const isSoldOut = getAvailabilityState(getTotalStock(product)) === "sold_out";
   const isList = viewMode === "list";
-
-  function addSelectedSize(size: string) {
-    setSelectedSize(size);
-    onAdd(product, size);
-    setIsSizePickerOpen(false);
-  }
 
   return (
     <article
@@ -781,56 +710,7 @@ function ProductCard({
           isList ? "self-center" : "absolute bottom-4 right-0"
         }`}
       >
-        {cartItem ? (
-          <div className="flex items-center border-b border-black/24 text-[10px]">
-            <button
-              aria-label={`Remove one ${product.name}`}
-              className="min-h-11 min-w-9"
-              onClick={() => onQuantity(product, activeSize, -1)}
-              type="button"
-            >
-              −
-            </button>
-            <span>{cartItem.quantity}</span>
-            <button
-              aria-label={`Add one ${product.name}`}
-              className="min-h-11 min-w-9 disabled:opacity-30"
-              disabled={cartItem.quantity >= selectedStock}
-              onClick={() => onQuantity(product, activeSize, 1)}
-              type="button"
-            >
-              +
-            </button>
-          </div>
-        ) : (
-          <button
-            aria-label={`Quick add ${product.name}; choose a size`}
-            className="min-h-11 whitespace-nowrap border-b border-black/36 text-[9px] uppercase tracking-[0.06em] text-black/70 disabled:opacity-30 sm:text-[10px]"
-            disabled={isSoldOut}
-            onClick={() => setIsSizePickerOpen((open) => !open)}
-            type="button"
-          >
-            {isSoldOut ? "Sold out" : isList ? "Quick add +" : "Add / size +"}
-          </button>
-        )}
-
-        {isSizePickerOpen && !cartItem ? (
-          <div className="absolute bottom-12 right-0 z-30 w-[220px] border border-black/18 bg-[#e5e6e1] p-3 text-[10px] uppercase tracking-[0.07em]">
-            <div className="grid grid-cols-5 gap-px bg-black/14">
-              {sizeOptions.map((size) => (
-                <button
-                  className="min-h-11 bg-[#dedfd9] disabled:text-black/24"
-                  disabled={size.stock <= 0}
-                  key={size.label}
-                  onClick={() => addSelectedSize(size.label)}
-                  type="button"
-                >
-                  {size.label}
-                </button>
-              ))}
-            </div>
-          </div>
-        ) : null}
+        <ProductAddAction product={product} />
       </div>
     </article>
   );
@@ -924,8 +804,4 @@ function getTotalStock(product: Product) {
     (total, size) => total + size.stock,
     0,
   );
-}
-
-function getCartItemId(product: Product, size: string) {
-  return `${product.id}-${size.toLowerCase()}`;
 }

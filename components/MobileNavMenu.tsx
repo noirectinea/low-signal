@@ -3,7 +3,6 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
-import { AccountHeaderLink } from "./AccountHeaderLink";
 import { CartCountLink } from "./CartCountLink";
 
 const links = [
@@ -91,7 +90,7 @@ export function MobileNavMenu({
         <div
           aria-label="Site menu"
           aria-modal="true"
-          className="mobile-menu-panel fixed inset-x-0 bottom-0 top-16 z-[70] overflow-y-auto border-b border-current bg-[#e4e5df] text-[#121211]"
+          className="mobile-menu-panel fixed inset-x-0 bottom-0 top-16 z-[70] h-[calc(100dvh-4rem)] overflow-hidden border-b border-current bg-[#e4e5df] text-[#121211]"
           id="mobile-site-menu"
           role="dialog"
           onPointerDown={(event) => {
@@ -123,10 +122,12 @@ export function MobileNavMenu({
           </div>
 
           <div className="mobile-menu-lower">
-            <nav aria-label="Secondary navigation" className="mobile-menu-secondary">
+            <nav aria-label="Utility navigation" className="mobile-menu-utility">
               <Link href="/search" onClick={() => setOpen(false)}>Search</Link>
-              <AccountHeaderLink onClick={() => setOpen(false)} />
+              <Link href="/account" onClick={() => setOpen(false)}>Account</Link>
               <CartCountLink onClick={() => setOpen(false)} />
+            </nav>
+            <nav aria-label="Service navigation" className="mobile-menu-secondary">
               <Link href="/shipping" onClick={() => setOpen(false)}>Shipping</Link>
               <Link href="/returns" onClick={() => setOpen(false)}>Returns</Link>
               <Link href="/contact" onClick={() => setOpen(false)}>Contact</Link>
@@ -138,6 +139,11 @@ export function MobileNavMenu({
                 Instagram ↗
               </a>
             </nav>
+            <div className="mobile-menu-legal">
+              <Link href="/privacy" onClick={() => setOpen(false)}>Privacy</Link>
+              <Link href="/terms" onClick={() => setOpen(false)}>Terms</Link>
+              <span>© 2026</span>
+            </div>
           </div>
         </div>
       ) : null}

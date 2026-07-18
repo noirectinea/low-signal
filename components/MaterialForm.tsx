@@ -8,28 +8,28 @@ const materials = [
   {
     caption: "Softens through wash while holding a quiet, dry structure.",
     href: "/collections/men?material=cotton",
-    image: "/images/low-signal/selected-collection/shirts.jpg",
+    image: "/images/low-signal/lookbook-campaign/material-hardware-label.png",
     name: "Washed cotton",
-    position: "object-[50%_46%]",
+    position: "object-[50%_50%]",
   },
   {
     caption: "Dense warmth with a matte surface and restrained drape.",
     href: "/collections/women?material=wool",
-    image: "/images/low-signal/collections/women-soft-wool-pullover-sleeve.png",
+    image: "/images/low-signal/lookbook-campaign/material-rib-knit.png",
     name: "Dry wool",
     position: "object-[50%_48%]",
   },
   {
     caption: "Firm utility cloth that records wear without losing shape.",
     href: "/collections/men?material=canvas",
-    image: "/images/low-signal/selected-garments-detail.jpg",
+    image: "/images/low-signal/selected-collection/material-form-original.png",
     name: "Raw canvas",
     position: "object-[50%_52%]",
   },
   {
     caption: "Light protection with a softened finish and low sheen.",
     href: "/collections/women?material=nylon",
-    image: "/images/low-signal/collections/women-storm-parka-full-body.png",
+    image: "/images/low-signal/selected-collection/material-detail.png",
     name: "Worn nylon",
     position: "object-[50%_48%]",
   },
@@ -50,7 +50,7 @@ export function MaterialForm() {
             05 / Material & Form
           </p>
           <h2
-            className="mt-6 max-w-[360px] text-[18px] uppercase leading-[1.28] tracking-[0.11em] lg:mt-8 lg:text-[22px]"
+            className="mt-5 max-w-[360px] text-[17px] font-normal uppercase leading-[1.28] tracking-[0.1em] lg:mt-8 lg:text-[22px]"
             id="material-form-title"
           >
             Materials that age quietly and take on character over time.
@@ -58,12 +58,12 @@ export function MaterialForm() {
 
           <div
             aria-label="Material selection"
-            className="material-selector mt-7 border-y border-black/18 lg:mt-9"
+            className="material-selector mt-6 grid grid-cols-2 border-y border-black/18 lg:mt-9 lg:block"
           >
             {materials.map((material, index) => (
               <button
                 aria-pressed={activeIndex === index}
-                className="material-selector-row group flex min-h-12 w-full items-center justify-between border-b border-black/12 text-left text-[11px] font-normal uppercase tracking-[0.08em] last:border-b-0"
+                className="material-selector-row group flex min-h-12 w-full items-center justify-between border-b border-black/12 px-2 text-left text-[10px] font-normal uppercase tracking-[0.07em] odd:border-r lg:px-0 lg:text-[11px] lg:odd:border-r-0 lg:last:border-b-0"
                 key={material.name}
                 onClick={() => setActiveIndex(index)}
                 onFocus={() => setActiveIndex(index)}
@@ -90,11 +90,11 @@ export function MaterialForm() {
           </div>
         </div>
 
-        <div className="mobile-material-image-column grid content-center px-5 py-7 lg:px-[5vw] lg:py-10">
+        <div className="mobile-material-image-column grid content-center px-5 py-5 lg:px-[5vw] lg:py-10">
           <div className="grid gap-4">
-            <div className="mobile-material-image relative aspect-[16/10] min-h-0 overflow-hidden border border-black/14 bg-[#bfc0b8] lg:aspect-[2/1]">
+            <div className="mobile-material-image relative aspect-[16/9] min-h-0 overflow-hidden border border-black/14 bg-[#bfc0b8] lg:aspect-[2/1]">
               <Image
-                alt={`${activeMaterial.name} garment detail`}
+                alt={`${activeMaterial.name} material detail`}
                 className={`editorial-image object-cover brightness-[0.78] contrast-[1.06] saturate-[0.62] transition-opacity duration-300 ${activeMaterial.position}`}
                 fill
                 key={activeMaterial.image}

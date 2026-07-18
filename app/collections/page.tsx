@@ -52,26 +52,18 @@ export default function CollectionsPage() {
 
       <section className="mobile-collections-hero mx-auto grid min-h-[88svh] w-full max-w-[1680px] px-5 pb-12 pt-[96px] sm:px-6 lg:grid-cols-[minmax(320px,480px)_1fr] lg:gap-14 lg:px-12 lg:pb-14 lg:pt-[112px] xl:gap-20 xl:px-14">
         <header className="mobile-collections-intro border-b border-black/16 pb-10 lg:border-b-0 lg:pb-0">
-          <p className="text-[9px] uppercase tracking-[0.22em] text-black/48">
-            05 — Collection / LOW SIGNAL
-          </p>
-
-          <h1 className="controlled-display-title mt-8 max-w-[600px] text-[58px] text-black/94 sm:text-[76px] lg:text-[88px] xl:text-[98px]">
+          <h1 className="controlled-display-title max-w-[600px] text-[58px] text-black/94 sm:text-[76px] lg:text-[88px] xl:text-[98px]">
             <span className="block">SPRING</span>
             <span className="mt-1 block text-black/90 [font-feature-settings:'tnum']">
               2026
             </span>
           </h1>
 
-          <p className="mt-8 max-w-[430px] text-[11px] uppercase leading-[1.82] tracking-[0.17em] text-black/60">
+          <p className="mt-8 hidden max-w-[430px] text-[11px] uppercase leading-[1.82] tracking-[0.17em] text-black/60 lg:block">
             Dark neutral clothing, cut for daily repeat. Washed fabrics, quiet
             volume, and pieces that move with you.
           </p>
 
-          <div className="mt-10 flex items-center gap-4 border-y border-black/16 py-5 text-[9px] uppercase tracking-[0.18em] text-black/54">
-            <span className="h-px w-8 bg-black/30" />
-            <span>Spring 2026 is divided into two rails.</span>
-          </div>
         </header>
 
         <div className="mobile-collection-entries grid content-end gap-5 pt-7 sm:grid-cols-2 lg:pt-0">
@@ -85,7 +77,7 @@ export default function CollectionsPage() {
           ))}
         </div>
       </section>
-      <section className="mobile-collection-notes mx-auto grid max-w-[1680px] gap-6 border-t border-black/16 px-5 py-10 sm:px-6 lg:grid-cols-[minmax(280px,420px)_1fr] lg:px-12 lg:py-12 xl:px-14">
+      <section className="mobile-collection-notes mx-auto hidden max-w-[1680px] gap-6 border-t border-black/16 px-5 py-10 sm:px-6 lg:grid lg:grid-cols-[minmax(280px,420px)_1fr] lg:px-12 lg:py-12 xl:px-14">
         <div className="grid content-between gap-8 border-b border-black/14 pb-7 lg:border-b-0 lg:border-r lg:pb-0 lg:pr-10">
           <div>
             <p className="text-[9px] uppercase tracking-[0.18em] text-black/54">
@@ -172,9 +164,6 @@ function CollectionEntryCard({
             sizes="(min-width: 1024px) 34vw, (min-width: 640px) 45vw, 92vw"
             src={leadImage.src}
           />
-          <span className="absolute left-4 top-4 text-[9px] uppercase tracking-[0.18em] text-[#f2f3ee]/90 mix-blend-difference">
-            {String(products.length).padStart(2, "0")} items
-          </span>
         </div>
 
         <div className="grid grid-cols-[1fr_auto] items-end gap-4 border-b border-black/14 pb-5 pt-5 uppercase">
@@ -182,13 +171,13 @@ function CollectionEntryCard({
             <h2 className="fashion-rail-title text-[42px] text-black/94 sm:text-[50px] lg:text-[58px]">
               {label}
             </h2>
-            <p className="mt-4 text-[9px] tracking-[0.18em] text-black/50">
-              {String(products.length).padStart(2, "0")} products / Spring 2026
+            <p className="mt-3 text-[9px] tracking-[0.18em] text-black/50">
+              {String(products.length).padStart(2, "0")} pieces
             </p>
           </div>
 
           <span className="mb-1 border-b border-black/58 pb-1 text-[9px] tracking-[0.18em] text-black transition-opacity duration-300 group-hover:opacity-55">
-            SHOP {label} →
+            Shop →
           </span>
         </div>
       </Link>
