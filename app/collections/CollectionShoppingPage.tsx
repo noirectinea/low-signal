@@ -21,64 +21,38 @@ import { trackEcommerce } from "@/lib/analytics";
 
 const categories = ["Outerwear", "Shirts", "Knitwear", "Trousers"] as const;
 const materialOptions = [
-  {
-    key: "cotton",
-    label: "Cotton",
-    terms: ["cotton"],
-  },
-  {
-    key: "wool",
-    label: "Wool",
-    terms: ["wool"],
-  },
-  {
-    key: "canvas",
-    label: "Canvas",
-    terms: ["canvas"],
-  },
-  {
-    key: "nylon",
-    label: "Nylon",
-    terms: ["nylon"],
-  },
-  {
-    key: "twill",
-    label: "Twill",
-    terms: ["twill"],
-  },
+  { key: "cotton", label: "Cotton", terms: ["cotton"] },
+  { key: "wool", label: "Wool", terms: ["wool"] },
+  { key: "canvas", label: "Canvas", terms: ["canvas"] },
+  { key: "nylon", label: "Nylon", terms: ["nylon"] },
+  { key: "twill", label: "Twill", terms: ["twill"] },
 ] as const;
 const priceOptions = [
-  {
-    key: "under-150",
-    label: "Under $150",
-    max: 149,
-    min: 0,
-  },
-  {
-    key: "150-199",
-    label: "$150 - $199",
-    max: 199,
-    min: 150,
-  },
-  {
-    key: "200-plus",
-    label: "$200+",
-    max: Infinity,
-    min: 200,
-  },
+  { key: "under-150", label: "Under $150", max: 149, min: 0 },
+  { key: "150-199", label: "$150 – $199", max: 199, min: 150 },
+  { key: "200-plus", label: "$200+", max: Infinity, min: 200 },
 ] as const;
 const sizeOrder = ["XS", "S", "M", "L", "XL"] as const;
+const viewStorageKey = "low-signal-catalog-view";
 
 type Category = (typeof categories)[number];
 type MaterialFilter = (typeof materialOptions)[number]["key"];
 type PriceFilter = (typeof priceOptions)[number]["key"];
-type SortOrder = "newest" | "price-asc" | "price-desc";
+type SortOrder = "newest" | "popular" | "price-asc" | "price-desc";
+type ViewMode = "grid" | "list";
 
 type AdvancedFilters = {
   color: string;
   material: MaterialFilter | "all";
   price: PriceFilter | "all";
   size: string;
+};
+
+const emptyFilters: AdvancedFilters = {
+  color: "all",
+  material: "all",
+  price: "all",
+  size: "all",
 };
 
 export function CollectionShoppingPage({
@@ -89,101 +63,76 @@ export function CollectionShoppingPage({
   products: Product[];
 }>) {
   const [activeCategory, setActiveCategory] = useState<Category | "all">("all");
-  const [advancedFilters, setAdvancedFilters] = useState<AdvancedFilters>({
-    color: "all",
-    material: "all",
-    price: "all",
-    size: "all",
-  });
-  const [searchQuery, setSearchQuery] = useState("");
+  const [advancedFilters, setAdvancedFilters] =
+    useState<AdvancedFilters>(emptyFilters);
   const [sortOrder, setSortOrder] = useState<SortOrder>("newest");
-  const [mobilePanel, setMobilePanel] = useState<"filters" | "sort" | null>(null);
+  const [viewMode, setViewMode] = useState<ViewMode>("grid");
+  const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [urlStateReady, setUrlStateReady] = useState(false);
   const panelRef = useRef<HTMLDivElement>(null);
   const { items: cartItems } = useCart();
   const genderLabel = gender.toUpperCase();
-  const allLabel = `All ${gender}`;
-  const collectionNote =
-    gender === "men"
-      ? "Dark outerwear, knit layers, wide trousers, and daily uniforms."
-      : "Soft structure, washed layers, quiet volume, and daily uniforms.";
-  const normalizedSearchQuery = searchQuery.trim().toLowerCase();
-  const advancedFilterCount = Object.values(advancedFilters).filter(
+  const filterCount = Object.values(advancedFilters).filter(
     (value) => value !== "all",
   ).length;
-  const totalFilterCount =
-    advancedFilterCount + (activeCategory === "all" ? 0 : 1);
-  const activeFilterLabels = [
-    activeCategory !== "all" ? activeCategory : null,
-    advancedFilters.size !== "all" ? `Size ${advancedFilters.size}` : null,
-    advancedFilters.color !== "all" ? advancedFilters.color : null,
-    advancedFilters.material !== "all"
-      ? materialOptions.find((option) => option.key === advancedFilters.material)?.label
-      : null,
-    advancedFilters.price !== "all"
-      ? priceOptions.find((option) => option.key === advancedFilters.price)?.label
-      : null,
-  ].filter((label): label is string => Boolean(label));
+
   const visibleProducts = useMemo(() => {
-    const categoryProducts =
-      activeCategory === "all"
-        ? products
-        : products.filter((product) => product.category === activeCategory);
-
-    const filtered = categoryProducts.filter((product) => {
-      if (
-        advancedFilters.size !== "all" &&
-        product.size !== advancedFilters.size
-      ) {
-        return false;
-      }
-
-      if (
-        advancedFilters.color !== "all" &&
-        product.color !== advancedFilters.color
-      ) {
-        return false;
-      }
-
-      if (
-        advancedFilters.material !== "all" &&
-        !productMatchesMaterial(product, advancedFilters.material)
-      ) {
-        return false;
-      }
-
-      if (
-        advancedFilters.price !== "all" &&
-        !productMatchesPrice(product, advancedFilters.price)
-      ) {
-        return false;
-      }
-
-      if (!normalizedSearchQuery) {
+    const filtered = products
+      .map((product, originalIndex) => ({ originalIndex, product }))
+      .filter(({ product }) => {
+        if (
+          activeCategory !== "all" &&
+          product.category !== activeCategory
+        ) {
+          return false;
+        }
+        if (
+          advancedFilters.size !== "all" &&
+          !getProductSizeOptions(product).some(
+            (size) =>
+              size.label === advancedFilters.size && size.stock > 0,
+          )
+        ) {
+          return false;
+        }
+        if (
+          advancedFilters.color !== "all" &&
+          product.color !== advancedFilters.color
+        ) {
+          return false;
+        }
+        if (
+          advancedFilters.material !== "all" &&
+          !productMatchesMaterial(product, advancedFilters.material)
+        ) {
+          return false;
+        }
+        if (
+          advancedFilters.price !== "all" &&
+          !productMatchesPrice(product, advancedFilters.price)
+        ) {
+          return false;
+        }
         return true;
+      });
+
+    filtered.sort((first, second) => {
+      if (sortOrder === "price-asc") {
+        return first.product.price - second.product.price;
       }
-
-      const searchableText = [
-        product.name,
-        product.category,
-        product.color,
-        product.materials,
-        product.description,
-        String(product.price),
-      ]
-        .filter(Boolean)
-        .join(" ")
-        .toLowerCase();
-
-      return searchableText.includes(normalizedSearchQuery);
+      if (sortOrder === "price-desc") {
+        return second.product.price - first.product.price;
+      }
+      if (sortOrder === "popular") {
+        const stockDifference =
+          getTotalStock(second.product) - getTotalStock(first.product);
+        return stockDifference || second.product.price - first.product.price;
+      }
+      return first.originalIndex - second.originalIndex;
     });
 
-    return [...filtered].sort((first, second) => {
-      if (sortOrder === "price-asc") return first.price - second.price;
-      if (sortOrder === "price-desc") return second.price - first.price;
-      return 0;
-    });
-  }, [activeCategory, advancedFilters, normalizedSearchQuery, products, sortOrder]);
+    return filtered.map(({ product }) => product);
+  }, [activeCategory, advancedFilters, products, sortOrder]);
 
   useEffect(() => {
     const timer = window.setTimeout(() => {
@@ -192,25 +141,31 @@ export function CollectionShoppingPage({
       const material = params.get("material");
       const price = params.get("price");
       const sort = params.get("sort");
+      const storedView = window.localStorage.getItem(viewStorageKey);
 
       if (category === "all" || categories.includes(category as Category)) {
         setActiveCategory(category as Category | "all");
       }
       setAdvancedFilters({
         color: params.get("color") || "all",
-        material:
-          materialOptions.some((option) => option.key === material)
-            ? (material as MaterialFilter)
-            : "all",
-        price:
-          priceOptions.some((option) => option.key === price)
-            ? (price as PriceFilter)
-            : "all",
+        material: materialOptions.some((option) => option.key === material)
+          ? (material as MaterialFilter)
+          : "all",
+        price: priceOptions.some((option) => option.key === price)
+          ? (price as PriceFilter)
+          : "all",
         size: params.get("size") || "all",
       });
-      setSearchQuery(params.get("q") || "");
-      if (sort === "price-asc" || sort === "price-desc" || sort === "newest") {
+      if (
+        sort === "popular" ||
+        sort === "price-asc" ||
+        sort === "price-desc" ||
+        sort === "newest"
+      ) {
         setSortOrder(sort);
+      }
+      if (storedView === "grid" || storedView === "list") {
+        setViewMode(storedView);
       }
       setUrlStateReady(true);
     }, 0);
@@ -219,44 +174,36 @@ export function CollectionShoppingPage({
   }, []);
 
   useEffect(() => {
-    if (!urlStateReady) return;
+    if (!urlStateReady) {
+      return;
+    }
     const params = new URLSearchParams();
     if (activeCategory !== "all") params.set("type", activeCategory);
     if (advancedFilters.size !== "all") params.set("size", advancedFilters.size);
     if (advancedFilters.color !== "all") params.set("color", advancedFilters.color);
-    if (advancedFilters.material !== "all") params.set("material", advancedFilters.material);
+    if (advancedFilters.material !== "all") {
+      params.set("material", advancedFilters.material);
+    }
     if (advancedFilters.price !== "all") params.set("price", advancedFilters.price);
-    if (searchQuery.trim()) params.set("q", searchQuery.trim());
     if (sortOrder !== "newest") params.set("sort", sortOrder);
     const query = params.toString();
-    window.history.replaceState(null, "", `${window.location.pathname}${query ? `?${query}` : ""}`);
-  }, [activeCategory, advancedFilters, searchQuery, sortOrder, urlStateReady]);
+    window.history.replaceState(
+      null,
+      "",
+      `${window.location.pathname}${query ? `?${query}` : ""}`,
+    );
+  }, [activeCategory, advancedFilters, sortOrder, urlStateReady]);
 
   useEffect(() => {
-    if (!mobilePanel) return;
+    if (!isFilterOpen) {
+      return;
+    }
     const previousOverflow = document.documentElement.style.overflow;
     const previousFocus = document.activeElement as HTMLElement | null;
     document.documentElement.style.overflow = "hidden";
     const handleKeyboard = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
-        setMobilePanel(null);
-        return;
-      }
-      if (event.key !== "Tab" || !panelRef.current) return;
-      const focusable = Array.from(
-        panelRef.current.querySelectorAll<HTMLElement>(
-          "button:not([disabled]), input:not([disabled]), a[href]",
-        ),
-      );
-      if (!focusable.length) return;
-      const first = focusable[0];
-      const last = focusable[focusable.length - 1];
-      if (event.shiftKey && document.activeElement === first) {
-        event.preventDefault();
-        last.focus();
-      } else if (!event.shiftKey && document.activeElement === last) {
-        event.preventDefault();
-        first.focus();
+        setIsFilterOpen(false);
       }
     };
     document.addEventListener("keydown", handleKeyboard);
@@ -269,33 +216,18 @@ export function CollectionShoppingPage({
       document.removeEventListener("keydown", handleKeyboard);
       previousFocus?.focus();
     };
-  }, [mobilePanel]);
+  }, [isFilterOpen]);
 
-  function clearAdvancedFilters() {
-    setAdvancedFilters({
-      color: "all",
-      material: "all",
-      price: "all",
-      size: "all",
-    });
-  }
-
-  function clearAllFilters() {
-    setActiveCategory("all");
-    clearAdvancedFilters();
-    setSearchQuery("");
+  function chooseView(nextView: ViewMode) {
+    setViewMode(nextView);
+    window.localStorage.setItem(viewStorageKey, nextView);
   }
 
   function addToCart(product: Product, size: string) {
     const selectedSize = getProductSizeOptions(product).find(
       (option) => option.label === size,
     );
-
-    addProductToCart({
-      product,
-      size,
-      sizeOption: selectedSize,
-    });
+    addProductToCart({ product, size, sizeOption: selectedSize });
     trackEcommerce("add_to_cart", {
       currency: "USD",
       item_id: product.id,
@@ -306,163 +238,656 @@ export function CollectionShoppingPage({
   }
 
   function changeCartQuantity(product: Product, size: string, delta: number) {
-    const cartItemId = getCartItemId(product, size);
     const selectedStock =
       getProductSizeOptions(product).find((option) => option.label === size)
         ?.stock ?? 1;
-
-    updateCartQuantity(cartItemId, delta, selectedStock);
+    updateCartQuantity(getCartItemId(product, size), delta, selectedStock);
   }
 
   return (
     <main className="min-h-screen bg-[#e5e6e1] text-[#121211]">
       <MobileHomeHeader mode="paper" />
 
-      <section className={`mobile-catalog-shell mobile-catalog-${gender} mx-auto max-w-[1760px] px-4 pb-16 pt-[86px] sm:px-6 lg:px-10 lg:pt-[94px] xl:px-14`}>
-        <header
-          className={`mobile-catalog-header grid gap-6 border-b border-black/16 lg:grid-cols-[1fr_minmax(320px,560px)] lg:items-end ${
-            gender === "women" ? "pb-4" : "pb-5"
-          }`}
-        >
-          <div>
-            <CollectionBreadcrumb gender={gender} genderLabel={genderLabel} />
-            <h1 className="fashion-rail-title mt-5 max-w-[480px] text-[25vw] text-black/94 sm:text-[62px] lg:text-[76px] xl:text-[84px]">
-              {genderLabel}
-            </h1>
-            <p className="mt-3 text-[10px] uppercase tracking-[0.18em] text-black/50">
-              {String(products.length).padStart(2, "0")} pieces / Spring 2026
-            </p>
-          </div>
-
-          <div className="grid gap-4 border-t border-black/12 pt-5 lg:border-t-0 lg:pt-0">
-            <ProductSearch
-              searchQuery={searchQuery}
-              setSearchQuery={setSearchQuery}
-            />
-
-            <div className="flex justify-between gap-4 text-[11px] uppercase tracking-[0.1em] text-black/68 lg:justify-end">
-              {normalizedSearchQuery || totalFilterCount > 0 ? (
-                <span>{String(visibleProducts.length).padStart(2, "0")} results</span>
-              ) : null}
-              <span>{sortOrder === "newest" ? "Newest" : sortOrder === "price-asc" ? "Price low" : "Price high"}</span>
+      <section className="mobile-catalog-shell mx-auto max-w-[1760px] px-4 pb-14 pt-[82px] sm:px-6 lg:px-10 lg:pt-[90px] xl:px-14">
+        <header className="mobile-catalog-header border-b border-black/16 pb-5">
+          <CollectionBreadcrumb gender={gender} genderLabel={genderLabel} />
+          <div className="mt-4 flex flex-wrap items-end justify-between gap-4">
+            <div>
+              <h1 className="fashion-rail-title text-[25vw] text-black/94 sm:text-[66px] lg:text-[82px] xl:text-[92px]">
+                {genderLabel}
+              </h1>
+              <p className="mt-3 text-[10px] uppercase tracking-[0.14em] text-black/52">
+                Spring 2026
+              </p>
             </div>
           </div>
         </header>
 
-        <div className="lg:hidden">
-          <FilterIntro gender={gender} note={collectionNote} />
-          <div className="mobile-filter-bar sticky top-[64px] z-20 -mx-4 border-y border-black/16 bg-[#e5e6e1]/95 px-4 backdrop-blur-sm sm:-mx-6 sm:px-6">
-            <button
-              className="flex min-h-13 items-center justify-between pr-4 text-[12px] uppercase tracking-[0.14em]"
-              type="button"
-              onClick={() => setMobilePanel("filters")}
-            >
-              <span>Filters{totalFilterCount > 0 ? ` / ${totalFilterCount}` : ""}</span>
-              <span>+</span>
-            </button>
-            <button
-              className="flex min-h-13 items-center justify-between pl-4 text-[12px] uppercase tracking-[0.14em]"
-              type="button"
-              onClick={() => setMobilePanel("sort")}
-            >
-              <span>Sort / {sortOrder === "newest" ? "Newest" : sortOrder === "price-asc" ? "Price low" : "Price high"}</span>
-              <span>+</span>
-            </button>
-          </div>
-          {totalFilterCount > 0 ? (
-            <div className="mobile-active-filters border-b border-black/14 py-3 text-[11px] uppercase tracking-[0.1em] text-black/68">
-              <div className="flex items-center justify-between gap-4">
-                <span>{String(visibleProducts.length).padStart(2, "0")} pieces</span>
-                <button className="flex min-h-11 items-center border-b border-black/44 text-black" type="button" onClick={clearAllFilters}>Clear filters</button>
-              </div>
-              <div aria-label="Selected filters" className="flex flex-wrap gap-2 pb-1">
-                {activeFilterLabels.map((label) => (
-                  <span className="border border-black/20 px-3 py-2 text-black/72" key={label}>
-                    {label}
-                  </span>
-                ))}
-              </div>
-            </div>
-          ) : null}
+        <CampaignRail gender={gender} />
 
-          {mobilePanel ? (
-            <MobileCatalogPanel
-              activeCategory={activeCategory}
-              advancedFilterCount={advancedFilterCount}
-              advancedFilters={advancedFilters}
-              allLabel={allLabel}
-              clearAdvancedFilters={clearAdvancedFilters}
-              onClose={() => setMobilePanel(null)}
-              panel={mobilePanel}
-              products={products}
-              resultCount={visibleProducts.length}
-              setAdvancedFilters={setAdvancedFilters}
-              setActiveCategory={setActiveCategory}
-              setSortOrder={setSortOrder}
-              sortOrder={sortOrder}
-              panelRef={panelRef}
-            />
-          ) : null}
-        </div>
+        <CatalogToolbar
+          activeCategory={activeCategory}
+          filterCount={filterCount}
+          onCategory={setActiveCategory}
+          onFilters={() => setIsFilterOpen(true)}
+          onSort={setSortOrder}
+          onView={chooseView}
+          productCount={visibleProducts.length}
+          ready={urlStateReady}
+          sortOrder={sortOrder}
+          viewMode={viewMode}
+        />
 
-        <div
-          className={`grid gap-8 lg:grid-cols-[220px_1fr] lg:gap-12 xl:grid-cols-[260px_1fr] xl:gap-16 ${
-            gender === "women" ? "pt-5 lg:pt-5" : "pt-8"
-          }`}
-        >
-          <aside className="hidden lg:block">
-            <div className="sticky top-[104px]">
-              <FilterIntro gender={gender} note={collectionNote} />
-              <CategoryFilters
-                activeCategory={activeCategory}
-                allLabel={allLabel}
-                products={products}
-                setActiveCategory={setActiveCategory}
-              />
-
-              <AdvancedFilterPanel
-                activeFilters={advancedFilters}
-                clearFilters={clearAdvancedFilters}
-                filterCount={advancedFilterCount}
-                products={products}
-                setActiveFilters={setAdvancedFilters}
-              />
-              {(advancedFilterCount > 0 || activeCategory !== "all" || searchQuery) ? (
-                <button className="mt-5 border-b border-black/50 pb-1 text-[12px] uppercase tracking-[0.08em]" type="button" onClick={clearAllFilters}>Clear filters</button>
-              ) : null}
-            </div>
-          </aside>
-
-          <ProductGrid
-            collectionNote={collectionNote}
-            genderLabel={genderLabel}
-            onAdd={addToCart}
-            onQuantity={changeCartQuantity}
-            products={visibleProducts}
-            cartItems={cartItems}
-            searchQuery={searchQuery}
-            title={genderLabel}
-            totalProductCount={products.length}
-            gender={gender}
-            onClearAll={clearAllFilters}
+        {filterCount > 0 ? (
+          <ActiveFilters
+            filters={advancedFilters}
+            onClear={() => setAdvancedFilters(emptyFilters)}
+            resultCount={visibleProducts.length}
           />
-        </div>
+        ) : null}
+
+        <ProductCollection
+          cartItems={cartItems}
+          gender={gender}
+          onAdd={addToCart}
+          onClear={() => {
+            setActiveCategory("all");
+            setAdvancedFilters(emptyFilters);
+          }}
+          onQuantity={changeCartQuantity}
+          products={visibleProducts}
+          viewMode={viewMode}
+        />
       </section>
+
+      {isFilterOpen ? (
+        <FilterPanel
+          activeFilters={advancedFilters}
+          onChange={setAdvancedFilters}
+          onClear={() => setAdvancedFilters(emptyFilters)}
+          onClose={() => setIsFilterOpen(false)}
+          panelRef={panelRef}
+          products={products}
+          resultCount={visibleProducts.length}
+        />
+      ) : null}
+
       <SiteFooter />
     </main>
+  );
+}
+
+function CatalogToolbar({
+  activeCategory,
+  filterCount,
+  onCategory,
+  onFilters,
+  onSort,
+  onView,
+  productCount,
+  ready,
+  sortOrder,
+  viewMode,
+}: Readonly<{
+  activeCategory: Category | "all";
+  filterCount: number;
+  onCategory: (value: Category | "all") => void;
+  onFilters: () => void;
+  onSort: (value: SortOrder) => void;
+  onView: (value: ViewMode) => void;
+  productCount: number;
+  ready: boolean;
+  sortOrder: SortOrder;
+  viewMode: ViewMode;
+}>) {
+  return (
+    <div className="catalog-toolbar sticky top-[64px] z-30 -mx-4 grid grid-cols-2 border-y border-black/18 bg-[#e5e6e1]/96 px-4 backdrop-blur-sm sm:-mx-6 sm:grid-cols-[auto_auto_1fr_1fr_auto] sm:px-6 lg:static lg:mx-0 lg:px-0">
+      <p className="flex min-h-12 items-center border-b border-black/12 text-[11px] uppercase tracking-[0.09em] sm:border-b-0 sm:pr-5">
+        {String(productCount).padStart(2, "0")} pieces
+      </p>
+      <button
+        className="flex min-h-12 items-center justify-between border-b border-l border-black/12 px-4 text-[11px] uppercase tracking-[0.09em] sm:border-b-0"
+        disabled={!ready}
+        onClick={onFilters}
+        type="button"
+      >
+        <span>Filters{filterCount ? ` / ${filterCount}` : ""}</span>
+        <span aria-hidden="true">+</span>
+      </button>
+      <label className="toolbar-select flex min-h-12 items-center border-black/12 sm:border-l">
+        <span className="sr-only">Sort products</span>
+        <select
+          aria-label="Sort products"
+          className="h-full w-full appearance-none bg-transparent px-0 pr-5 text-[11px] uppercase tracking-[0.07em] outline-none sm:px-4"
+          disabled={!ready}
+          onChange={(event) => onSort(event.target.value as SortOrder)}
+          value={sortOrder}
+        >
+          <option value="newest">Sort: Newest</option>
+          <option value="popular">Sort: Popular</option>
+          <option value="price-asc">Price: Low to High</option>
+          <option value="price-desc">Price: High to Low</option>
+        </select>
+      </label>
+      <label className="toolbar-select flex min-h-12 items-center border-l border-black/12 pl-4 sm:pl-0">
+        <span className="sr-only">Collection category</span>
+        <select
+          aria-label="Collection category"
+          className="h-full w-full appearance-none bg-transparent pr-5 text-[11px] uppercase tracking-[0.07em] outline-none sm:px-4"
+          disabled={!ready}
+          onChange={(event) =>
+            onCategory(event.target.value as Category | "all")
+          }
+          value={activeCategory}
+        >
+          <option value="all">Collection: All</option>
+          {categories.map((category) => (
+            <option key={category} value={category}>
+              {category}
+            </option>
+          ))}
+        </select>
+      </label>
+      <div
+        aria-label="Product view"
+        className="col-span-2 flex min-h-11 items-center justify-end gap-4 border-t border-black/12 sm:col-span-1 sm:min-h-12 sm:border-l sm:border-t-0 sm:pl-5"
+        role="group"
+      >
+        <button
+          aria-label="Grid view"
+          aria-pressed={viewMode === "grid"}
+          className={viewMode === "grid" ? "text-black" : "text-black/35"}
+          disabled={!ready}
+          onClick={() => onView("grid")}
+          type="button"
+        >
+          <GridIcon />
+        </button>
+        <button
+          aria-label="List view"
+          aria-pressed={viewMode === "list"}
+          className={viewMode === "list" ? "text-black" : "text-black/35"}
+          disabled={!ready}
+          onClick={() => onView("list")}
+          type="button"
+        >
+          <ListIcon />
+        </button>
+      </div>
+    </div>
+  );
+}
+
+function CampaignRail({ gender }: Readonly<{ gender: ProductGender }>) {
+  const railImage =
+    gender === "women"
+      ? "/images/low-signal/collections/spring-2026-women-rail.png"
+      : "/images/low-signal/collections/spring-2026-rail.png";
+
+  return (
+    <div className="mobile-campaign-rail relative my-5 h-[150px] overflow-hidden border-y border-black/14 bg-[#d3d5cf] sm:h-[180px] lg:my-6 lg:h-[205px] xl:h-[225px]">
+      <Image
+        alt={`${gender} Spring 2026 editorial garment rail`}
+        className="object-cover brightness-[0.76] contrast-[1.05] saturate-[0.55]"
+        fill
+        priority
+        sizes="(min-width: 1024px) 94vw, 100vw"
+        src={railImage}
+      />
+      <div className="absolute inset-0 bg-black/8" />
+    </div>
+  );
+}
+
+function ActiveFilters({
+  filters,
+  onClear,
+  resultCount,
+}: Readonly<{
+  filters: AdvancedFilters;
+  onClear: () => void;
+  resultCount: number;
+}>) {
+  const labels = [
+    filters.size !== "all" ? `Size ${filters.size}` : null,
+    filters.color !== "all" ? filters.color : null,
+    filters.material !== "all"
+      ? materialOptions.find((item) => item.key === filters.material)?.label
+      : null,
+    filters.price !== "all"
+      ? priceOptions.find((item) => item.key === filters.price)?.label
+      : null,
+  ].filter((label): label is string => Boolean(label));
+
+  return (
+    <div className="flex flex-wrap items-center gap-2 border-b border-black/14 py-3 text-[9px] uppercase tracking-[0.08em]">
+      {labels.map((label) => (
+        <span className="border-r border-black/20 pr-3 text-black/60" key={label}>
+          {label}
+        </span>
+      ))}
+      <span className="ml-auto text-black/48">
+        {String(resultCount).padStart(2, "0")} found
+      </span>
+      <button className="border-b border-black/42 pb-1" onClick={onClear} type="button">
+        Clear all
+      </button>
+    </div>
+  );
+}
+
+function FilterPanel({
+  activeFilters,
+  onChange,
+  onClear,
+  onClose,
+  panelRef,
+  products,
+  resultCount,
+}: Readonly<{
+  activeFilters: AdvancedFilters;
+  onChange: (filters: AdvancedFilters) => void;
+  onClear: () => void;
+  onClose: () => void;
+  panelRef: React.RefObject<HTMLDivElement | null>;
+  products: Product[];
+  resultCount: number;
+}>) {
+  const sizes = sortSizes(
+    uniqueValues(
+      products.flatMap((product) =>
+        getProductSizeOptions(product).map((size) => size.label),
+      ),
+    ),
+  );
+  const colors = uniqueValues(products.map((product) => product.color));
+
+  function update<Key extends keyof AdvancedFilters>(
+    key: Key,
+    value: AdvancedFilters[Key],
+  ) {
+    onChange({
+      ...activeFilters,
+      [key]: activeFilters[key] === value ? "all" : value,
+    });
+  }
+
+  return (
+    <>
+      <button
+        aria-label="Close filters"
+        className="fixed inset-0 z-40 cursor-default bg-black/38"
+        onClick={onClose}
+        type="button"
+      />
+      <div
+        aria-label="Collection filters"
+        aria-modal="true"
+        className="catalog-filter-panel fixed inset-x-0 bottom-0 z-50 grid max-h-[calc(100svh-64px)] grid-rows-[auto_1fr_auto] border-t border-black/24 bg-[#e5e6e1] sm:left-auto sm:right-0 sm:top-0 sm:h-svh sm:w-[min(440px,88vw)] sm:max-h-none sm:border-l sm:border-t-0"
+        ref={panelRef}
+        role="dialog"
+      >
+        <div className="flex min-h-14 items-center justify-between border-b border-black/16 px-5 text-[12px] uppercase tracking-[0.08em]">
+          <span>{String(resultCount).padStart(2, "0")} pieces</span>
+          <button className="min-h-11 border-b border-black/38" onClick={onClose} type="button">
+            Close
+          </button>
+        </div>
+
+        <div className="overflow-y-auto px-5 py-3">
+          <FilterGroup
+            activeValue={activeFilters.size}
+            label="Size"
+            onSelect={(value) => update("size", value)}
+            options={sizes.map((size) => ({ key: size, label: size }))}
+          />
+          <FilterGroup
+            activeValue={activeFilters.color}
+            label="Color"
+            onSelect={(value) => update("color", value)}
+            options={colors.map((color) => ({ key: color, label: color }))}
+          />
+          <FilterGroup
+            activeValue={activeFilters.material}
+            label="Material"
+            onSelect={(value) => update("material", value)}
+            options={materialOptions.map((material) => ({
+              key: material.key,
+              label: material.label,
+            }))}
+          />
+          <FilterGroup
+            activeValue={activeFilters.price}
+            label="Price"
+            onSelect={(value) => update("price", value)}
+            options={priceOptions.map((price) => ({
+              key: price.key,
+              label: price.label,
+            }))}
+          />
+        </div>
+
+        <div className="grid grid-cols-[auto_1fr] gap-5 border-t border-black/16 bg-[#dedfd9] p-4 text-[11px] uppercase tracking-[0.08em]">
+          <button className="min-h-12 border-b border-black/38" onClick={onClear} type="button">
+            Clear all
+          </button>
+          <button
+            className="min-h-12 bg-[#171614] px-5 text-[#ecece5]"
+            onClick={() => {
+              trackEcommerce("filter", { result_count: resultCount });
+              onClose();
+            }}
+            type="button"
+          >
+            View {String(resultCount).padStart(2, "0")} pieces →
+          </button>
+        </div>
+      </div>
+    </>
+  );
+}
+
+function FilterGroup<Value extends string>({
+  activeValue,
+  label,
+  onSelect,
+  options,
+}: Readonly<{
+  activeValue: Value | "all";
+  label: string;
+  onSelect: (value: Value) => void;
+  options: Array<{ key: Value; label: string }>;
+}>) {
+  return (
+    <fieldset className="border-b border-black/14 py-5">
+      <legend className="mb-4 text-[10px] uppercase tracking-[0.1em] text-black/52">
+        {label}
+      </legend>
+      <div className="flex flex-wrap gap-x-5 gap-y-2">
+        {options.map((option) => (
+          <button
+            aria-pressed={activeValue === option.key}
+            className={`min-h-10 border-b text-[11px] uppercase tracking-[0.07em] ${
+              activeValue === option.key
+                ? "border-black text-black"
+                : "border-black/16 text-black/48"
+            }`}
+            key={option.key}
+            onClick={() => onSelect(option.key)}
+            type="button"
+          >
+            {option.label}
+          </button>
+        ))}
+      </div>
+    </fieldset>
+  );
+}
+
+function ProductCollection({
+  cartItems,
+  gender,
+  onAdd,
+  onClear,
+  onQuantity,
+  products,
+  viewMode,
+}: Readonly<{
+  cartItems: CartItem[];
+  gender: ProductGender;
+  onAdd: (product: Product, size: string) => void;
+  onClear: () => void;
+  onQuantity: (product: Product, size: string, delta: number) => void;
+  products: Product[];
+  viewMode: ViewMode;
+}>) {
+  if (products.length === 0) {
+    return (
+      <div className="border-b border-black/14 py-14 text-[11px] uppercase tracking-[0.1em] text-black/58">
+        <p>No garments found.</p>
+        <button className="mt-5 border-b border-black/50 pb-1 text-black" onClick={onClear} type="button">
+          Clear all
+        </button>
+      </div>
+    );
+  }
+
+  return (
+    <section
+      aria-label={`${gender} products`}
+      className={
+        viewMode === "grid"
+          ? "catalog-products grid grid-cols-2 gap-x-3 gap-y-9 pt-6 md:grid-cols-3 md:gap-x-5 xl:grid-cols-4 xl:gap-x-6"
+          : "catalog-products catalog-list-view border-b border-black/14"
+      }
+    >
+      {products.map((product, index) => (
+        <ProductCard
+          cartItems={cartItems}
+          index={index}
+          key={product.id}
+          onAdd={onAdd}
+          onQuantity={onQuantity}
+          product={product}
+          viewMode={viewMode}
+        />
+      ))}
+    </section>
+  );
+}
+
+function ProductCard({
+  cartItems,
+  index,
+  onAdd,
+  onQuantity,
+  product,
+  viewMode,
+}: Readonly<{
+  cartItems: CartItem[];
+  index: number;
+  onAdd: (product: Product, size: string) => void;
+  onQuantity: (product: Product, size: string, delta: number) => void;
+  product: Product;
+  viewMode: ViewMode;
+}>) {
+  const sizeOptions = getProductSizeOptions(product);
+  const firstAvailableSize =
+    product.size ??
+    sizeOptions.find((option) => option.stock > 0)?.label ??
+    sizeOptions[0]?.label ??
+    "M";
+  const [isSizePickerOpen, setIsSizePickerOpen] = useState(false);
+  const [selectedSize, setSelectedSize] = useState(firstAvailableSize);
+  const productCartItems = cartItems.filter((item) =>
+    item.id.startsWith(`${product.id}-`),
+  );
+  const cartItem =
+    cartItems.find(
+      (item) => item.id === getCartItemId(product, selectedSize),
+    ) ?? productCartItems[0];
+  const activeSize = cartItem?.size ?? selectedSize;
+  const selectedStock =
+    sizeOptions.find((option) => option.label === activeSize)?.stock ?? 0;
+  const isSoldOut = getAvailabilityState(getTotalStock(product)) === "sold_out";
+  const isList = viewMode === "list";
+
+  function addSelectedSize(size: string) {
+    setSelectedSize(size);
+    onAdd(product, size);
+    setIsSizePickerOpen(false);
+  }
+
+  return (
+    <article
+      className={`quiet-reveal group relative border-black/14 ${
+        isList
+          ? "grid min-h-[132px] grid-cols-[96px_minmax(0,1fr)_auto] items-center gap-4 border-t py-4 sm:grid-cols-[130px_minmax(0,1fr)_auto] sm:gap-7"
+          : "min-w-0 border-b pb-4"
+      }`}
+      style={{ animationDelay: `${Math.min(index, 10) * 35}ms` }}
+    >
+      <Link
+        aria-label={`Open ${product.name}`}
+        className="absolute inset-0 z-10 focus:outline-none focus-visible:ring-1 focus-visible:ring-black"
+        href={`/products/${product.slug}`}
+      />
+
+      <div
+        className={`relative overflow-hidden border border-black/10 bg-[#d1d3cd] ${
+          isList ? "aspect-[4/5] w-full" : "aspect-[4/5]"
+        }`}
+      >
+        <Image
+          alt={product.name}
+          className={`product-image object-cover brightness-[0.86] contrast-[1.06] saturate-[0.62] transition-[filter,transform] duration-500 group-hover:scale-[1.025] group-hover:brightness-[0.79] ${
+            product.objectPosition ?? "object-center"
+          }`}
+          fill
+          priority={index < 2}
+          sizes={
+            isList
+              ? "130px"
+              : "(min-width: 1280px) 23vw, (min-width: 768px) 31vw, 48vw"
+          }
+          src={product.image}
+        />
+      </div>
+
+      <div
+        className={
+          isList
+            ? "min-w-0 uppercase"
+            : "grid grid-cols-[1fr_auto] gap-3 pt-4 uppercase"
+        }
+      >
+        <h2 className="text-[12px] font-normal tracking-[0.04em] text-black sm:text-[13px]">
+          {product.name}
+        </h2>
+        <p className="mt-2 text-[9px] tracking-[0.08em] text-black/54 sm:text-[10px]">
+          {product.category}
+        </p>
+        <p
+          className={`text-[12px] font-normal tracking-[0.02em] text-black ${
+            isList ? "mt-3" : "mt-3"
+          }`}
+        >
+          ${product.price}
+        </p>
+      </div>
+
+      <div
+        className={`relative z-20 ${
+          isList ? "self-center" : "absolute bottom-4 right-0"
+        }`}
+      >
+        {cartItem ? (
+          <div className="flex items-center border-b border-black/24 text-[10px]">
+            <button
+              aria-label={`Remove one ${product.name}`}
+              className="min-h-11 min-w-9"
+              onClick={() => onQuantity(product, activeSize, -1)}
+              type="button"
+            >
+              −
+            </button>
+            <span>{cartItem.quantity}</span>
+            <button
+              aria-label={`Add one ${product.name}`}
+              className="min-h-11 min-w-9 disabled:opacity-30"
+              disabled={cartItem.quantity >= selectedStock}
+              onClick={() => onQuantity(product, activeSize, 1)}
+              type="button"
+            >
+              +
+            </button>
+          </div>
+        ) : (
+          <button
+            aria-label={`Quick add ${product.name}; choose a size`}
+            className="min-h-11 whitespace-nowrap border-b border-black/36 text-[9px] uppercase tracking-[0.06em] text-black/70 disabled:opacity-30 sm:text-[10px]"
+            disabled={isSoldOut}
+            onClick={() => setIsSizePickerOpen((open) => !open)}
+            type="button"
+          >
+            {isSoldOut ? "Sold out" : isList ? "Quick add +" : "Add / size +"}
+          </button>
+        )}
+
+        {isSizePickerOpen && !cartItem ? (
+          <div className="absolute bottom-12 right-0 z-30 w-[220px] border border-black/18 bg-[#e5e6e1] p-3 text-[10px] uppercase tracking-[0.07em]">
+            <div className="grid grid-cols-5 gap-px bg-black/14">
+              {sizeOptions.map((size) => (
+                <button
+                  className="min-h-11 bg-[#dedfd9] disabled:text-black/24"
+                  disabled={size.stock <= 0}
+                  key={size.label}
+                  onClick={() => addSelectedSize(size.label)}
+                  type="button"
+                >
+                  {size.label}
+                </button>
+              ))}
+            </div>
+          </div>
+        ) : null}
+      </div>
+    </article>
+  );
+}
+
+function CollectionBreadcrumb({
+  gender,
+  genderLabel,
+}: Readonly<{
+  gender: ProductGender;
+  genderLabel: string;
+}>) {
+  return (
+    <nav
+      aria-label="Collection path"
+      className="flex items-center gap-3 text-[9px] uppercase tracking-[0.1em] text-black/58"
+    >
+      <Link className="border-b border-black/18 pb-1" href="/collections">
+        Collections
+      </Link>
+      <span className="h-px w-5 bg-black/22" />
+      <Link className="border-b border-black/46 pb-1 text-black" href={`/collections/${gender}`}>
+        {genderLabel}
+      </Link>
+    </nav>
+  );
+}
+
+function GridIcon() {
+  return (
+    <span aria-hidden="true" className="grid h-4 w-4 grid-cols-2 gap-[2px]">
+      <span className="border border-current" />
+      <span className="border border-current" />
+      <span className="border border-current" />
+      <span className="border border-current" />
+    </span>
+  );
+}
+
+function ListIcon() {
+  return (
+    <span aria-hidden="true" className="grid h-4 w-4 content-center gap-[3px]">
+      <span className="h-px bg-current" />
+      <span className="h-px bg-current" />
+      <span className="h-px bg-current" />
+    </span>
   );
 }
 
 function productMatchesMaterial(product: Product, material: MaterialFilter) {
   const option = materialOptions.find((item) => item.key === material);
   const text = product.materials.toLowerCase();
-
   return option?.terms.some((term) => text.includes(term)) ?? false;
 }
 
 function productMatchesPrice(product: Product, price: PriceFilter) {
   const option = priceOptions.find((item) => item.key === price);
-
   return option
     ? product.price >= option.min && product.price <= option.max
     : false;
@@ -471,18 +896,16 @@ function productMatchesPrice(product: Product, price: PriceFilter) {
 function uniqueValues(values: Array<string | undefined>) {
   return Array.from(
     new Set(values.filter((value): value is string => Boolean(value))),
-  ).sort((a, b) => a.localeCompare(b));
+  ).sort((first, second) => first.localeCompare(second));
 }
 
 function sortSizes(sizes: string[]) {
-  return sizes.sort((a, b) => {
-    const firstIndex = sizeOrder.indexOf(a as (typeof sizeOrder)[number]);
-    const secondIndex = sizeOrder.indexOf(b as (typeof sizeOrder)[number]);
-
+  return sizes.sort((first, second) => {
+    const firstIndex = sizeOrder.indexOf(first as (typeof sizeOrder)[number]);
+    const secondIndex = sizeOrder.indexOf(second as (typeof sizeOrder)[number]);
     if (firstIndex === -1 || secondIndex === -1) {
-      return a.localeCompare(b);
+      return first.localeCompare(second);
     }
-
     return firstIndex - secondIndex;
   });
 }
@@ -496,728 +919,13 @@ function getProductSizeOptions(product: Product): ProductSize[] {
       }));
 }
 
+function getTotalStock(product: Product) {
+  return getProductSizeOptions(product).reduce(
+    (total, size) => total + size.stock,
+    0,
+  );
+}
+
 function getCartItemId(product: Product, size: string) {
   return `${product.id}-${size.toLowerCase()}`;
-}
-
-function ProductSearch({
-  searchQuery,
-  setSearchQuery,
-}: Readonly<{
-  searchQuery: string;
-  setSearchQuery: (value: string) => void;
-}>) {
-  return (
-    <div className="border-y border-black/18 py-2 transition-colors duration-300 focus-within:border-black/42">
-      <label className="block" htmlFor="collection-search">
-        <span className="grid grid-cols-[1fr_auto] items-center gap-3">
-          <input
-            autoComplete="off"
-            className="min-w-0 bg-transparent py-3 text-[15px] uppercase tracking-[0.06em] text-black outline-none placeholder:text-black/50 lg:text-[13px]"
-            id="collection-search"
-            placeholder="SEARCH GARMENTS..."
-            type="search"
-            value={searchQuery}
-            onChange={(event) => setSearchQuery(event.target.value)}
-          />
-          {searchQuery ? (
-            <button
-              className="min-h-11 border-b border-black/50 text-[12px] uppercase tracking-[0.08em] text-black/72 transition-opacity duration-300 hover:opacity-55"
-              type="button"
-              onClick={() => setSearchQuery("")}
-            >
-              Clear
-            </button>
-          ) : null}
-        </span>
-      </label>
-    </div>
-  );
-}
-
-function FilterIntro({
-  gender,
-  note,
-}: Readonly<{
-  gender: ProductGender;
-  note: string;
-}>) {
-  return (
-    <div className="mobile-filter-intro mb-6 border-y border-black/14 py-5 text-[12px] uppercase leading-[1.55] tracking-[0.08em] text-black/68 lg:mb-7">
-      <p className="text-[11px] text-black/72">{gender} collection</p>
-      <p className="mt-3 max-w-[250px] text-black/68">{note}</p>
-    </div>
-  );
-}
-
-function CollectionBreadcrumb({
-  gender,
-  genderLabel,
-}: Readonly<{
-  gender: ProductGender;
-  genderLabel: string;
-}>) {
-  const items = [
-    {
-      href: "/collections",
-      label: "COLLECTIONS",
-    },
-    {
-      href: `/collections/${gender}`,
-      label: genderLabel,
-    },
-  ];
-
-  return (
-    <nav
-      aria-label="Collection path"
-      className="flex flex-wrap items-center gap-x-3 gap-y-2 text-[10px] uppercase tracking-[0.12em] text-black/62"
-    >
-      {items.map((item, index) => (
-        <span className="flex items-center gap-3" key={`${item.label}-${index}`}>
-          {index > 0 ? <span className="h-px w-6 bg-black/24" /> : null}
-          <Link
-            className={`border-b pb-[5px] transition-opacity duration-300 hover:opacity-55 ${
-              index === items.length - 1
-                ? "border-black/50 text-black"
-                : "border-black/18"
-            }`}
-            href={item.href}
-          >
-            {item.label}
-          </Link>
-        </span>
-      ))}
-    </nav>
-  );
-}
-
-function MobileCatalogPanel({
-  activeCategory,
-  advancedFilterCount,
-  advancedFilters,
-  allLabel,
-  clearAdvancedFilters,
-  onClose,
-  panel,
-  products,
-  resultCount,
-  setAdvancedFilters,
-  setActiveCategory,
-  setSortOrder,
-  sortOrder,
-  panelRef,
-}: Readonly<{
-  activeCategory: Category | "all";
-  advancedFilterCount: number;
-  advancedFilters: AdvancedFilters;
-  allLabel: string;
-  clearAdvancedFilters: () => void;
-  onClose: () => void;
-  panel: "filters" | "sort";
-  products: Product[];
-  resultCount: number;
-  setAdvancedFilters: (filters: AdvancedFilters) => void;
-  setActiveCategory: (category: Category | "all") => void;
-  setSortOrder: (value: SortOrder) => void;
-  sortOrder: SortOrder;
-  panelRef: React.RefObject<HTMLDivElement | null>;
-}>) {
-  return (
-    <>
-    <button
-      aria-label="Close collection panel"
-      className="fixed inset-0 z-[39] cursor-default bg-black/40"
-      type="button"
-      onClick={onClose}
-    />
-    <div ref={panelRef} aria-label={panel === "filters" ? "Collection filters" : "Collection sorting"} aria-modal="true" className="mobile-catalog-panel fixed inset-x-0 bottom-0 z-40 grid max-h-[calc(100svh-72px)] grid-rows-[auto_1fr_auto] border-t border-black/24 bg-[#e5e6e1] text-[#121211]" role="dialog">
-      <div className="flex min-h-14 items-center justify-between border-b border-black/16 px-5 text-[14px] uppercase tracking-[0.08em]">
-        <span>{panel === "filters" ? `Filters${advancedFilterCount > 0 ? ` / ${advancedFilterCount}` : ""}` : "Sort garments"}</span>
-        <button className="min-h-11 px-2" type="button" onClick={onClose}>Close</button>
-      </div>
-      <div className="overflow-y-auto px-5 py-6">
-        {panel === "filters" ? (
-          <div className="grid gap-7">
-            <CategoryFilters
-              activeCategory={activeCategory}
-              allLabel={allLabel}
-              products={products}
-              setActiveCategory={setActiveCategory}
-            />
-            <AdvancedFilterPanel
-              activeFilters={advancedFilters}
-              clearFilters={clearAdvancedFilters}
-              filterCount={advancedFilterCount}
-              products={products}
-              setActiveFilters={setAdvancedFilters}
-            />
-          </div>
-        ) : (
-          <div className="divide-y divide-black/14 border-y border-black/14 text-[13px] uppercase tracking-[0.08em]">
-            {(["newest", "price-asc", "price-desc"] as const).map((value) => (
-              <button className={`flex min-h-14 w-full items-center justify-between text-left ${sortOrder === value ? "text-black" : "text-black/50"}`} key={value} type="button" onClick={() => {
-                setSortOrder(value);
-                onClose();
-              }}>
-                <span>{value === "newest" ? "Newest first" : value === "price-asc" ? "Price: low to high" : "Price: high to low"}</span>
-                <span>{sortOrder === value ? "●" : "○"}</span>
-              </button>
-            ))}
-          </div>
-        )}
-      </div>
-      <div className="border-t border-black/16 bg-[#dedfd9] p-4">
-        {panel === "filters" ? (
-          <button className="flex min-h-14 w-full items-center justify-center bg-[#171614] px-5 text-[12px] uppercase tracking-[0.14em] text-[#ecece5]" type="button" onClick={() => {
-            trackEcommerce("filter", {
-              active_filters: advancedFilterCount,
-              result_count: resultCount,
-            });
-            onClose();
-          }}>
-            Show {String(resultCount).padStart(2, "0")} pieces →
-          </button>
-        ) : null}
-      </div>
-    </div>
-    </>
-  );
-}
-
-function CategoryFilters({
-  activeCategory,
-  allLabel,
-  products,
-  setActiveCategory,
-}: Readonly<{
-  activeCategory: Category | "all";
-  allLabel: string;
-  products: Product[];
-  setActiveCategory: (category: Category | "all") => void;
-}>) {
-  const filters: Array<{
-    count: number;
-    key: Category | "all";
-    label: string;
-  }> = [
-    {
-      count: products.length,
-      key: "all",
-      label: allLabel,
-    },
-    ...categories.map((category) => ({
-      count: products.filter((product) => product.category === category)
-        .length,
-      key: category,
-      label: category,
-    })),
-  ];
-
-  return (
-    <div className="text-[12px] uppercase tracking-[0.08em]">
-      <div className="mb-4 text-[11px] font-medium text-black/68">
-        <span>Category</span>
-      </div>
-
-      <div className="divide-y divide-black/12 border-y border-black/12 transition-colors duration-300 hover:border-black/18">
-        {filters.map((filter) => (
-          <button
-            className={`flex w-full items-center justify-between py-4 text-left transition-all duration-300 hover:bg-black/[0.025] hover:px-2 hover:opacity-70 ${
-              activeCategory === filter.key
-                ? "bg-black/[0.025] px-2 text-black"
-                : "text-black/62"
-            }`}
-            key={filter.key}
-            type="button"
-            onClick={() => setActiveCategory(filter.key)}
-          >
-            <span>{filter.label}</span>
-            <span>{String(filter.count).padStart(2, "0")}</span>
-          </button>
-        ))}
-      </div>
-    </div>
-  );
-}
-
-function AdvancedFilterPanel({
-  activeFilters,
-  clearFilters,
-  filterCount,
-  products,
-  setActiveFilters,
-}: Readonly<{
-  activeFilters: AdvancedFilters;
-  clearFilters: () => void;
-  filterCount: number;
-  products: Product[];
-  setActiveFilters: (filters: AdvancedFilters) => void;
-}>) {
-  const sizeOptions = sortSizes(
-    uniqueValues(products.map((product) => product.size)),
-  );
-  const colorOptions = uniqueValues(products.map((product) => product.color));
-
-  function updateFilter<Key extends keyof AdvancedFilters>(
-    key: Key,
-    value: AdvancedFilters[Key],
-  ) {
-    setActiveFilters({
-      ...activeFilters,
-      [key]: activeFilters[key] === value ? "all" : value,
-    });
-  }
-
-  return (
-    <div className="mt-7 border-y border-black/12 text-[12px] uppercase tracking-[0.08em] transition-colors duration-300 hover:border-black/18">
-      <div className="flex min-h-12 items-center justify-between border-b border-black/12 text-black/58">
-        <span>
-          Refine selection
-          {filterCount > 0 ? ` / ${filterCount}` : ""}
-        </span>
-        {filterCount > 0 ? (
-          <button
-            className="relative z-10 border-b border-black/40 pb-1 text-black/62 transition-opacity duration-300 hover:opacity-55"
-            type="button"
-            onClick={(event) => {
-              event.preventDefault();
-              clearFilters();
-            }}
-          >
-            Clear
-          </button>
-        ) : (
-          <span>Size / Color / Material / Price</span>
-        )}
-      </div>
-
-      <div className="divide-y divide-black/12 border-t border-black/12">
-        <OptionDisclosure
-          activeValue={activeFilters.size}
-          label="Size"
-          options={sizeOptions.map((size) => ({
-            count: products.filter((product) => product.size === size).length,
-            key: size,
-            label: size,
-          }))}
-          onSelect={(value) => updateFilter("size", value)}
-        />
-        <OptionDisclosure
-          activeValue={activeFilters.color}
-          label="Color"
-          options={colorOptions.map((color) => ({
-            count: products.filter((product) => product.color === color).length,
-            key: color,
-            label: color,
-          }))}
-          onSelect={(value) => updateFilter("color", value)}
-        />
-        <OptionDisclosure
-          activeValue={activeFilters.material}
-          label="Material"
-          options={materialOptions.map((material) => ({
-            count: products.filter((product) =>
-              productMatchesMaterial(product, material.key),
-            ).length,
-            key: material.key,
-            label: material.label,
-          }))}
-          onSelect={(value) => updateFilter("material", value)}
-        />
-        <OptionDisclosure
-          activeValue={activeFilters.price}
-          label="Price"
-          options={priceOptions.map((price) => ({
-            count: products.filter((product) =>
-              productMatchesPrice(product, price.key),
-            ).length,
-            key: price.key,
-            label: price.label,
-          }))}
-          onSelect={(value) => updateFilter("price", value)}
-        />
-      </div>
-    </div>
-  );
-}
-
-function OptionDisclosure<Value extends string>({
-  activeValue,
-  label,
-  onSelect,
-  options,
-}: Readonly<{
-  activeValue: Value | "all";
-  label: string;
-  onSelect: (value: Value) => void;
-  options: Array<{
-    count: number;
-    key: Value;
-    label: string;
-  }>;
-}>) {
-  const activeLabel = options.find((option) => option.key === activeValue)
-    ?.label;
-  const visibleOptions = options.filter((option) => option.count > 0);
-
-  return (
-    <details className="group">
-      <summary className="flex cursor-pointer list-none items-center justify-between py-4 text-black/58 transition-all duration-300 hover:bg-black/[0.02] hover:px-2 hover:text-black">
-        <span>
-          {label}
-          {activeLabel ? ` — ${activeLabel}` : ""}
-        </span>
-        <span className="text-[12px] leading-none transition-transform duration-300 group-open:rotate-45">
-          +
-        </span>
-      </summary>
-      <div className="grid pb-4">
-        {visibleOptions.map((option) => (
-          <button
-            className={`flex items-center justify-between py-2 text-left transition-all duration-300 hover:px-2 hover:opacity-65 ${
-              activeValue === option.key
-                ? "bg-black/[0.06] px-2 font-medium text-black"
-                : "text-black/62"
-            }`}
-            key={option.key}
-            type="button"
-            onClick={() => onSelect(option.key)}
-          >
-            <span>{option.label}</span>
-            <span>{String(option.count).padStart(2, "0")}</span>
-          </button>
-        ))}
-      </div>
-    </details>
-  );
-}
-
-function ProductGrid({
-  cartItems,
-  collectionNote,
-  gender,
-  genderLabel,
-  onAdd,
-  onQuantity,
-  products,
-  searchQuery,
-  title,
-  totalProductCount,
-  onClearAll,
-}: Readonly<{
-  cartItems: CartItem[];
-  collectionNote: string;
-  gender: ProductGender;
-  genderLabel: string;
-  onAdd: (product: Product, size: string) => void;
-  onQuantity: (product: Product, size: string, delta: number) => void;
-  products: Product[];
-  searchQuery: string;
-  title: string;
-  totalProductCount: number;
-  onClearAll: () => void;
-}>) {
-  return (
-    <section className="mobile-product-section" aria-label={`${title} product grid`}>
-      <CollectionRailHeader
-        gender={gender}
-        genderLabel={genderLabel}
-        note={collectionNote}
-        productCount={totalProductCount}
-      />
-      <CampaignRail gender={gender} />
-
-      {products.length > 0 ? (
-        <div
-          className={`mobile-product-grid grid grid-cols-12 gap-x-3 sm:grid-cols-2 sm:gap-x-5 md:grid-cols-3 lg:grid-cols-4 ${
-            gender === "women" ? "gap-y-12 sm:gap-y-14" : "gap-y-10 sm:gap-y-10"
-          }`}
-        >
-          {products.map((product, index) => (
-              <ProductCard
-                index={index}
-              isWomen={gender === "women"}
-              cartItems={cartItems}
-              key={product.id}
-              onAdd={onAdd}
-              onQuantity={onQuantity}
-              product={product}
-            />
-          ))}
-        </div>
-      ) : (
-        <div className="border-y border-black/14 py-12 text-[12px] uppercase leading-[1.8] tracking-[0.14em] text-black/60">
-          <p>No garments found
-          {searchQuery.trim() ? ` for "${searchQuery.trim()}".` : "."}
-          </p>
-          <button className="mt-5 border-b border-black/50 pb-1 text-black" type="button" onClick={onClearAll}>Clear filters and search</button>
-        </div>
-      )}
-    </section>
-  );
-}
-
-function CollectionRailHeader({
-  gender,
-  genderLabel,
-  note,
-  productCount,
-}: Readonly<{
-  gender: ProductGender;
-  genderLabel: string;
-  note: string;
-  productCount: number;
-}>) {
-  const isWomen = gender === "women";
-
-  return (
-    <div
-      className={`mobile-collection-rail-header grid gap-3 border-b border-black/14 text-[9px] uppercase tracking-[0.18em] sm:grid-cols-[1fr_auto] sm:items-end ${
-        isWomen ? "mb-3 pb-3" : "mb-4 pb-4"
-      }`}
-    >
-      <div>
-        <p
-          className={
-            isWomen
-              ? "text-[10px] tracking-[0.2em] text-black/68"
-              : "text-[18px] tracking-[0.08em] text-black sm:text-[22px]"
-          }
-        >
-          {genderLabel}
-        </p>
-        <p className="mt-2 text-black/54">
-          Spring 2026 / {String(productCount).padStart(2, "0")} pieces
-        </p>
-      </div>
-      <p className="max-w-[360px] leading-[1.65] text-black/52 sm:text-right">
-        {note}
-      </p>
-    </div>
-  );
-}
-
-function CampaignRail({
-  gender,
-}: Readonly<{
-  gender: ProductGender;
-}>) {
-  const railImage =
-    gender === "women"
-      ? "/images/low-signal/collections/spring-2026-women-rail.png"
-      : "/images/low-signal/collections/spring-2026-rail.png";
-
-  return (
-    <div
-      className={`mobile-campaign-rail relative overflow-hidden border-y border-black/14 bg-[#d3d5cf] ${
-        gender === "women"
-          ? "mb-8 h-[52svh] max-h-[360px] min-h-[238px] sm:h-[212px] lg:h-[212px] xl:h-[238px]"
-          : "mb-7 h-[46svh] max-h-[330px] min-h-[218px] sm:h-[190px] lg:h-[180px] xl:h-[206px]"
-      }`}
-    >
-      <Image
-        alt="Spring 2026 rail garment details"
-        className="object-cover brightness-[0.76] contrast-[1.05] saturate-[0.55]"
-        fill
-        priority
-        sizes="(min-width: 1024px) 72vw, 100vw"
-        src={railImage}
-      />
-      <div className="absolute inset-0 bg-black/10" />
-    </div>
-  );
-}
-
-function ProductCard({
-  cartItems,
-  index,
-  isWomen,
-  onAdd,
-  onQuantity,
-  product,
-}: Readonly<{
-  cartItems: CartItem[];
-  index: number;
-  isWomen: boolean;
-  onAdd: (product: Product, size: string) => void;
-  onQuantity: (product: Product, size: string, delta: number) => void;
-  product: Product;
-}>) {
-  const sizeOptions = getProductSizeOptions(product);
-  const firstAvailableSize =
-    product.size ??
-    sizeOptions.find((option) => option.stock > 0)?.label ??
-    sizeOptions[0]?.label ??
-    "M";
-  const [isSizePickerOpen, setIsSizePickerOpen] = useState(false);
-  const [showAddedToast, setShowAddedToast] = useState(false);
-  const [selectedSize, setSelectedSize] = useState(firstAvailableSize);
-  const productCartItems = cartItems.filter((item) =>
-    item.id.startsWith(`${product.id}-`),
-  );
-  const cartItem =
-    cartItems.find(
-      (item) => item.id === getCartItemId(product, selectedSize),
-    ) ?? productCartItems[0];
-  const activeSize = cartItem?.size ?? selectedSize;
-  const selectedStock =
-    sizeOptions.find((option) => option.label === activeSize)?.stock ?? 0;
-  const totalStock = sizeOptions.reduce((total, size) => total + size.stock, 0);
-  const isSoldOut = getAvailabilityState(totalStock) === "sold_out";
-
-  function addSelectedSize(size: string) {
-    setSelectedSize(size);
-    onAdd(product, size);
-    setIsSizePickerOpen(false);
-    setShowAddedToast(true);
-  }
-
-  return (
-    <article
-      className={`mobile-product-card quiet-reveal group relative min-w-0 border-b border-black/14 pb-4 sm:col-span-1 sm:col-start-auto ${
-        index % 4 === 0
-          ? "col-span-8"
-          : index % 4 === 1
-            ? "col-span-8 col-start-5"
-            : index % 4 === 2
-              ? "col-span-7"
-              : "col-span-9 col-start-4"
-      }`}
-      style={{ animationDelay: `${Math.min(index, 10) * 45}ms` }}
-    >
-      <Link
-        aria-label={`Open ${product.name}`}
-        className="absolute inset-0 z-10 focus:outline-none focus-visible:ring-1 focus-visible:ring-black"
-        href={`/products/${product.slug}`}
-      />
-
-      <div
-        className={`relative overflow-hidden border border-black/10 bg-[#d1d3cd] ${
-          index % 4 === 2 ? "aspect-[5/6]" : index % 4 === 3 ? "aspect-[4/5]" : "aspect-[3/4]"
-        } sm:aspect-[4/5]`}
-      >
-        <Image
-          alt={product.name}
-          className={`product-image object-cover brightness-[0.86] contrast-[1.06] saturate-[0.62] transition-[filter,transform] ease-out group-hover:scale-[1.03] group-hover:brightness-[0.78] ${
-            isWomen ? "duration-500" : "duration-700"
-          } ${
-            product.objectPosition ?? "object-center"
-          }`}
-          fill
-          priority={index < 2}
-          sizes="(min-width: 1280px) 18vw, (min-width: 1024px) 17vw, (min-width: 768px) 25vw, 74vw"
-          src={product.image}
-        />
-        <div className="absolute inset-0 bg-black/0 transition duration-500 group-hover:bg-black/12" />
-      </div>
-
-      {isSizePickerOpen && !cartItem ? (
-        <div className="mobile-size-picker absolute bottom-[62px] right-0 z-30 w-full max-w-[240px] border border-black/18 bg-[#e5e6e1]/96 p-4 text-[12px] uppercase tracking-[0.08em] text-black backdrop-blur-sm sm:bottom-[68px]">
-          <div className="mb-3 flex items-center justify-between border-b border-black/14 pb-2 text-black/76">
-            <span>Choose a size</span>
-            <button
-              aria-label={`Close size selector for ${product.name}`}
-              className="min-h-11 min-w-11 text-black/58"
-              type="button"
-              onClick={() => setIsSizePickerOpen(false)}
-            >
-              x
-            </button>
-          </div>
-          <div className="grid grid-cols-5 gap-px bg-black/14">
-            {sizeOptions.map((size) => (
-              <button
-                className="min-h-11 bg-[#dedfd9] px-2 py-3 text-black/70 transition-colors duration-300 hover:bg-[#cfd0ca] hover:text-black disabled:cursor-not-allowed disabled:text-black/26"
-                disabled={size.stock <= 0}
-                key={size.label}
-                type="button"
-                onClick={() => addSelectedSize(size.label)}
-              >
-                {size.label}
-              </button>
-            ))}
-          </div>
-          <p className="mt-3 text-[11px] text-black/68">
-            Select an available size to add this piece.
-          </p>
-        </div>
-      ) : null}
-
-      <div className="grid grid-cols-[1fr_auto] gap-3 pt-4 uppercase tracking-[0.06em]">
-        <div className="min-w-0">
-          <h2
-            className={`truncate text-[14px] font-medium tracking-[0.03em] text-black transition-transform duration-300 ease-out lg:text-[13px] ${
-              isWomen ? "group-hover:-translate-y-0.5" : ""
-            }`}
-          >
-            {product.name}
-          </h2>
-          <p className="mt-2 text-[11px] text-black/62">{product.category}</p>
-          <p className="mt-3 text-[14px] font-medium tracking-[0.02em] text-black">
-            ${product.price}
-          </p>
-        </div>
-
-        {cartItem ? (
-          <div className="relative z-20 self-end">
-            <div className="flex items-center gap-3 border-b border-black/22 pb-1 text-[10px] text-black/76">
-              <button
-                aria-label={`Remove one ${product.name}`}
-                className="min-h-11 min-w-11 px-1 transition-opacity duration-300 hover:opacity-55"
-                type="button"
-                onClick={() => onQuantity(product, activeSize, -1)}
-              >
-                -
-              </button>
-              <span className="min-w-3 text-center">{cartItem.quantity}</span>
-              <button
-                aria-label={`Add one ${product.name}`}
-                className="min-h-11 min-w-11 px-1 transition-opacity duration-300 hover:opacity-55 disabled:cursor-not-allowed disabled:opacity-30"
-                disabled={cartItem.quantity >= selectedStock}
-                type="button"
-                onClick={() => onQuantity(product, activeSize, 1)}
-              >
-                +
-              </button>
-            </div>
-            <p className="mt-2 text-right text-[7px] tracking-[0.12em] text-black/48">
-              {activeSize}
-            </p>
-          </div>
-        ) : (
-          <button
-            aria-label={`Quick add ${product.name}; choose a size`}
-            className="relative z-20 flex min-h-11 self-end items-center justify-center whitespace-nowrap border-b border-black/36 px-1 text-[11px] uppercase tracking-[0.06em] text-black/78 transition duration-300 ease-out hover:border-black/70 hover:text-black disabled:cursor-not-allowed disabled:opacity-30"
-            disabled={isSoldOut}
-            type="button"
-            onClick={() => setIsSizePickerOpen((isOpen) => !isOpen)}
-          >
-            {isSoldOut ? "Sold out" : "Quick add / size +"}
-          </button>
-        )}
-      </div>
-
-      {showAddedToast ? (
-        <div
-          aria-live="polite"
-          className="fixed inset-x-4 bottom-4 z-[80] grid gap-4 border border-white/12 bg-[#171614] p-5 text-[9px] uppercase tracking-[0.14em] text-[#ecece5] sm:left-auto sm:right-5 sm:w-[380px]"
-        >
-          <p>{product.name} / {selectedSize} added to cart.</p>
-          <div className="flex items-center justify-between gap-5">
-            <Link className="relative z-20 flex min-h-11 items-center border-b border-white/55" href="/cart">
-              View cart
-            </Link>
-            <button
-              className="relative z-20 min-h-11 border-b border-white/28 text-white/68"
-              type="button"
-              onClick={() => setShowAddedToast(false)}
-            >
-              Continue shopping
-            </button>
-          </div>
-        </div>
-      ) : null}
-    </article>
-  );
 }

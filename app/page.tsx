@@ -1,14 +1,13 @@
 import Image from "next/image";
 import Link from "next/link";
 import { HomeSelectedPieces } from "@/components/HomeSelectedPieces";
+import { MaterialForm } from "@/components/MaterialForm";
 import { MobileHomeHeader } from "@/components/MobileHomeHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 
 const heroImage = "/images/hero/ch1.png";
 const collectionImage = "/images/hero/ch3.png";
 const lookbookImage = "/images/low-signal/lookbook-coast.jpg";
-const materialStoryImage =
-  "/images/low-signal/selected-collection/material-form-original.png";
 const journalImages = [
   ["/images/low-signal/journal/fabric-detail.jpg", "Fabric detail"],
   ["/images/low-signal/journal/road-coast.jpg", "Road / cloudy coast"],
@@ -17,7 +16,6 @@ const journalImages = [
   ["/images/low-signal/journal/studio-table.jpg", "Studio table note"],
 ];
 
-const materialNotes = ["Washed cotton", "Dry wool", "Raw canvas", "Worn nylon"];
 const journalRows = [
   ["01", "Field note"],
   ["02", "Material log"],
@@ -236,68 +234,6 @@ function EditorialGrid() {
   );
 }
 
-function MaterialForm() {
-  return (
-    <section className="mobile-material-story order-3 grid min-h-[72svh] w-full grid-cols-[46%_54%] border-t border-black/20 bg-[#d6d7d1] lg:order-none lg:min-h-[76svh] lg:grid-cols-[38vw_1fr]">
-      <div className="mobile-material-copy relative border-r border-black/18 bg-[#d4d5cf] lg:min-h-0">
-        <div className="h-full px-5 py-9 lg:h-auto lg:px-0 lg:py-0">
-          <div className="lg:absolute lg:left-[8.5vw] lg:top-[22%] lg:max-w-[310px]">
-            <Kicker number="05" />
-            <h2 className="mt-6 text-[11px] uppercase leading-[1.45] tracking-[0.22em] lg:mt-[42px]">
-              Material & Form
-            </h2>
-            <p className="mt-6 text-[16px] uppercase leading-[1.42] tracking-[0.14em] lg:mt-[34px] lg:text-[20px]">
-              We work with materials
-              <br />
-              that age quietly and
-              <br />
-              take on character
-              <br />
-              over time.
-            </p>
-            <div className="mobile-material-notes mt-7 hidden max-w-[260px] grid-cols-2 border-y border-black/18 text-[8px] uppercase tracking-[0.15em] text-black/56 lg:mt-[40px] lg:grid lg:grid-cols-1 lg:text-[9px]">
-              {materialNotes.map((item) => (
-                <div
-                  key={item}
-                  className="flex min-w-0 justify-between border-b border-black/12 py-2.5 odd:pr-3 even:border-l even:pl-3 lg:py-3 lg:odd:pr-0 lg:even:border-l-0 lg:even:pl-0 lg:last:border-b-0"
-                >
-                  <span>{item}</span>
-                  <span className="h-px w-8 self-center bg-black/20" />
-                </div>
-              ))}
-            </div>
-            <Link
-              className="mt-7 inline-flex border-b border-black pb-[5px] text-[9px] uppercase tracking-[0.16em] lg:mt-[42px]"
-              href="/about"
-            >
-              Our approach
-            </Link>
-          </div>
-        </div>
-      </div>
-
-      <div className="mobile-material-image-column relative min-h-0 bg-[#d6d7d1] lg:px-[5vw] lg:py-[7vh]">
-        <div className="grid h-full content-center gap-5">
-          <div className="mobile-material-image relative h-full min-h-[72svh] w-full overflow-hidden border-l border-black/14 bg-[#bfc0b8] lg:ml-[3vw] lg:min-h-0 lg:aspect-[16/11] lg:h-auto lg:w-[88%] lg:border">
-            <Image
-              src={materialStoryImage}
-              alt="Close black washed fabric, rib texture, and shadow"
-              fill
-              sizes="(min-width: 1024px) 44vw, 92vw"
-              className="editorial-image object-cover object-[50%_48%] brightness-[0.72] contrast-[1.08] saturate-[0.62]"
-            />
-            <div className="absolute inset-0 bg-[#11110f]/10" />
-          </div>
-
-          <div className="hidden gap-2 border-t border-black/16 pt-4 text-[8px] uppercase leading-[1.6] tracking-[0.18em] text-black/48 lg:ml-[3vw] lg:grid lg:w-[88%] lg:grid-cols-[1fr_auto] lg:items-start">
-            <span>Material note / 01</span>
-            <span className="lg:text-right">Washed black / texture / time</span>
-          </div>
-        </div>
-      </div>
-    </section>
-  );
-}
 
 function JournalSection() {
   return (

@@ -11,6 +11,11 @@ export default defineConfig({
   workers: 1,
   use: {
     baseURL: "http://localhost:3005",
+    launchOptions: {
+      executablePath:
+        process.env.PLAYWRIGHT_EXECUTABLE_PATH ??
+        "/tmp/pw/chromium_headless_shell-1187/chrome-mac/headless_shell",
+    },
     screenshot: "only-on-failure",
     trace: "retain-on-failure",
   },

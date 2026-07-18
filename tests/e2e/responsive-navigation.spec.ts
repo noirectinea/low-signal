@@ -50,13 +50,14 @@ test("mobile filters apply, close, and persist in the URL", async ({ page }) => 
   await page.getByRole("button", { name: /^Filters/ }).click();
 
   const filters = page.getByRole("dialog", { name: "Collection filters" });
-  await filters.getByRole("button", { name: /Outerwear/ }).click();
-  await filters.getByRole("button", { name: /Show 02 pieces/ }).click();
+  await filters.getByRole("button", { name: "Canvas" }).click();
+  await filters.getByRole("button", { name: /View \d+ pieces/ }).click();
 
   await expect(filters).toBeHidden();
-  await expect(page).toHaveURL(/type=Outerwear/);
-  await expect(page.getByLabel("Selected filters").getByText("Outerwear")).toBeVisible();
+  await expect(page).toHaveURL(/material=canvas/);
+  await expect(page.getByText("Canvas", { exact: true }).first()).toBeVisible();
 
   await page.reload();
-  await expect(page.getByLabel("Selected filters").getByText("Outerwear")).toBeVisible();
+  await expect(page).toHaveURL(/material=canvas/);
+  await expect(page.getByRole("button", { name: /^Filters \/ 1/ })).toBeVisible();
 });

@@ -181,6 +181,31 @@ a {
   opacity: 0.55;
 }
 
+.site-footer-link {
+  display: inline-flex;
+  min-height: 26px;
+  align-items: center;
+  font-size: 10px;
+  font-weight: 400;
+  white-space: nowrap;
+}
+
+.toolbar-select {
+  position: relative;
+}
+
+.toolbar-select::after {
+  position: absolute;
+  right: 0;
+  content: "⌄";
+  color: rgb(18 18 17 / 0.48);
+  pointer-events: none;
+}
+
+.material-selector-row[aria-pressed="true"] {
+  background: rgb(18 18 17 / 0.025);
+}
+
 :where(a, button, input, select, summary):focus-visible {
   outline: 2px solid currentColor;
   outline-offset: 3px;
@@ -452,40 +477,25 @@ a {
   }
 
   .mobile-material-copy {
-    width: 78%;
-    min-height: 52svh;
+    width: auto;
+    min-height: 0;
     border-bottom: 1px solid rgb(17 17 15 / 0.16);
   }
 
-  .mobile-material-copy > div {
-    padding: 38px 20px 44px;
-  }
-
   .mobile-material-copy p {
-    max-width: 240px;
-  }
-
-  .mobile-material-notes {
-    display: grid;
-    grid-template-columns: 1fr;
-    max-width: 220px;
-  }
-
-  .mobile-material-notes > div:nth-child(even) {
-    border-left: 0;
-    padding-left: 0;
+    max-width: 300px;
   }
 
   .mobile-material-image-column {
-    width: 82%;
-    margin-left: 18%;
+    width: auto;
+    margin-left: 0;
     margin-top: 0;
-    border-top: 1px solid rgb(17 17 15 / 0.16);
+    border-top: 0;
   }
 
   .mobile-material-image {
-    min-height: 58svh;
-    border-left: 1px solid rgb(17 17 15 / 0.18);
+    min-height: 0;
+    border-left: 1px solid rgb(17 17 15 / 0.14);
   }
 
   .mobile-journal {
@@ -629,108 +639,24 @@ a {
   }
 
   .mobile-catalog-header {
-    gap: 12px;
-    padding-bottom: 12px;
+    padding-bottom: 16px;
   }
 
   .mobile-catalog-header h1 {
-    margin-top: 10px;
     font-size: clamp(3.25rem, 15vw, 4rem);
   }
 
-  .mobile-catalog-women .mobile-catalog-header h1 {
-    font-size: clamp(3.1rem, 14vw, 3.8rem);
-  }
-
-  .mobile-catalog-header > div:last-child {
-    gap: 8px;
-    padding-top: 10px;
-  }
-
-  .mobile-catalog-header > div:last-child > div:last-child {
-    display: none;
-  }
-
-  .mobile-filter-intro {
-    margin-bottom: 0;
-    padding-block: 12px;
-    border-top: 0;
-  }
-
-  .mobile-filter-intro p:last-child {
-    margin-top: 6px;
-    max-width: 100%;
-    line-height: 1.55;
-  }
-
-  .mobile-filter-intro p:first-child {
-    display: none;
-  }
-
-  .mobile-filter-bar {
-    margin-inline: -16px;
-    padding-inline: 16px;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-  }
-
-  .mobile-filter-bar > button {
-    min-width: 0;
-    border-bottom: 0;
-  }
-
-  .mobile-filter-bar > button + button {
-    border-left: 1px solid rgb(0 0 0 / 0.16);
-    padding-left: 16px;
-  }
-
-  .mobile-collection-rail-header {
-    display: none;
-  }
-
   .mobile-campaign-rail {
-    height: 12svh !important;
-    min-height: 92px !important;
-    max-height: 112px !important;
-    margin: 0 -16px 18px;
+    height: 150px !important;
+    min-height: 0 !important;
+    max-height: none !important;
+    margin: 16px -16px;
     border-left: 0;
     border-right: 0;
   }
 
-  .mobile-product-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    column-gap: 12px;
-    row-gap: 30px;
-  }
-
-  .mobile-product-card:nth-child(n) {
-    grid-column: auto !important;
-  }
-
-  .mobile-product-card > div:first-of-type {
-    aspect-ratio: 4 / 5 !important;
-  }
-
-  .mobile-product-card:nth-child(4n + 2),
-  .mobile-product-card:nth-child(4n + 3) {
-    margin-top: 18px;
-  }
-
-  .mobile-size-picker {
-    position: fixed;
-    inset: auto 0 0;
-    z-index: 70;
-    width: 100%;
-    max-width: none;
-    padding: 20px;
-    border-inline: 0;
-    background: rgb(229 230 225 / 0.98);
-  }
-
-  .mobile-product-card h2 {
-    overflow: visible;
-    white-space: normal;
-    line-height: 1.25;
+  .catalog-list-view article:last-child {
+    border-bottom: 0;
   }
 
   .mobile-product-page {
@@ -1068,24 +994,18 @@ a {
 
   .site-footer {
     min-height: 0;
+    font-size: 11px;
+    font-weight: 400;
   }
 
-  .site-footer-bottom nav {
-    width: 100%;
-    justify-content: space-between;
-  }
-
-  .site-footer {
-    font-size: 13px;
-  }
-
-  .site-footer-groups a {
-    min-height: 38px;
-    font-size: 13px;
+  .site-footer-link {
+    min-height: 32px;
+    font-size: 10px;
+    font-weight: 400;
   }
 
   .site-footer-bottom {
-    font-size: 11px;
+    font-size: 9px;
   }
 }
 
