@@ -102,7 +102,8 @@ function HeroPanel() {
       </div>
 
       <p className="mobile-hero-season absolute left-5 top-[104px] z-30 max-w-[112px] text-[9px] uppercase leading-[1.45] tracking-[0.18em] text-black/68 lg:left-auto lg:right-[74px] lg:max-w-[84px] lg:leading-[1.34]">
-        Spring 2026 / Washed Black
+        <span className="lg:hidden">Spring 2026<br />Washed Black</span>
+        <span className="hidden lg:inline">Spring 2026 / Washed Black</span>
       </p>
 
       <h1
@@ -115,13 +116,12 @@ function HeroPanel() {
 
       <div className="mobile-hero-actions absolute inset-x-5 bottom-5 z-30 grid grid-cols-[29%_1fr] gap-4 border-t border-black/34 pt-3 lg:hidden">
         <p className="min-w-0 text-[10px] uppercase leading-[1.55] tracking-[0.1em] text-black/76">
-          Washed black.
-          <br />
-          Daily wear.
+          <span className="block whitespace-nowrap">Washed black.</span>
+          <span className="block whitespace-nowrap">Made for daily wear.</span>
         </p>
-        <div className="grid min-w-0 text-[11px] uppercase tracking-[0.11em] text-[#f5f2ed]/88">
-          <Link className="flex min-h-11 items-center whitespace-nowrap border-b border-[#f5f2ed]/62" href="/collections">Shop Spring 2026 →</Link>
-          <Link className="flex min-h-11 w-fit items-center border-b border-[#f5f2ed]/38 text-[#f5f2ed]/72" href="/lookbook">View Lookbook</Link>
+        <div className="mobile-hero-cta grid min-w-0 text-[11px] uppercase tracking-[0.08em] text-[#f5f2ed]">
+          <Link className="mobile-hero-cta-primary flex min-h-11 items-center whitespace-nowrap border-b border-[#f5f2ed]/78" href="/collections">Shop Spring 2026 →</Link>
+          <Link className="mobile-hero-cta-secondary flex min-h-11 w-fit items-center border-b border-[#f5f2ed]/48 text-[#f5f2ed]/82" href="/lookbook">View Lookbook →</Link>
         </div>
       </div>
 
@@ -137,25 +137,12 @@ function EditorialGrid() {
     <section className="mobile-home-editorial border-b border-black/20">
       <div className="mobile-editorial-composition lg:hidden">
         <div className="mobile-editorial-index bg-[#e8e9e3]">
-          <Link className="mobile-spring-teaser group grid min-h-0 grid-cols-[63%_37%] border-b border-black/18" href="/collections">
-            <div className="relative min-h-0 overflow-hidden border-r border-black/18 bg-[#c9cac4]">
-              <Image
-                src={collectionImage}
-                alt="LOW SIGNAL collection preview"
-                fill
-                sizes="63vw"
-                className="editorial-image object-cover object-[48%_24%] transition-transform duration-700 group-hover:scale-[1.012]"
-              />
-            </div>
-            <div className="flex min-w-0 flex-col justify-between px-4 py-5 uppercase">
-              <span className="text-[9px] tracking-[0.14em] text-black/48">02</span>
-              <div>
-                <p className="text-[11px] tracking-[0.1em]">Spring 2026</p>
-                <span className="mt-3 flex min-h-11 items-center border-b border-black/50 text-[9px] tracking-[0.09em]">
-                  View collection →
-                </span>
-              </div>
-            </div>
+          <Link className="mobile-spring-teaser group flex min-h-0 items-center justify-between gap-4 border-y border-black/18 px-4 uppercase" href="/collections">
+            <span className="text-[10px] tracking-[0.1em] text-black/48">02</span>
+            <span className="text-[12px] tracking-[0.08em]">Spring 2026</span>
+            <span className="flex min-h-11 items-center border-b border-black/52 text-[9px] tracking-[0.07em]">
+              View collection →
+            </span>
           </Link>
 
           <Link className="mobile-lookbook-teaser group relative block min-h-0 overflow-hidden bg-[#151413] text-[#f2f1ea]" href="/lookbook">

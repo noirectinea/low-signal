@@ -1976,3 +1976,127 @@ a {
     margin-bottom: 26px;
   }
 }
+
+/* Final mobile-only commercial hierarchy. Desktop editorial layouts stay intact. */
+.account-header-link {
+  border-bottom: 1px solid transparent;
+  transition: border-color 220ms ease, opacity 220ms ease;
+}
+
+.account-header-link:hover,
+.account-header-link:focus-visible {
+  border-bottom-color: currentColor;
+}
+
+@media (max-width: 767.98px) {
+  .mobile-home-hero {
+    height: 100svh;
+    min-height: 100svh;
+  }
+
+  .mobile-home-hero .hero-printed-title {
+    top: 45.5%;
+  }
+
+  .mobile-hero-season {
+    left: 16px;
+    top: 94px;
+    max-width: 102px;
+    font-size: 10.5px;
+    line-height: 1.42;
+    letter-spacing: 0.1em;
+    color: rgb(18 18 17 / 0.82);
+  }
+
+  .mobile-hero-actions {
+    grid-template-columns: 29% minmax(0, 1fr);
+    gap: 12px;
+  }
+
+  .mobile-hero-actions > p {
+    font-size: 11px;
+    line-height: 1.42;
+    letter-spacing: 0.055em;
+    color: rgb(18 18 17 / 0.86);
+  }
+
+  .mobile-hero-cta {
+    row-gap: 8px;
+  }
+
+  .mobile-hero-cta-primary {
+    width: 100%;
+    font-size: 13px;
+    letter-spacing: 0.065em;
+    color: rgb(245 242 237 / 0.98);
+  }
+
+  .mobile-hero-cta-secondary {
+    font-size: 10.5px;
+    letter-spacing: 0.075em;
+  }
+
+  .mobile-editorial-index {
+    height: 400px;
+    grid-template-rows: 100px 300px;
+  }
+
+  .mobile-spring-teaser {
+    min-height: 100px;
+  }
+
+  .mobile-lookbook-teaser {
+    min-height: 300px;
+  }
+
+  .site-footer {
+    display: none;
+  }
+
+  .mobile-header-actions {
+    gap: 11px;
+  }
+
+  .account-header-link,
+  .mobile-header-action,
+  .mobile-menu-trigger {
+    align-self: center;
+  }
+
+  .mobile-menu-legal {
+    display: flex;
+    min-height: 42px;
+    align-items: center;
+    justify-content: flex-end;
+  }
+}
+
+@media (max-width: 382px) {
+  .mobile-hero-image {
+    object-position: 55% 50%;
+  }
+}
+
+@media (min-width: 383px) and (max-width: 395px) {
+  .mobile-hero-image {
+    object-position: 51% 50%;
+  }
+}
+
+@media (min-width: 396px) and (max-width: 414px) {
+  .mobile-hero-image {
+    object-position: 49% 50%;
+  }
+}
+
+@media (min-width: 415px) and (max-width: 767.98px) {
+  .mobile-hero-image {
+    object-position: 47% 50%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .selected-rail {
+    scroll-behavior: auto;
+  }
+}

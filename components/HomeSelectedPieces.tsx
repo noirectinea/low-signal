@@ -5,6 +5,7 @@ import Link from "next/link";
 import {
   useCallback,
   useEffect,
+  useMemo,
   useRef,
   useState,
   type UIEvent,
@@ -20,26 +21,43 @@ const selectedIds = [
   "pleated-pant",
 ] as const;
 
-const selectedProducts = selectedIds.map((id) => {
+const desktopSelectedProducts = selectedIds.map((id) => {
   const product = products.find((item) => item.id === id);
   if (!product) throw new Error(`Missing selected product: ${id}`);
   return product;
 });
 
-const repeatedProducts = Array.from({ length: 3 }, (_, group) =>
-  selectedProducts.map((product, index) => ({
-    clone: group !== 1,
-    group,
-    index,
-    product,
-  })),
-).flat();
+const mobileSelectedProducts = [
+  desktopSelectedProducts[0],
+  desktopSelectedProducts[3],
+  desktopSelectedProducts[1],
+  desktopSelectedProducts[4],
+  desktopSelectedProducts[2],
+  desktopSelectedProducts[5],
+];
 
 export function HomeSelectedPieces() {
   const railRef = useRef<HTMLDivElement>(null);
   const frameRef = useRef<number | null>(null);
-  const physicalIndexRef = useRef(selectedProducts.length);
+  const pauseAutoplayUntilRef = useRef(0);
+  const physicalIndexRef = useRef(desktopSelectedProducts.length);
+  const [isMobile, setIsMobile] = useState(false);
   const [activeIndex, setActiveIndex] = useState(0);
+  const selectedProducts = isMobile
+    ? mobileSelectedProducts
+    : desktopSelectedProducts;
+  const repeatedProducts = useMemo(
+    () =>
+      Array.from({ length: 3 }, (_, group) =>
+        selectedProducts.map((product, index) => ({
+          clone: group !== 1,
+          group,
+          index,
+          product,
+        })),
+      ).flat(),
+    [selectedProducts],
+  );
 
   const scrollToPhysicalIndex = useCallback(
     (physicalIndex: number, behavior: ScrollBehavior) => {
@@ -66,6 +84,16 @@ export function HomeSelectedPieces() {
   );
 
   useEffect(() => {
+    const mobileQuery = window.matchMedia("(max-width: 767.98px)");
+    const updateMode = () => setIsMobile(mobileQuery.matches);
+
+    updateMode();
+    mobileQuery.addEventListener("change", updateMode);
+
+    return () => mobileQuery.removeEventListener("change", updateMode);
+  }, []);
+
+  useEffect(() => {
     const alignRail = () =>
       scrollToPhysicalIndex(selectedProducts.length, "auto");
     const frame = window.requestAnimationFrame(alignRail);
@@ -75,7 +103,30 @@ export function HomeSelectedPieces() {
       window.cancelAnimationFrame(frame);
       window.removeEventListener("resize", alignRail);
     };
-  }, [scrollToPhysicalIndex]);
+  }, [isMobile, scrollToPhysicalIndex, selectedProducts.length]);
+
+  useEffect(() => {
+    if (!isMobile) return;
+    const reducedMotion = window.matchMedia(
+      "(prefers-reduced-motion: reduce)",
+    );
+    const interval = window.setInterval(() => {
+      if (
+        reducedMotion.matches ||
+        document.hidden ||
+        Date.now() < pauseAutoplayUntilRef.current
+      ) {
+        return;
+      }
+      scrollToPhysicalIndex(physicalIndexRef.current + 1, "smooth");
+    }, 3800);
+
+    return () => window.clearInterval(interval);
+  }, [isMobile, scrollToPhysicalIndex]);
+
+  function pauseAutoplay() {
+    pauseAutoplayUntilRef.current = Date.now() + 7000;
+  }
 
   function handleScroll(event: UIEvent<HTMLDivElement>) {
     const rail = event.currentTarget;
@@ -115,6 +166,7 @@ export function HomeSelectedPieces() {
   }
 
   function moveRail(direction: -1 | 1) {
+    pauseAutoplay();
     scrollToPhysicalIndex(physicalIndexRef.current + direction, "smooth");
   }
 
@@ -174,7 +226,9 @@ export function HomeSelectedPieces() {
             <div
               aria-label="Selected garments carousel"
               className="selected-rail flex min-w-0 snap-x snap-mandatory gap-3 overflow-x-auto overscroll-x-contain scroll-smooth lg:gap-4"
+              onPointerDown={pauseAutoplay}
               onScroll={handleScroll}
+              onWheel={pauseAutoplay}
               ref={railRef}
               role="region"
             >

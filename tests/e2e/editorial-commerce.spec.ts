@@ -34,10 +34,55 @@ test("selected garments uses a light mobile campaign and swipe rail", async ({ p
   await expect(section.getByRole("link", { name: "Men", exact: true })).toBeVisible();
   await expect(section.getByRole("link", { name: "Women", exact: true })).toBeVisible();
   await expect(section.getByText("View product →").first()).toBeVisible();
+  await expect(section.locator("article h3")).toHaveText([
+    "Field Jacket",
+    "Storm Parka",
+    "Work Jacket",
+    "Double Face Coat",
+    "Cotton Shirt",
+    "Double Pleat Trouser",
+    "Field Jacket",
+    "Storm Parka",
+    "Work Jacket",
+    "Double Face Coat",
+    "Cotton Shirt",
+    "Double Pleat Trouser",
+    "Field Jacket",
+    "Storm Parka",
+    "Work Jacket",
+    "Double Face Coat",
+    "Cotton Shirt",
+    "Double Pleat Trouser",
+  ]);
   await section.getByRole("button", { name: "Next selected garment" }).click();
   await expect(section.locator(".selected-rail-footer > span")).toHaveText(
     "02 / 06",
   );
+});
+
+test("mobile selected garments autoplays, pauses after input, and respects reduced motion", async ({
+  page,
+}) => {
+  test.setTimeout(35_000);
+  await page.setViewportSize({ height: 844, width: 390 });
+  await page.goto("/");
+
+  const index = page.locator("#selected-pieces .selected-rail-footer > span");
+  await expect(index).toHaveText("01 / 06");
+  await expect(index).toHaveText("02 / 06", { timeout: 5_000 });
+
+  await page
+    .getByRole("button", { name: "Next selected garment" })
+    .click();
+  await expect(index).toHaveText("03 / 06");
+  await page.waitForTimeout(4_200);
+  await expect(index).toHaveText("03 / 06");
+
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  await page.reload();
+  await expect(index).toHaveText("01 / 06");
+  await page.waitForTimeout(4_200);
+  await expect(index).toHaveText("01 / 06");
 });
 
 test("material rows update the image, caption, and garment link", async ({

@@ -48,7 +48,7 @@ export function MobileHomeHeader({ mode = "overlay" }: Readonly<{ mode?: "overla
     </nav>
     <div className="mobile-header-actions flex min-w-0 items-center justify-end gap-3 lg:gap-4">
       <Link aria-label="Search products" className="mobile-header-search flex min-h-11 items-center text-[9px] tracking-[0.1em] lg:text-[11px] lg:tracking-[0.12em]" href="/search">Search</Link>
-      <AccountHeaderLink className="flex min-h-11 items-center whitespace-nowrap text-[11px] tracking-[0.06em] lg:text-[11px] lg:tracking-[0.12em]" compact />
+      <AccountHeaderLink className="account-header-link flex min-h-11 items-center whitespace-nowrap text-[11px] tracking-[0.045em] lg:text-[12px] lg:tracking-[0.08em]" />
       <CartCountLink className="mobile-header-action flex min-h-11 items-center whitespace-nowrap text-[11px] uppercase tracking-[0.06em] lg:hidden" />
       <CartCountLink className="hidden min-h-11 items-center whitespace-nowrap text-[11px] uppercase tracking-[0.12em] lg:flex" />
       <MobileNavMenu onOpenChange={setIsMenuOpen} />

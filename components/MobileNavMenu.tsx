@@ -131,6 +131,8 @@ export function MobileNavMenu({
               <Link href="/info#shipping" onClick={() => setOpen(false)}>Shipping</Link>
               <Link href="/info#returns" onClick={() => setOpen(false)}>Returns</Link>
               <Link href="/info#contact" onClick={() => setOpen(false)}>Contact</Link>
+              <Link href="/info#privacy" onClick={() => setOpen(false)}>Privacy</Link>
+              <Link href="/info#terms" onClick={() => setOpen(false)}>Terms</Link>
               <Link href="/info#cookies" onClick={() => setOpen(false)}>Cookies</Link>
               <a
                 href="https://www.instagram.com/lowsignal/"
@@ -139,11 +141,10 @@ export function MobileNavMenu({
               >
                 Instagram ↗
               </a>
+              <Link href="/admin" onClick={() => setOpen(false)}>Admin ↗</Link>
             </nav>
             <div className="mobile-menu-legal">
-              <Link href="/info#privacy" onClick={() => setOpen(false)}>Privacy</Link>
-              <Link href="/info#terms" onClick={() => setOpen(false)}>Terms</Link>
-              <span>© 2026</span>
+              <span>© 2026 LOW SIGNAL</span>
             </div>
           </div>
         </div>

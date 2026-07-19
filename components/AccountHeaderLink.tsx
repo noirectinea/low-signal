@@ -3,22 +3,14 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
-type AccountState =
-  | { authenticated: false }
-  | { authenticated: true; initials: string };
-
 export function AccountHeaderLink({
   className = "",
-  compact = false,
   onClick,
 }: {
   className?: string;
-  compact?: boolean;
   onClick?: () => void;
 }) {
-  const [account, setAccount] = useState<AccountState>({
-    authenticated: false,
-  });
+  const [authenticated, setAuthenticated] = useState(false);
 
   useEffect(() => {
     const controller = new AbortController();
@@ -32,14 +24,7 @@ export function AccountHeaderLink({
         profile?: { email?: string; full_name?: string | null };
       }) => {
         if (!result.authenticated) return;
-
-        setAccount({
-          authenticated: true,
-          initials: getInitials(
-            result.profile?.full_name,
-            result.profile?.email,
-          ),
-        });
+        setAuthenticated(true);
       })
       .catch(() => {});
 
@@ -48,32 +33,12 @@ export function AccountHeaderLink({
 
   return (
     <Link
-      aria-label={account.authenticated ? "Open my account" : "Sign in"}
+      aria-label={authenticated ? "Open my account" : "Sign in to account"}
       className={className}
-      href={account.authenticated ? "/account" : "/account/login"}
+      href={authenticated ? "/account" : "/account/login"}
       onClick={onClick}
     >
-      {account.authenticated
-        ? compact
-          ? account.initials
-          : "Account"
-        : compact
-          ? "Sign in"
-          : "Account"}
+      Account
     </Link>
   );
-}
-
-function getInitials(name?: string | null, email?: string) {
-  const words = (name ?? "").trim().split(/\s+/).filter(Boolean);
-
-  if (words.length) {
-    return words
-      .slice(0, 2)
-      .map((word) => word[0])
-      .join("")
-      .toUpperCase();
-  }
-
-  return (email?.[0] ?? "A").toUpperCase();
 }
