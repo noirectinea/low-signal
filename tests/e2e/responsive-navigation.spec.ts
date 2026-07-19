@@ -71,8 +71,13 @@ test("mobile home keeps the first screen exact and removes the large footer", as
       const spring =
         document.querySelector<HTMLElement>(".mobile-spring-teaser");
       const footer = document.querySelector<HTMLElement>(".site-footer");
+      const compactFooter =
+        document.querySelector<HTMLElement>(".mobile-compact-footer");
 
       return {
+        compactFooterDisplay: compactFooter
+          ? getComputedStyle(compactFooter).display
+          : null,
         documentWidth: document.documentElement.scrollWidth,
         editorialTop: editorial?.getBoundingClientRect().top,
         footerDisplay: footer ? getComputedStyle(footer).display : null,
@@ -89,6 +94,7 @@ test("mobile home keeps the first screen exact and removes the large footer", as
     expect(metrics.springHeight).toBeLessThanOrEqual(110);
     expect(metrics.documentWidth).toBe(metrics.viewportWidth);
     expect(metrics.footerDisplay).toBe("none");
+    expect(metrics.compactFooterDisplay).not.toBe("none");
   }
 });
 

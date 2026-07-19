@@ -15,7 +15,33 @@ const serviceLinks = [
 
 export function SiteFooter() {
   return (
-    <footer className="site-footer border-t border-black/18 bg-[#d8d9d3] px-5 py-6 text-[11px] font-normal uppercase tracking-[0.06em] text-[#121211] sm:px-6 lg:px-12 lg:py-10">
+    <>
+    <footer className="mobile-compact-footer border-t border-black/18 bg-[#d8d9d3] px-4 py-4 text-[9px] font-normal uppercase tracking-[0.07em] text-[#121211] lg:hidden">
+      <div className="flex items-center justify-between gap-5">
+        <p className="text-[11px] tracking-[0.1em]">LOW SIGNAL</p>
+        <span className="text-[8px] tracking-[0.06em] text-black/48">
+          © 2026
+        </span>
+      </div>
+      <nav
+        aria-label="Essential footer navigation"
+        className="mt-4 grid grid-cols-4 border-t border-black/14 pt-3"
+      >
+        <Link className="min-h-8" href="/collections">Collections</Link>
+        <Link className="min-h-8 text-center" href="/lookbook">Lookbook</Link>
+        <Link className="min-h-8 text-center" href="/info">Information</Link>
+        <a
+          className="min-h-8 text-right"
+          href="https://www.instagram.com/lowsignal/"
+          rel="noreferrer"
+          target="_blank"
+        >
+          Instagram ↗
+        </a>
+      </nav>
+    </footer>
+
+    <footer className="site-footer hidden border-t border-black/18 bg-[#d8d9d3] px-5 py-6 text-[11px] font-normal uppercase tracking-[0.06em] text-[#121211] sm:px-6 lg:block lg:px-12 lg:py-10">
       <div className="mx-auto max-w-[1680px]">
         <div className="site-footer-primary grid gap-5 lg:grid-cols-[auto_1fr_auto] lg:items-start lg:gap-10">
           <div className="site-footer-brand grid gap-3">
@@ -77,5 +103,6 @@ export function SiteFooter() {
         </div>
       </div>
     </footer>
+    </>
   );
 }
