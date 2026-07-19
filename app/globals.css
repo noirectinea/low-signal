@@ -2100,3 +2100,87 @@ a {
     scroll-behavior: auto;
   }
 }
+
+/* Mobile Selected Garments: compact editorial storefront. */
+@media (max-width: 767.98px) {
+  .mobile-selected-editorial {
+    overflow: hidden;
+    padding-block: 16px 24px;
+  }
+
+  .mobile-selected-editorial .selected-garments-header {
+    margin-bottom: 10px;
+    padding-bottom: 12px;
+  }
+
+  .mobile-selected-editorial .selected-gender-link {
+    border-color: transparent !important;
+  }
+
+  .mobile-selected-editorial .selected-gender-link.is-active {
+    border-color: currentColor !important;
+  }
+
+  .mobile-selected-editorial .selected-garments-layout {
+    gap: 12px;
+  }
+
+  .mobile-selected-editorial .selected-campaign-card {
+    height: 150px;
+  }
+
+  .mobile-selected-editorial .selected-products-column {
+    height: auto;
+  }
+
+  .mobile-selected-editorial .selected-rail {
+    width: calc(100vw - 16px);
+    max-width: none;
+    gap: 12px;
+    padding-right: 0;
+  }
+
+  .mobile-selected-editorial .mobile-selected-card {
+    width: 76vw;
+    height: auto;
+    padding-bottom: 10px;
+  }
+
+  .mobile-selected-editorial .mobile-selected-card > div:first-of-type {
+    width: 100%;
+    height: auto;
+    min-height: 0;
+    max-height: none;
+    aspect-ratio: 3 / 4;
+  }
+
+  .mobile-selected-editorial .mobile-selected-product-info {
+    min-height: 82px;
+    grid-template-columns: minmax(0, 1fr);
+    padding-top: 10px;
+  }
+
+  .mobile-selected-editorial .selected-product-cta {
+    display: none;
+  }
+
+  .mobile-selected-editorial .selected-rail-footer {
+    min-height: 34px;
+    margin-top: 10px;
+    padding-top: 9px;
+  }
+
+  .selected-rail-progress {
+    width: min(42vw, 150px);
+    height: 1px;
+    overflow: hidden;
+    background: rgb(18 18 17 / 0.16);
+  }
+
+  .selected-rail-progress > span {
+    display: block;
+    height: 100%;
+    background: rgb(18 18 17 / 0.62);
+    transition: width 420ms ease;
+  }
+}

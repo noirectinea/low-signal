@@ -38,10 +38,12 @@ const mobileSelectedProducts = [
 
 export function HomeSelectedPieces() {
   const railRef = useRef<HTMLDivElement>(null);
+  const sectionRef = useRef<HTMLElement>(null);
   const frameRef = useRef<number | null>(null);
   const pauseAutoplayUntilRef = useRef(0);
   const physicalIndexRef = useRef(desktopSelectedProducts.length);
   const [isMobile, setIsMobile] = useState(false);
+  const [isInView, setIsInView] = useState(false);
   const [activeIndex, setActiveIndex] = useState(0);
   const selectedProducts = isMobile
     ? mobileSelectedProducts
@@ -106,6 +108,18 @@ export function HomeSelectedPieces() {
   }, [isMobile, scrollToPhysicalIndex, selectedProducts.length]);
 
   useEffect(() => {
+    const section = sectionRef.current;
+    if (!section) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => setIsInView(entry.isIntersecting),
+      { threshold: 0.25 },
+    );
+    observer.observe(section);
+
+    return () => observer.disconnect();
+  }, []);
+
+  useEffect(() => {
     if (!isMobile) return;
     const reducedMotion = window.matchMedia(
       "(prefers-reduced-motion: reduce)",
@@ -114,15 +128,16 @@ export function HomeSelectedPieces() {
       if (
         reducedMotion.matches ||
         document.hidden ||
+        !isInView ||
         Date.now() < pauseAutoplayUntilRef.current
       ) {
         return;
       }
       scrollToPhysicalIndex(physicalIndexRef.current + 1, "smooth");
-    }, 3800);
+    }, 3000);
 
     return () => window.clearInterval(interval);
-  }, [isMobile, scrollToPhysicalIndex]);
+  }, [isInView, isMobile, scrollToPhysicalIndex]);
 
   function pauseAutoplay() {
     pauseAutoplayUntilRef.current = Date.now() + 7000;
@@ -175,6 +190,7 @@ export function HomeSelectedPieces() {
       aria-labelledby="selected-garments-title"
       className="selected-garments-section mobile-selected-editorial order-2 scroll-mt-16 border-y border-black/14 bg-[#dedfd9] py-7 text-[#11110f] lg:order-none lg:scroll-mt-24 lg:py-9"
       id="selected-pieces"
+      ref={sectionRef}
     >
       <div className="selected-garments-inner mx-auto max-w-[1680px] px-4 sm:px-6 lg:px-12">
         <header className="selected-garments-header mb-5 grid grid-cols-[1fr_auto] items-end gap-4 border-b border-black/14 pb-4 text-[10px] font-normal uppercase tracking-[0.12em] text-black/58 lg:mb-6 lg:grid-cols-[minmax(190px,0.34fr)_1fr_auto]">
@@ -186,10 +202,24 @@ export function HomeSelectedPieces() {
             aria-label="Selected garment collections"
             className="flex gap-4 lg:gap-6"
           >
-            <Link className="border-b border-current/45 pb-1" href="/collections/men">
+            <Link
+              className={`selected-gender-link border-b border-current/45 pb-1 ${
+                selectedProducts[activeIndex]?.gender === "men"
+                  ? "is-active"
+                  : ""
+              }`}
+              href="/collections/men"
+            >
               Men
             </Link>
-            <Link className="border-b border-current/45 pb-1" href="/collections/women">
+            <Link
+              className={`selected-gender-link border-b border-current/45 pb-1 ${
+                selectedProducts[activeIndex]?.gender === "women"
+                  ? "is-active"
+                  : ""
+              }`}
+              href="/collections/women"
+            >
               Women
             </Link>
           </nav>
@@ -246,7 +276,15 @@ export function HomeSelectedPieces() {
               <span aria-live="polite">
                 {String(activeIndex + 1).padStart(2, "0")} / 06
               </span>
-              <div className="flex items-center gap-5">
+              <div
+                aria-hidden="true"
+                className="selected-rail-progress lg:hidden"
+              >
+                <span
+                  style={{ width: `${((activeIndex + 1) / 6) * 100}%` }}
+                />
+              </div>
+              <div className="hidden items-center gap-5 lg:flex">
                 <button
                   aria-label="Previous selected garment"
                   className="selected-rail-control"
@@ -313,7 +351,7 @@ function SelectedProductCard({
           </p>
           <p className="mt-2 text-[10px] font-normal">${product.price}</p>
         </div>
-        <span className="self-end border-b border-black/36 pb-1 text-[9px] tracking-[0.06em]">
+        <span className="selected-product-cta self-end border-b border-black/36 pb-1 text-[9px] tracking-[0.06em]">
           View product →
         </span>
       </div>

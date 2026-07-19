@@ -33,7 +33,11 @@ test("selected garments uses a light mobile campaign and swipe rail", async ({ p
   await expect(section.locator("article")).toHaveCount(18);
   await expect(section.getByRole("link", { name: "Men", exact: true })).toBeVisible();
   await expect(section.getByRole("link", { name: "Women", exact: true })).toBeVisible();
-  await expect(section.getByText("View product →").first()).toBeVisible();
+  await expect(section.getByText("View product →").first()).toBeHidden();
+  await expect(
+    section.getByRole("button", { name: "Next selected garment" }),
+  ).toBeHidden();
+  await expect(section.locator(".selected-rail-progress")).toBeVisible();
   await expect(section.locator("article h3")).toHaveText([
     "Field Jacket",
     "Storm Parka",
@@ -54,7 +58,11 @@ test("selected garments uses a light mobile campaign and swipe rail", async ({ p
     "Cotton Shirt",
     "Double Pleat Trouser",
   ]);
-  await section.getByRole("button", { name: "Next selected garment" }).click();
+  await section.locator(".selected-rail").evaluate((rail) => {
+    const cards = rail.querySelectorAll<HTMLElement>("[data-selected-card]");
+    const target = cards[7];
+    rail.scrollTo({ behavior: "auto", left: target.offsetLeft - rail.offsetLeft });
+  });
   await expect(section.locator(".selected-rail-footer > span")).toHaveText(
     "02 / 06",
   );
@@ -68,18 +76,23 @@ test("mobile selected garments autoplays, pauses after input, and respects reduc
   await page.goto("/");
 
   const index = page.locator("#selected-pieces .selected-rail-footer > span");
+  await page.locator("#selected-pieces").scrollIntoViewIfNeeded();
   await expect(index).toHaveText("01 / 06");
-  await expect(index).toHaveText("02 / 06", { timeout: 5_000 });
+  await expect(index).toHaveText("02 / 06", { timeout: 4_000 });
 
-  await page
-    .getByRole("button", { name: "Next selected garment" })
-    .click();
+  await page.locator("#selected-pieces .selected-rail").dispatchEvent("pointerdown");
+  await page.locator("#selected-pieces .selected-rail").evaluate((rail) => {
+    const cards = rail.querySelectorAll<HTMLElement>("[data-selected-card]");
+    const target = cards[8];
+    rail.scrollTo({ behavior: "auto", left: target.offsetLeft - rail.offsetLeft });
+  });
   await expect(index).toHaveText("03 / 06");
   await page.waitForTimeout(4_200);
   await expect(index).toHaveText("03 / 06");
 
   await page.emulateMedia({ reducedMotion: "reduce" });
   await page.reload();
+  await page.locator("#selected-pieces").scrollIntoViewIfNeeded();
   await expect(index).toHaveText("01 / 06");
   await page.waitForTimeout(4_200);
   await expect(index).toHaveText("01 / 06");
