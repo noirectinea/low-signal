@@ -233,13 +233,13 @@ export function HomeSelectedPieces() {
           >
             <Image
               alt="Black LOW SIGNAL garment arranged on a studio chair"
-              className="object-cover object-[54%_50%] brightness-[0.76] contrast-[1.06] saturate-[0.58] transition-transform duration-700 group-hover:scale-[1.012]"
+              className="selected-campaign-image object-cover object-[54%_50%] brightness-[0.76] contrast-[1.06] saturate-[0.58] transition-transform duration-700 group-hover:scale-[1.012]"
               fill
               sizes="(min-width: 1024px) 40vw, 100vw"
               src="/images/low-signal/selected-garments-main.jpg"
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/66 via-black/5 to-black/5" />
-            <div className="absolute inset-x-0 bottom-0 grid gap-2 p-5 text-[#f1f1ea] lg:p-7">
+            <div className="selected-campaign-overlay absolute inset-0 bg-gradient-to-t from-black/66 via-black/5 to-black/5" />
+            <div className="selected-campaign-copy absolute inset-x-0 bottom-0 grid gap-2 p-5 text-[#f1f1ea] lg:p-7">
               <p className="text-[17px] font-normal uppercase tracking-[0.07em] lg:text-[22px]">
                 Selected garments
               </p>

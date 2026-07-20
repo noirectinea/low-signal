@@ -116,8 +116,8 @@ function HeroPanel() {
 
       <div className="mobile-hero-actions absolute inset-x-5 bottom-5 z-30 grid grid-cols-[29%_1fr] gap-4 border-t border-black/34 pt-3 lg:hidden">
         <p className="min-w-0 text-[10px] uppercase leading-[1.55] tracking-[0.1em] text-black/76">
-          <span className="block whitespace-nowrap">Washed black.</span>
-          <span className="block whitespace-nowrap">Made for daily wear.</span>
+          <span className="block">Washed black.</span>
+          <span className="block">Made for daily wear.</span>
         </p>
         <div className="mobile-hero-cta grid min-w-0 text-[11px] uppercase tracking-[0.08em] text-[#f5f2ed]">
           <Link className="mobile-hero-cta-primary flex min-h-11 items-center whitespace-nowrap border-b border-[#f5f2ed]/78" href="/collections">Shop Spring 2026 →</Link>

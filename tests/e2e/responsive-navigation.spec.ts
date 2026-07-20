@@ -55,6 +55,7 @@ test("mobile home keeps the first screen exact and removes the large footer", as
   test.setTimeout(60_000);
 
   for (const viewport of [
+    { height: 667, width: 375 },
     { height: 812, width: 375 },
     { height: 844, width: 390 },
     { height: 854, width: 400 },
@@ -73,16 +74,34 @@ test("mobile home keeps the first screen exact and removes the large footer", as
       const footer = document.querySelector<HTMLElement>(".site-footer");
       const compactFooter =
         document.querySelector<HTMLElement>(".mobile-compact-footer");
+      const actions =
+        document.querySelector<HTMLElement>(".mobile-hero-actions");
+      const brandCopy = actions?.querySelector<HTMLElement>("p");
+      const cta = actions?.querySelector<HTMLElement>(".mobile-hero-cta");
+      const image =
+        document.querySelector<HTMLElement>(".mobile-home-hero > div:nth-child(2)");
+      const season =
+        document.querySelector<HTMLElement>(".mobile-hero-season");
+      const title =
+        document.querySelector<HTMLElement>(".hero-printed-title");
 
       return {
+        actionsBottom: actions?.getBoundingClientRect().bottom,
+        actionsTop: actions?.getBoundingClientRect().top,
+        brandRight: brandCopy?.getBoundingClientRect().right,
         compactFooterDisplay: compactFooter
           ? getComputedStyle(compactFooter).display
           : null,
+        ctaLeft: cta?.getBoundingClientRect().left,
+        ctaRight: cta?.getBoundingClientRect().right,
         documentWidth: document.documentElement.scrollWidth,
         editorialTop: editorial?.getBoundingClientRect().top,
         footerDisplay: footer ? getComputedStyle(footer).display : null,
         heroHeight: hero?.getBoundingClientRect().height,
+        imageLeft: image?.getBoundingClientRect().left,
+        seasonRight: season?.getBoundingClientRect().right,
         springHeight: spring?.getBoundingClientRect().height,
+        titleBottom: title?.getBoundingClientRect().bottom,
         viewportHeight: window.innerHeight,
         viewportWidth: window.innerWidth,
       };
@@ -93,6 +112,13 @@ test("mobile home keeps the first screen exact and removes the large footer", as
     expect(metrics.springHeight).toBeGreaterThanOrEqual(80);
     expect(metrics.springHeight).toBeLessThanOrEqual(110);
     expect(metrics.documentWidth).toBe(metrics.viewportWidth);
+    expect(metrics.brandRight).toBeLessThanOrEqual(metrics.imageLeft ?? 0);
+    expect((metrics.ctaLeft ?? 0) - (metrics.imageLeft ?? 0)).toBeGreaterThanOrEqual(19);
+    expect((metrics.ctaLeft ?? 0) - (metrics.brandRight ?? 0)).toBeGreaterThanOrEqual(19);
+    expect(metrics.ctaRight).toBeLessThanOrEqual(metrics.viewportWidth - 16);
+    expect(metrics.seasonRight).toBeLessThan(metrics.imageLeft ?? 0);
+    expect(metrics.actionsBottom).toBeLessThanOrEqual(metrics.viewportHeight - 55);
+    expect(metrics.actionsTop).toBeGreaterThan(metrics.titleBottom ?? 0);
     expect(metrics.footerDisplay).toBe("none");
     expect(metrics.compactFooterDisplay).not.toBe("none");
   }

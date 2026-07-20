@@ -6,6 +6,9 @@ test("selected garments uses a one-row cyclical desktop rail", async ({ page }) 
 
   const section = page.locator("#selected-pieces");
   await expect(section.getByLabel("Shop selected garments")).toBeVisible();
+  await expect(
+    section.getByAltText("Black LOW SIGNAL garment arranged on a studio chair"),
+  ).toBeVisible();
   await expect(section.locator("article")).toHaveCount(18);
   await expect(section.locator(".selected-rail")).toBeVisible();
   await expect(
@@ -29,7 +32,19 @@ test("selected garments uses a light mobile campaign and swipe rail", async ({ p
   await page.goto("/");
 
   const section = page.locator("#selected-pieces");
-  await expect(section.getByLabel("Shop selected garments")).toBeVisible();
+  const campaign = section.getByLabel("Shop selected garments");
+  await expect(campaign).toBeVisible();
+  await expect(
+    section.getByAltText("Black LOW SIGNAL garment arranged on a studio chair"),
+  ).toBeHidden();
+  await expect(campaign.getByText("Selected garments", { exact: true })).toBeVisible();
+  await expect(campaign.getByText("06 pieces", { exact: true })).toBeVisible();
+  await expect(campaign.getByText("Shop selection →", { exact: true })).toBeVisible();
+  await expect(campaign).toHaveCSS("background-color", "rgba(0, 0, 0, 0)");
+  await expect(campaign).toHaveCSS("border-top-width", "0px");
+  await expect
+    .poll(() => campaign.evaluate((element) => element.getBoundingClientRect().height))
+    .toBeLessThan(90);
   await expect(section.locator("article")).toHaveCount(18);
   await expect(section.getByRole("link", { name: "Men", exact: true })).toBeVisible();
   await expect(section.getByRole("link", { name: "Women", exact: true })).toBeVisible();

@@ -2122,11 +2122,42 @@ a {
   }
 
   .mobile-selected-editorial .selected-garments-layout {
-    gap: 12px;
+    gap: 8px;
   }
 
   .mobile-selected-editorial .selected-campaign-card {
-    height: 150px;
+    height: auto;
+    min-height: 0;
+    overflow: visible;
+    border: 0;
+    background: transparent;
+  }
+
+  .mobile-selected-editorial .selected-campaign-image,
+  .mobile-selected-editorial .selected-campaign-overlay {
+    display: none;
+  }
+
+  .mobile-selected-editorial .selected-campaign-copy {
+    position: static;
+    gap: 7px;
+    padding: 2px 0 4px;
+    color: #11110f;
+  }
+
+  .mobile-selected-editorial .selected-campaign-copy > p:first-child {
+    font-size: 19px;
+    line-height: 1.05;
+    letter-spacing: 0.065em;
+  }
+
+  .mobile-selected-editorial .selected-campaign-copy > p:nth-child(2) {
+    color: rgb(18 18 17 / 0.52);
+  }
+
+  .mobile-selected-editorial .selected-campaign-copy .selected-rail-link {
+    margin-top: 1px;
+    color: rgb(18 18 17 / 0.78);
   }
 
   .mobile-selected-editorial .selected-products-column {
@@ -2182,5 +2213,41 @@ a {
     height: 100%;
     background: rgb(18 18 17 / 0.62);
     transition: width 420ms ease;
+  }
+}
+
+/* Mobile hero: keep copy and actions inside their visual columns. */
+@media (max-width: 767.98px) {
+  .mobile-hero-season {
+    width: calc(24.5vw - 24px);
+    max-width: none;
+    overflow-wrap: normal;
+  }
+
+  .mobile-home-hero .mobile-hero-actions {
+    bottom: 56px;
+    grid-template-columns: calc(24.5vw - 16px) minmax(0, 1fr);
+    column-gap: 20px;
+  }
+
+  .mobile-hero-actions > p {
+    width: calc(24.5vw - 16px);
+    max-width: 100%;
+    line-height: 1.28;
+    overflow-wrap: normal;
+  }
+
+  .mobile-hero-cta {
+    justify-items: end;
+    row-gap: 12px;
+    text-align: right;
+  }
+
+  .mobile-hero-cta-primary {
+    justify-content: flex-end;
+  }
+
+  .mobile-hero-cta-secondary {
+    justify-content: flex-end;
   }
 }
