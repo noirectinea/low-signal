@@ -78,6 +78,12 @@ test("mobile home keeps the first screen exact and removes the large footer", as
         document.querySelector<HTMLElement>(".mobile-hero-actions");
       const brandCopy = actions?.querySelector<HTMLElement>("p");
       const cta = actions?.querySelector<HTMLElement>(".mobile-hero-cta");
+      const primaryCta = cta?.querySelector<HTMLElement>(
+        ".mobile-hero-cta-primary",
+      );
+      const secondaryCta = cta?.querySelector<HTMLElement>(
+        ".mobile-hero-cta-secondary",
+      );
       const image =
         document.querySelector<HTMLElement>(".mobile-home-hero > div:nth-child(2)");
       const season =
@@ -94,11 +100,27 @@ test("mobile home keeps the first screen exact and removes the large footer", as
           : null,
         ctaLeft: cta?.getBoundingClientRect().left,
         ctaRight: cta?.getBoundingClientRect().right,
+        ctaWidth: cta?.getBoundingClientRect().width,
         documentWidth: document.documentElement.scrollWidth,
         editorialTop: editorial?.getBoundingClientRect().top,
         footerDisplay: footer ? getComputedStyle(footer).display : null,
         heroHeight: hero?.getBoundingClientRect().height,
         imageLeft: image?.getBoundingClientRect().left,
+        primaryCtaFontSize: primaryCta
+          ? Number.parseFloat(getComputedStyle(primaryCta).fontSize)
+          : 0,
+        primaryCtaClientWidth: primaryCta?.clientWidth,
+        primaryCtaRight: primaryCta?.getBoundingClientRect().right,
+        primaryCtaScrollWidth: primaryCta?.scrollWidth,
+        primaryCtaWidth: primaryCta?.getBoundingClientRect().width,
+        secondaryCtaFontSize: secondaryCta
+          ? Number.parseFloat(getComputedStyle(secondaryCta).fontSize)
+          : 0,
+        secondaryCtaGap:
+          primaryCta && secondaryCta
+            ? secondaryCta.getBoundingClientRect().top -
+              primaryCta.getBoundingClientRect().bottom
+            : 0,
         seasonRight: season?.getBoundingClientRect().right,
         springHeight: spring?.getBoundingClientRect().height,
         titleBottom: title?.getBoundingClientRect().bottom,
@@ -116,6 +138,15 @@ test("mobile home keeps the first screen exact and removes the large footer", as
     expect((metrics.ctaLeft ?? 0) - (metrics.imageLeft ?? 0)).toBeGreaterThanOrEqual(19);
     expect((metrics.ctaLeft ?? 0) - (metrics.brandRight ?? 0)).toBeGreaterThanOrEqual(19);
     expect(metrics.ctaRight).toBeLessThanOrEqual(metrics.viewportWidth - 16);
+    expect(metrics.primaryCtaFontSize).toBeGreaterThanOrEqual(15);
+    expect(metrics.primaryCtaFontSize).toBeLessThanOrEqual(17);
+    expect(metrics.primaryCtaWidth).toBe(metrics.ctaWidth);
+    expect(metrics.primaryCtaRight).toBe(metrics.ctaRight);
+    expect(metrics.primaryCtaScrollWidth).toBeLessThanOrEqual(
+      metrics.primaryCtaClientWidth ?? 0,
+    );
+    expect(metrics.secondaryCtaFontSize).toBeLessThanOrEqual(11);
+    expect(metrics.secondaryCtaGap).toBeGreaterThanOrEqual(15);
     expect(metrics.seasonRight).toBeLessThan(metrics.imageLeft ?? 0);
     expect(metrics.actionsBottom).toBeLessThanOrEqual(metrics.viewportHeight - 55);
     expect(metrics.actionsTop).toBeGreaterThan(metrics.titleBottom ?? 0);
