@@ -45,17 +45,29 @@ test("selected garments uses a light mobile campaign and swipe rail", async ({ p
   const campaignMetrics = await campaign.evaluate((element) => {
     const title = element.querySelector("p");
     const rect = element.getBoundingClientRect();
+    const section = element.closest("section");
+    const titleRange = document.createRange();
+    if (title) titleRange.selectNodeContents(title);
     return {
       fontSize: title ? Number.parseFloat(getComputedStyle(title).fontSize) : 0,
+      fontWeight: title ? Number.parseInt(getComputedStyle(title).fontWeight, 10) : 0,
       height: rect.height,
       left: rect.left,
+      sectionHeight: section?.getBoundingClientRect().height ?? 0,
+      titleAvailableWidth: title?.clientWidth ?? 0,
+      titleWidth: title ? titleRange.getBoundingClientRect().width : 0,
       width: rect.width,
     };
   });
   expect(campaignMetrics.left).toBe(0);
   expect(campaignMetrics.width).toBe(390);
-  expect(campaignMetrics.fontSize).toBeGreaterThanOrEqual(28);
-  expect(campaignMetrics.height).toBeLessThan(115);
+  expect(campaignMetrics.fontSize).toBeGreaterThanOrEqual(31);
+  expect(campaignMetrics.fontWeight).toBeGreaterThanOrEqual(600);
+  expect(campaignMetrics.titleWidth).toBeLessThanOrEqual(
+    campaignMetrics.titleAvailableWidth,
+  );
+  expect(campaignMetrics.sectionHeight).toBeGreaterThanOrEqual(844);
+  expect(campaignMetrics.height).toBeLessThan(120);
   await expect(section.locator("article")).toHaveCount(18);
   await expect(section.getByRole("link", { name: "Men", exact: true })).toBeVisible();
   await expect(section.getByRole("link", { name: "Women", exact: true })).toBeVisible();

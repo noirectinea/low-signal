@@ -2104,6 +2104,7 @@ a {
 /* Mobile Selected Garments: compact editorial storefront. */
 @media (max-width: 767.98px) {
   .mobile-selected-editorial {
+    min-height: 100svh;
     overflow: hidden;
     padding-block: 16px 24px;
   }
@@ -2149,9 +2150,10 @@ a {
 
   .mobile-selected-editorial .selected-campaign-copy > p:first-child {
     white-space: nowrap;
-    font-size: clamp(27px, 7.2vw, 31px);
-    line-height: 0.98;
-    letter-spacing: 0.035em;
+    font-size: clamp(30px, 8vw, 35px);
+    font-weight: 600;
+    line-height: 0.94;
+    letter-spacing: 0.005em;
   }
 
   .mobile-selected-editorial .selected-campaign-copy > p:nth-child(2) {
