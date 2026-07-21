@@ -42,9 +42,20 @@ test("selected garments uses a light mobile campaign and swipe rail", async ({ p
   await expect(campaign.getByText("Shop selection →", { exact: true })).toBeVisible();
   await expect(campaign).toHaveCSS("background-color", "rgba(0, 0, 0, 0)");
   await expect(campaign).toHaveCSS("border-top-width", "0px");
-  await expect
-    .poll(() => campaign.evaluate((element) => element.getBoundingClientRect().height))
-    .toBeLessThan(90);
+  const campaignMetrics = await campaign.evaluate((element) => {
+    const title = element.querySelector("p");
+    const rect = element.getBoundingClientRect();
+    return {
+      fontSize: title ? Number.parseFloat(getComputedStyle(title).fontSize) : 0,
+      height: rect.height,
+      left: rect.left,
+      width: rect.width,
+    };
+  });
+  expect(campaignMetrics.left).toBe(0);
+  expect(campaignMetrics.width).toBe(390);
+  expect(campaignMetrics.fontSize).toBeGreaterThanOrEqual(28);
+  expect(campaignMetrics.height).toBeLessThan(115);
   await expect(section.locator("article")).toHaveCount(18);
   await expect(section.getByRole("link", { name: "Men", exact: true })).toBeVisible();
   await expect(section.getByRole("link", { name: "Women", exact: true })).toBeVisible();

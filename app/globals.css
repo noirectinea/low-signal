@@ -2126,8 +2126,10 @@ a {
   }
 
   .mobile-selected-editorial .selected-campaign-card {
+    width: 100vw;
     height: auto;
     min-height: 0;
+    margin-left: -16px;
     overflow: visible;
     border: 0;
     background: transparent;
@@ -2141,14 +2143,15 @@ a {
   .mobile-selected-editorial .selected-campaign-copy {
     position: static;
     gap: 7px;
-    padding: 2px 0 4px;
+    padding: 6px 16px 12px;
     color: #11110f;
   }
 
   .mobile-selected-editorial .selected-campaign-copy > p:first-child {
-    font-size: 19px;
-    line-height: 1.05;
-    letter-spacing: 0.065em;
+    white-space: nowrap;
+    font-size: clamp(27px, 7.2vw, 31px);
+    line-height: 0.98;
+    letter-spacing: 0.035em;
   }
 
   .mobile-selected-editorial .selected-campaign-copy > p:nth-child(2) {
