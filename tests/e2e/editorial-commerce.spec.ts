@@ -85,9 +85,13 @@ test("selected garments uses a light mobile campaign and swipe rail", async ({ p
     "Double Pleat Trouser",
   ]);
   await section.locator(".selected-rail").evaluate((rail) => {
+    const railElement = rail as HTMLElement;
     const cards = rail.querySelectorAll<HTMLElement>("[data-selected-card]");
     const target = cards[7];
-    rail.scrollTo({ behavior: "auto", left: target.offsetLeft - rail.offsetLeft });
+    railElement.scrollTo({
+      behavior: "auto",
+      left: target.offsetLeft - railElement.offsetLeft,
+    });
   });
   await expect(section.locator(".selected-rail-footer > span")).toHaveText(
     "02 / 06",
@@ -108,9 +112,13 @@ test("mobile selected garments autoplays, pauses after input, and respects reduc
 
   await page.locator("#selected-pieces .selected-rail").dispatchEvent("pointerdown");
   await page.locator("#selected-pieces .selected-rail").evaluate((rail) => {
+    const railElement = rail as HTMLElement;
     const cards = rail.querySelectorAll<HTMLElement>("[data-selected-card]");
     const target = cards[8];
-    rail.scrollTo({ behavior: "auto", left: target.offsetLeft - rail.offsetLeft });
+    railElement.scrollTo({
+      behavior: "auto",
+      left: target.offsetLeft - railElement.offsetLeft,
+    });
   });
   await expect(index).toHaveText("03 / 06");
   await page.waitForTimeout(8_200);
