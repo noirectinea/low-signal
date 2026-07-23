@@ -75,12 +75,6 @@ test("Selected Garments and Lookbook remain composed at every requested viewport
       expect(measurements.imageRatio).toBeLessThan(0.83);
     }
 
-    if (viewport.width === 390) {
-      await page.locator("#lookbook-continuation").scrollIntoViewIfNeeded();
-      await page.screenshot({
-        path: "/tmp/low-signal-lookbook-390.png",
-      });
-    }
   }
 
   expect(runtimeErrors).toEqual([]);
