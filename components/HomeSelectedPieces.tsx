@@ -2,12 +2,15 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import {
   useCallback,
   useEffect,
   useMemo,
   useRef,
   useState,
+  type PointerEvent as ReactPointerEvent,
+  type TouchEvent as ReactTouchEvent,
   type UIEvent,
 } from "react";
 import { type Product, products } from "@/data/products";
@@ -28,14 +31,33 @@ const selectedProducts = selectedIds.map((id) => {
 });
 
 export function HomeSelectedPieces() {
+  const router = useRouter();
   const railRef = useRef<HTMLDivElement>(null);
   const sectionRef = useRef<HTMLElement>(null);
   const frameRef = useRef<number | null>(null);
   const pauseAutoplayUntilRef = useRef(0);
   const physicalIndexRef = useRef(selectedProducts.length);
-  const [isMobile, setIsMobile] = useState(false);
+  const interactionRef = useRef({
+    focus: false,
+    hover: false,
+    pointer: false,
+  });
+  const pointerDragRef = useRef<{
+    cardWidth: number;
+    pointerId: number;
+    startScrollLeft: number;
+    startX: number;
+    startedOnLast: boolean;
+  } | null>(null);
+  const touchDragRef = useRef<{
+    cardWidth: number;
+    startX: number;
+    startedOnLast: boolean;
+  } | null>(null);
+  const suppressClickRef = useRef(false);
   const [isInView, setIsInView] = useState(false);
   const [activeIndex, setActiveIndex] = useState(0);
+  const [collectionPull, setCollectionPull] = useState(0);
   const repeatedProducts = useMemo(
     () =>
       Array.from({ length: 3 }, (_, group) =>
@@ -74,16 +96,6 @@ export function HomeSelectedPieces() {
   );
 
   useEffect(() => {
-    const mobileQuery = window.matchMedia("(max-width: 767.98px)");
-    const updateMode = () => setIsMobile(mobileQuery.matches);
-
-    updateMode();
-    mobileQuery.addEventListener("change", updateMode);
-
-    return () => mobileQuery.removeEventListener("change", updateMode);
-  }, []);
-
-  useEffect(() => {
     const alignRail = () =>
       scrollToPhysicalIndex(selectedProducts.length, "auto");
     const frame = window.requestAnimationFrame(alignRail);
@@ -108,7 +120,7 @@ export function HomeSelectedPieces() {
   }, []);
 
   useEffect(() => {
-    if (!isMobile || !isInView) return;
+    if (!isInView) return;
     const reducedMotion = window.matchMedia(
       "(prefers-reduced-motion: reduce)",
     );
@@ -119,6 +131,7 @@ export function HomeSelectedPieces() {
       if (
         reducedMotion.matches ||
         document.hidden ||
+        Object.values(interactionRef.current).some(Boolean) ||
         Date.now() < pauseAutoplayUntilRef.current
       ) {
         return;
@@ -127,17 +140,146 @@ export function HomeSelectedPieces() {
     };
     const firstAdvance = window.setTimeout(() => {
       advance();
-      interval = window.setInterval(advance, 3800);
-    }, 4500);
+      interval = window.setInterval(advance, 3000);
+    }, 3000);
 
     return () => {
       window.clearTimeout(firstAdvance);
       if (interval !== undefined) window.clearInterval(interval);
     };
-  }, [isInView, isMobile, scrollToPhysicalIndex]);
+  }, [isInView, scrollToPhysicalIndex]);
 
-  function pauseAutoplay() {
-    pauseAutoplayUntilRef.current = Date.now() + 9000;
+  function pauseAutoplay(delay = 4200) {
+    pauseAutoplayUntilRef.current = Date.now() + delay;
+  }
+
+  function isDesktopRail() {
+    return window.matchMedia("(min-width: 1024px)").matches;
+  }
+
+  function getCardWidth(rail: HTMLDivElement) {
+    return (
+      rail.querySelector<HTMLElement>("[data-selected-card]")?.offsetWidth ??
+      rail.clientWidth
+    );
+  }
+
+  function updateCollectionPull(
+    startedOnLast: boolean,
+    distance: number,
+    cardWidth: number,
+  ) {
+    if (!startedOnLast || !isDesktopRail()) {
+      setCollectionPull(0);
+      return;
+    }
+
+    setCollectionPull(
+      Math.min(1, Math.max(0, distance / (cardWidth * 0.28))),
+    );
+  }
+
+  function completeCollectionPull(
+    startedOnLast: boolean,
+    distance: number,
+    cardWidth: number,
+  ) {
+    const shouldOpenCollections =
+      isDesktopRail() &&
+      startedOnLast &&
+      distance >= cardWidth * 0.28;
+
+    setCollectionPull(0);
+    interactionRef.current.pointer = false;
+    pauseAutoplay();
+
+    if (shouldOpenCollections) {
+      router.push("/collections");
+    }
+  }
+
+  function handlePointerDown(event: ReactPointerEvent<HTMLDivElement>) {
+    pauseAutoplay();
+    interactionRef.current.pointer = true;
+
+    if (event.pointerType !== "mouse" || event.button !== 0) return;
+
+    pointerDragRef.current = {
+      cardWidth: getCardWidth(event.currentTarget),
+      pointerId: event.pointerId,
+      startScrollLeft: event.currentTarget.scrollLeft,
+      startX: event.clientX,
+      startedOnLast: activeIndex === selectedProducts.length - 1,
+    };
+    event.currentTarget.setPointerCapture(event.pointerId);
+  }
+
+  function handlePointerMove(event: ReactPointerEvent<HTMLDivElement>) {
+    const drag = pointerDragRef.current;
+    if (!drag || drag.pointerId !== event.pointerId) return;
+
+    const distance = drag.startX - event.clientX;
+    if (Math.abs(distance) > 5) suppressClickRef.current = true;
+    event.currentTarget.scrollLeft = drag.startScrollLeft + distance;
+    updateCollectionPull(drag.startedOnLast, distance, drag.cardWidth);
+  }
+
+  function handlePointerUp(event: ReactPointerEvent<HTMLDivElement>) {
+    const drag = pointerDragRef.current;
+    if (!drag || drag.pointerId !== event.pointerId) {
+      interactionRef.current.pointer = false;
+      pauseAutoplay();
+      return;
+    }
+
+    const distance = drag.startX - event.clientX;
+    pointerDragRef.current = null;
+    if (event.currentTarget.hasPointerCapture(event.pointerId)) {
+      event.currentTarget.releasePointerCapture(event.pointerId);
+    }
+    completeCollectionPull(
+      drag.startedOnLast,
+      distance,
+      drag.cardWidth,
+    );
+  }
+
+  function handleTouchStart(event: ReactTouchEvent<HTMLDivElement>) {
+    pauseAutoplay();
+    interactionRef.current.pointer = true;
+    const touch = event.touches[0];
+    touchDragRef.current = {
+      cardWidth: getCardWidth(event.currentTarget),
+      startX: touch.clientX,
+      startedOnLast: activeIndex === selectedProducts.length - 1,
+    };
+  }
+
+  function handleTouchMove(event: ReactTouchEvent<HTMLDivElement>) {
+    const drag = touchDragRef.current;
+    const touch = event.touches[0];
+    if (!drag || !touch) return;
+    updateCollectionPull(
+      drag.startedOnLast,
+      drag.startX - touch.clientX,
+      drag.cardWidth,
+    );
+  }
+
+  function handleTouchEnd(event: ReactTouchEvent<HTMLDivElement>) {
+    const drag = touchDragRef.current;
+    const touch = event.changedTouches[0];
+    touchDragRef.current = null;
+    if (!drag || !touch) {
+      interactionRef.current.pointer = false;
+      setCollectionPull(0);
+      return;
+    }
+    completeCollectionPull(
+      drag.startedOnLast,
+      drag.startX - touch.clientX,
+      drag.cardWidth,
+    );
   }
 
   function handleScroll(event: UIEvent<HTMLDivElement>) {
@@ -229,7 +371,7 @@ export function HomeSelectedPieces() {
             />
             <div className="selected-campaign-overlay absolute inset-0 bg-gradient-to-t from-black/66 via-black/5 to-black/5" />
             <div className="selected-campaign-copy absolute inset-x-0 bottom-0 grid gap-2 p-5 text-[#f1f1ea] lg:p-7">
-              <p className="text-[17px] font-normal uppercase tracking-[0.07em] lg:text-[22px]">
+              <p className="selected-campaign-title text-[17px] uppercase tracking-[0.07em] lg:text-[22px]">
                 Selected garments
               </p>
               <p className="text-[9px] uppercase tracking-[0.12em] text-white/64">
@@ -245,10 +387,50 @@ export function HomeSelectedPieces() {
             <div
               aria-label="Selected garments carousel"
               className="selected-rail flex min-w-0 snap-x snap-mandatory gap-3 overflow-x-auto overscroll-x-contain scroll-smooth lg:gap-4"
-              onPointerDown={pauseAutoplay}
+              onBlurCapture={(event) => {
+                if (!event.currentTarget.contains(event.relatedTarget)) {
+                  interactionRef.current.focus = false;
+                  pauseAutoplay(2600);
+                }
+              }}
+              onClickCapture={(event) => {
+                if (suppressClickRef.current) {
+                  event.preventDefault();
+                  event.stopPropagation();
+                  suppressClickRef.current = false;
+                }
+              }}
+              onFocusCapture={() => {
+                interactionRef.current.focus = true;
+                pauseAutoplay();
+              }}
+              onDragStart={(event) => event.preventDefault()}
+              onPointerCancel={() => {
+                pointerDragRef.current = null;
+                interactionRef.current.pointer = false;
+                setCollectionPull(0);
+                pauseAutoplay();
+              }}
+              onPointerDown={handlePointerDown}
+              onPointerEnter={() => {
+                interactionRef.current.hover = true;
+                pauseAutoplay();
+              }}
+              onPointerLeave={() => {
+                interactionRef.current.hover = false;
+                if (!pointerDragRef.current) {
+                  interactionRef.current.pointer = false;
+                  setCollectionPull(0);
+                }
+                pauseAutoplay(2600);
+              }}
+              onPointerMove={handlePointerMove}
+              onPointerUp={handlePointerUp}
               onScroll={handleScroll}
-              onTouchStart={pauseAutoplay}
-              onWheel={pauseAutoplay}
+              onTouchEnd={handleTouchEnd}
+              onTouchMove={handleTouchMove}
+              onTouchStart={handleTouchStart}
+              onWheel={() => pauseAutoplay()}
               ref={railRef}
               role="region"
             >
@@ -274,6 +456,17 @@ export function HomeSelectedPieces() {
                   style={{ width: `${((activeIndex + 1) / 6) * 100}%` }}
                 />
               </div>
+              <Link
+                aria-hidden={activeIndex !== selectedProducts.length - 1}
+                className="selected-collections-link hidden lg:inline-flex"
+                href="/collections"
+                style={{ "--collection-pull": collectionPull } as React.CSSProperties}
+                tabIndex={
+                  activeIndex === selectedProducts.length - 1 ? 0 : -1
+                }
+              >
+                View all collections →
+              </Link>
               <div className="hidden items-center gap-5 lg:flex">
                 <button
                   aria-label="Previous selected garment"
