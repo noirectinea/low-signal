@@ -2811,3 +2811,188 @@ a {
     border-color: rgb(245 242 237 / 0.38);
   }
 }
+
+/* Homepage hierarchy repair: restore editorial scale without changing the system. */
+.home-section-title,
+.home-editorial-statement {
+  font-family: var(--font-archivo), Arial, sans-serif;
+  font-weight: 580;
+  text-transform: uppercase;
+}
+
+.home-section-title {
+  font-size: clamp(24px, 2.05vw, 30px);
+  line-height: 1;
+  letter-spacing: -0.018em;
+}
+
+.home-editorial-statement {
+  max-width: 15ch;
+  font-size: clamp(26px, 2.2vw, 32px);
+  line-height: 1.04;
+  letter-spacing: 0.015em;
+}
+
+.home-editorial-body,
+.home-hero-summary,
+.home-hero-image-note {
+  font-family: var(--font-inter), sans-serif;
+  font-size: clamp(14px, 1vw, 16px);
+  font-weight: 400;
+  line-height: 1.48;
+  letter-spacing: 0.035em;
+  text-transform: uppercase;
+}
+
+.home-primary-cta,
+.home-secondary-cta,
+.home-editorial-cta {
+  font-family: var(--font-inter), sans-serif;
+  font-weight: 500;
+  line-height: 1.25;
+  letter-spacing: 0.085em;
+  text-transform: uppercase;
+}
+
+.home-primary-cta {
+  font-size: 14px;
+}
+
+.home-secondary-cta,
+.home-editorial-cta {
+  font-size: 12px;
+}
+
+.selected-campaign-title {
+  font-size: clamp(26px, 2vw, 30px);
+  font-weight: 580;
+  letter-spacing: -0.012em;
+}
+
+.mobile-selected-product-info .selected-product-title {
+  font-size: clamp(15px, 1.1vw, 17px);
+  line-height: 1.15;
+  letter-spacing: 0.015em;
+}
+
+.selected-product-category {
+  font-size: 11px !important;
+  line-height: 1.4;
+  letter-spacing: 0.065em;
+}
+
+.selected-product-price {
+  font-size: 12px !important;
+  line-height: 1.35;
+  letter-spacing: 0.035em;
+}
+
+.selected-product-cta {
+  font-size: 12px;
+  line-height: 1.3;
+  letter-spacing: 0.055em;
+}
+
+.material-form-section .editorial-section-title {
+  max-width: 390px;
+  font-size: clamp(24px, 2.25vw, 32px);
+  font-weight: 580;
+  line-height: 1.04;
+  letter-spacing: 0.018em;
+}
+
+.material-form-section .editorial-body {
+  font-size: clamp(14px, 1vw, 16px);
+  line-height: 1.5;
+}
+
+@media (min-width: 1024px) {
+  .mobile-home-editorial .home-section-title {
+    font-size: clamp(24px, 1.8vw, 28px);
+  }
+
+  .mobile-home-editorial .home-editorial-body {
+    line-height: 1.4;
+  }
+
+  .selected-garments-layout {
+    align-items: start;
+  }
+
+  .selected-campaign-card {
+    height: min(100%, clamp(560px, 42vw, 610px));
+    align-self: start;
+  }
+
+  .selected-products-column {
+    height: 100%;
+  }
+}
+
+@media (max-width: 767.98px) {
+  .home-section-title {
+    font-size: clamp(22px, 6.6vw, 28px);
+    line-height: 0.98;
+  }
+
+  .home-editorial-body,
+  .home-hero-summary,
+  .home-hero-image-note {
+    font-size: clamp(13px, 3.7vw, 15px);
+    line-height: 1.46;
+  }
+
+  .home-editorial-cta {
+    font-size: 12px;
+  }
+
+  .mobile-journal {
+    padding: 26px 16px 28px;
+  }
+
+  .mobile-journal > div {
+    gap: 18px;
+  }
+
+  .mobile-journal-intro > .home-editorial-statement {
+    max-width: 13ch;
+    margin-top: 18px;
+    font-size: clamp(25px, 7.2vw, 29px);
+    line-height: 1.04;
+    letter-spacing: 0.012em;
+  }
+
+  .mobile-journal-composition {
+    position: static;
+    display: block;
+    height: auto;
+  }
+
+  .mobile-journal-lead {
+    width: 100%;
+    height: auto;
+    min-height: 0;
+    aspect-ratio: 16 / 9;
+  }
+
+  .mobile-journal-details {
+    display: none;
+  }
+
+  .mobile-journal-lead > a {
+    bottom: 16px;
+    left: 16px;
+    padding-bottom: 6px;
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.09em;
+  }
+
+  .mobile-selected-editorial .selected-campaign-copy > p:first-child {
+    font-weight: 580;
+  }
+
+  .mobile-selected-product-info h3 {
+    font-size: 15px;
+  }
+}

@@ -98,12 +98,12 @@ function HeroPanel() {
 
       <div className="absolute left-[5.15vw] top-1/2 z-20 hidden w-[210px] -translate-y-1/2 flex-col items-start lg:flex">
         <Kicker number="01" />
-        <p className="mt-[26px] max-w-[205px] text-[12px] uppercase leading-[1.52] tracking-[0.19em]">
+        <p className="home-hero-summary mt-[26px] max-w-[205px] uppercase">
           Washed black clothing for daily wear.
         </p>
-        <div className="mt-[32px] grid gap-3 text-[10px] uppercase tracking-[0.18em]">
+        <div className="home-hero-links mt-[32px] grid gap-4 uppercase">
           <Link
-            className="group inline-flex w-fit items-center gap-3 border-b border-black/70 pb-[6px] transition-opacity duration-300 hover:opacity-55"
+            className="home-primary-cta group inline-flex w-fit items-center gap-3 border-b border-black/70 pb-[7px] transition-opacity duration-300 hover:opacity-55"
             href="/collections"
           >
             <span>Shop Spring 2026</span>
@@ -112,7 +112,7 @@ function HeroPanel() {
             </span>
           </Link>
           <Link
-            className="group inline-flex w-fit items-center gap-3 border-b border-black/45 pb-[6px] transition-opacity duration-300 hover:opacity-55"
+            className="home-secondary-cta group inline-flex w-fit items-center gap-3 border-b border-black/45 pb-[6px] transition-opacity duration-300 hover:opacity-55"
             href="/lookbook"
           >
             <span>View Lookbook</span>
@@ -156,7 +156,7 @@ function HeroPanel() {
         </div>
       </div>
 
-      <p className="absolute bottom-[34px] right-[232px] z-30 hidden max-w-[245px] text-center text-[9px] uppercase leading-[1.45] tracking-[0.19em] text-[#f5f2ed]/78 lg:block">
+      <p className="home-hero-image-note absolute bottom-[34px] right-[210px] z-30 hidden max-w-[290px] text-center uppercase text-[#f5f2ed]/78 lg:block">
         Washed cotton, dense knitwear, black canvas, wide trousers.
       </p>
     </section>
@@ -170,8 +170,8 @@ function EditorialGrid() {
         <div className="mobile-editorial-index bg-[#e8e9e3]">
           <Link className="mobile-spring-teaser group flex min-h-0 items-center justify-between gap-4 border-y border-black/18 px-4 uppercase" href="/collections">
             <span className="text-[10px] tracking-[0.1em] text-black/48">02</span>
-            <span className="text-[12px] tracking-[0.08em]">Spring 2026</span>
-            <span className="flex min-h-11 items-center border-b border-black/52 text-[9px] tracking-[0.07em]">
+            <span className="home-section-title">Spring 2026</span>
+            <span className="home-editorial-cta flex min-h-11 items-center border-b border-black/52">
               View collection →
             </span>
           </Link>
@@ -189,12 +189,12 @@ function EditorialGrid() {
               <div className="flex flex-col justify-between border-r border-white/26 pr-4">
                 <span className="text-[9px] tracking-[0.14em] text-white/58">03</span>
                 <div className="grid gap-2">
-                  <p className="text-[12px] tracking-[0.11em]">Lookbook</p>
+                  <p className="home-section-title text-[#f2f1ea]">Lookbook</p>
                   <p className="text-[9px] tracking-[0.14em] text-white/62">Issue 01</p>
                 </div>
               </div>
               <div className="flex items-end justify-end pl-4">
-                <span className="flex min-h-11 items-center border-b border-white/58 text-[9px] tracking-[0.09em]">
+                <span className="home-editorial-cta flex min-h-11 items-center border-b border-white/58">
                   View lookbook →
                 </span>
               </div>
@@ -207,9 +207,9 @@ function EditorialGrid() {
         <Link href="/collections" className="group relative grid grid-cols-[47.96%_52.04%] border-r transition-colors duration-300 hover:bg-black/[0.025]">
           <div className="flex h-full flex-col bg-[#e8e9e3] px-[27px] py-[34px]">
             <Kicker number="02" />
-            <p className="mt-[24px] text-[10px] uppercase leading-[1.5] tracking-[0.22em]">Spring 2026</p>
-            <p className="mt-[18px] max-w-[130px] text-[10px] uppercase leading-[1.55] tracking-[0.2em]">A collection built on restraint, quiet structures, and small interruptions.</p>
-            <span className="mt-auto inline-flex w-fit gap-2 border-b border-black/65 pb-[4px] text-[9px] uppercase tracking-[0.16em] transition-opacity duration-300 group-hover:opacity-55">
+            <p className="home-section-title mt-[22px]">Spring 2026</p>
+            <p className="home-editorial-body mt-[16px] max-w-[155px]">A collection built on restraint, quiet structures, and small interruptions.</p>
+            <span className="home-editorial-cta mt-auto inline-flex w-fit gap-2 border-b border-black/65 pb-[5px] transition-opacity duration-300 group-hover:opacity-55">
               View collection
               <span className="transition-transform duration-300 group-hover:translate-x-1">→</span>
             </span>
@@ -222,9 +222,9 @@ function EditorialGrid() {
 
         <Link href="/lookbook" className="group flex h-full flex-col border-r bg-[#ebece6] px-[46px] py-[34px] transition-colors duration-300 hover:bg-[#e4e5df]">
           <Kicker number="03" />
-          <p className="mt-[23px] text-[10px] uppercase tracking-[0.2em]">Lookbook</p>
+          <p className="home-section-title mt-[22px]">Lookbook</p>
           <div className="relative mt-[14px] h-[clamp(92px,12vh,122px)] w-[min(240px,72%)] overflow-hidden"><Image src={lookbookImage} alt="LOW SIGNAL lookbook photograph" fill sizes="200px" className="editorial-image object-cover object-[58%_54%]" /></div>
-          <span className="mt-auto inline-flex w-fit gap-2 border-b border-black/65 pb-[4px] text-[9px] uppercase tracking-[0.16em] transition-opacity duration-300 group-hover:opacity-55">
+          <span className="home-editorial-cta mt-auto inline-flex w-fit gap-2 border-b border-black/65 pb-[5px] transition-opacity duration-300 group-hover:opacity-55">
             View lookbook
             <span className="transition-transform duration-300 group-hover:translate-x-1">→</span>
           </span>
@@ -233,15 +233,15 @@ function EditorialGrid() {
         <Link href="#selected-pieces" className="group relative grid min-h-0 grid-cols-[minmax(170px,34%)_1fr] bg-[#151413] text-[#f5f2ed] transition-colors duration-300 hover:bg-[#1c1b19]">
         <div className="flex h-full min-w-0 flex-col border-r border-[#f5f2ed]/14 px-5 py-9 lg:px-[30px] lg:py-[34px]">
           <span className="text-[10px] uppercase tracking-[0.12em] text-[#f5f2ed]/58">Current edit</span>
-          <p className="mt-[24px] max-w-[92px] text-[10px] uppercase leading-[1.62] tracking-[0.2em]">
+          <p className="home-section-title mt-[22px] max-w-[150px] text-[#f5f2ed]">
             Selected garments
           </p>
         </div>
         <div className="flex h-full min-w-0 flex-col justify-between px-[clamp(28px,4vw,62px)] py-[34px]">
-          <p className="max-w-[260px] text-[12px] uppercase leading-[1.55] tracking-[0.1em] text-[#f5f2ed]/72">
+          <p className="home-editorial-body max-w-[310px] text-[#f5f2ed]/72">
             A concise edit of outerwear, knitwear, shirts, and trousers available now.
           </p>
-          <span className="inline-flex w-fit gap-3 border-b border-[#f5f2ed]/70 pb-[6px] text-[11px] uppercase tracking-[0.16em] transition-opacity duration-300 group-hover:opacity-60">
+          <span className="home-editorial-cta inline-flex w-fit gap-3 border-b border-[#f5f2ed]/70 pb-[6px] text-[#f5f2ed] transition-opacity duration-300 group-hover:opacity-60">
             Browse the rail
             <span className="transition-transform duration-300 group-hover:translate-x-1">↓</span>
           </span>
@@ -259,10 +259,10 @@ function LookbookContinuation() {
       <div className="grid gap-6 lg:grid-cols-[28vw_1fr] lg:gap-9">
         <aside className="mobile-journal-intro grid max-w-[360px] grid-cols-[auto_1fr] gap-x-8 lg:flex lg:flex-col">
           <Kicker number="06" />
-          <h2 className="text-[11px] uppercase leading-[1.45] tracking-[0.22em] lg:mt-[34px]">
+          <h2 className="home-section-title lg:mt-[34px]">
             Lookbook
           </h2>
-          <p className="col-span-2 mt-6 text-[22px] uppercase leading-[1.18] tracking-[0.15em] lg:text-[26px] lg:mt-[32px]">
+          <p className="home-editorial-statement col-span-2 mt-5 lg:mt-[28px]">
             Coastal light
             <br />
             between weather

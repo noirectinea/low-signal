@@ -109,7 +109,7 @@ export function MaterialForm() {
                 {activeMaterial.caption}
               </p>
               <Link
-                className="flex min-h-11 w-fit items-center border-b border-black/50 text-[10px] uppercase tracking-[0.1em] text-black"
+                className="home-editorial-cta flex min-h-11 w-fit items-center border-b border-black/50 text-black"
                 href={activeMaterial.href}
               >
                 View garments →

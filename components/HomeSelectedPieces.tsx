@@ -526,15 +526,17 @@ function SelectedProductCard({
       </div>
       <div className="mobile-selected-product-info grid min-h-[96px] grid-cols-[minmax(0,1fr)_auto] gap-2 pt-3 uppercase">
         <div className="min-w-0">
-          <h3 className="text-[11px] font-normal tracking-[0.06em] lg:text-[12px]">
+          <h3 className="selected-product-title font-medium">
             {product.name}
           </h3>
-          <p className="mt-2 text-[9px] tracking-[0.08em] text-black/54">
+          <p className="selected-product-category mt-2 text-black/54">
             {product.category}
           </p>
-          <p className="mt-2 text-[10px] font-normal">${product.price}</p>
+          <p className="selected-product-price mt-2 font-normal">
+            ${product.price}
+          </p>
         </div>
-        <span className="selected-product-cta self-end border-b border-black/36 pb-1 text-[9px] tracking-[0.06em]">
+        <span className="selected-product-cta self-end border-b border-black/36 pb-1">
           View product →
         </span>
       </div>

@@ -37,15 +37,53 @@ test("Selected Garments and Lookbook remain composed at every requested viewport
       const nextCard = cards?.[7];
       const image = card?.querySelector<HTMLElement>(":scope > div");
       const lookbook = document.querySelector<HTMLElement>(".mobile-journal");
+      const lookbookComposition = document.querySelector<HTMLElement>(
+        ".mobile-journal-composition",
+      );
+      const lookbookDetails = document.querySelector<HTMLElement>(
+        ".mobile-journal-details",
+      );
+      const lookbookLead = document.querySelector<HTMLElement>(
+        ".mobile-journal-lead",
+      );
+      const campaign = document.querySelector<HTMLElement>(
+        ".selected-campaign-card",
+      );
+      const visibleSectionTitle = Array.from(
+        document.querySelectorAll<HTMLElement>(".home-section-title"),
+      ).find((element) => element.getBoundingClientRect().width > 0);
+      const visibleEditorialBody = Array.from(
+        document.querySelectorAll<HTMLElement>(".home-editorial-body"),
+      ).find((element) => element.getBoundingClientRect().width > 0);
+      const productTitle = card?.querySelector<HTMLElement>(
+        ".selected-product-title",
+      );
       const rect = (element?: Element | null) =>
         element?.getBoundingClientRect() ?? null;
       const imageRect = rect(image);
+      const cardRect = rect(card);
+      const campaignRect = rect(campaign);
+      const leadRect = rect(lookbookLead);
 
       return {
+        campaignHeight: campaignRect?.height ?? 0,
+        cardHeight: cardRect?.height ?? 0,
+        editorialBodySize: visibleEditorialBody
+          ? Number.parseFloat(getComputedStyle(visibleEditorialBody).fontSize)
+          : 0,
         imageRatio: imageRect
           ? imageRect.width / imageRect.height
           : 0,
+        lookbookCompositionPosition: lookbookComposition
+          ? getComputedStyle(lookbookComposition).position
+          : "",
+        lookbookDetailsDisplay: lookbookDetails
+          ? getComputedStyle(lookbookDetails).display
+          : "",
         lookbookHeight: rect(lookbook)?.height ?? 0,
+        lookbookLeadRatio: leadRect
+          ? leadRect.width / leadRect.height
+          : 0,
         nextCardStartsInsideRail:
           (rect(nextCard)?.left ?? Number.POSITIVE_INFINITY) <
           (rect(rail)?.right ?? 0),
@@ -60,21 +98,41 @@ test("Selected Garments and Lookbook remain composed at every requested viewport
           ).fontWeight,
           10,
         ),
+        sectionTitleSize: visibleSectionTitle
+          ? Number.parseFloat(getComputedStyle(visibleSectionTitle).fontSize)
+          : 0,
+        sectionTitleWeight: visibleSectionTitle
+          ? Number.parseInt(getComputedStyle(visibleSectionTitle).fontWeight, 10)
+          : 0,
+        selectedProductTitleSize: productTitle
+          ? Number.parseFloat(getComputedStyle(productTitle).fontSize)
+          : 0,
       };
     });
 
     expect(measurements.overflow).toBeLessThanOrEqual(1);
     expect(measurements.nextCardStartsInsideRail).toBe(true);
     expect(measurements.selectedTitleWeight).toBeGreaterThanOrEqual(520);
+    expect(measurements.sectionTitleSize).toBeGreaterThanOrEqual(22);
+    expect(measurements.sectionTitleWeight).toBeGreaterThanOrEqual(550);
+    expect(measurements.selectedProductTitleSize).toBeGreaterThanOrEqual(15);
 
     if (viewport.width < 768) {
-      expect(measurements.lookbookHeight).toBeLessThanOrEqual(700);
+      expect(measurements.lookbookCompositionPosition).toBe("static");
+      expect(measurements.lookbookDetailsDisplay).toBe("none");
+      expect(measurements.lookbookHeight).toBeLessThanOrEqual(450);
+      expect(measurements.lookbookLeadRatio).toBeGreaterThan(1.75);
+      expect(measurements.lookbookLeadRatio).toBeLessThan(1.8);
     }
     if (viewport.width >= 1024) {
+      expect(measurements.campaignHeight).toBeLessThan(
+        measurements.cardHeight - 35,
+      );
+      expect(measurements.campaignHeight).toBeLessThanOrEqual(620);
+      expect(measurements.editorialBodySize).toBeGreaterThanOrEqual(14);
       expect(measurements.imageRatio).toBeGreaterThan(0.77);
       expect(measurements.imageRatio).toBeLessThan(0.83);
     }
-
   }
 
   expect(runtimeErrors).toEqual([]);
