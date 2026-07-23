@@ -185,11 +185,11 @@ export default async function ProductPage({
               </h1>
               <div className="product-commercial-summary mt-5 grid gap-3 sm:grid-cols-[auto_1fr] sm:items-start">
                 <span className="text-[17px]">${product.price}</span>
-                <span className="max-w-[440px] text-[15px] leading-[1.5] text-black/68 sm:justify-self-end sm:text-right">
+                <span className="max-w-[440px] text-[14px] uppercase leading-[1.5] tracking-[0.045em] text-black/68 sm:justify-self-end sm:text-right">
                   {product.materials || product.color || "Washed material"}
                 </span>
               </div>
-              <p className="mt-6 max-w-[560px] text-[15px] leading-[1.58] tracking-[-0.005em] text-black/72 lg:text-[16px]">
+              <p className="mt-6 max-w-[560px] text-[14px] uppercase leading-[1.58] tracking-[0.045em] text-black/72 lg:text-[15px]">
                 {product.description}
               </p>
             </div>
@@ -230,7 +230,7 @@ export default async function ProductPage({
         <section className="related-products-section border-t border-black/16 bg-[#deded7] px-4 py-7 sm:px-6 lg:px-12 lg:py-9">
           <div className="mx-auto max-w-[1500px]">
             <div className="flex items-end justify-between border-b border-black/16 pb-4 text-black/50">
-              <h2 className="text-[24px] font-medium tracking-[-0.03em] text-black/82 sm:text-[30px]">
+              <h2 className="fashion-rail-title text-[24px] text-black/82 sm:text-[30px]">
                 Related products
               </h2>
               <span className="editorial-label">{genderLabel} / Spring 2026</span>
@@ -293,7 +293,7 @@ function ProductDetail({
         <span>{label}</span>
         <span className="transition-transform duration-300 group-open:rotate-45">+</span>
       </summary>
-      <div className="grid max-w-[520px] gap-3 pb-5 pt-2 text-[15px] leading-[1.58] tracking-[-0.005em]">
+      <div className="grid max-w-[520px] gap-3 pb-5 pt-2 text-[14px] uppercase leading-[1.58] tracking-[0.04em]">
         {children}
       </div>
     </details>

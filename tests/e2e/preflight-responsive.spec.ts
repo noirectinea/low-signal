@@ -144,7 +144,7 @@ test("About uses five readable editorial chapters with a valid heading hierarchy
           : 0,
       };
     });
-    expect(typography.body).toBeGreaterThanOrEqual(15);
+    expect(typography.body).toBeGreaterThanOrEqual(14);
     expect(typography.sectionHeading).toBeGreaterThanOrEqual(28);
     expect(typography.overflow).toBeLessThanOrEqual(1);
   }

@@ -142,7 +142,7 @@ export default function CollectionsPage() {
                 />
               </div>
               <div className="grid gap-3">
-                <p className="text-[18px] font-medium tracking-[-0.02em] text-black">
+                <p className="fashion-rail-title text-[19px] text-black">
                   {preview.label}
                 </p>
                 <p className="editorial-body text-[15px]">{preview.note}</p>

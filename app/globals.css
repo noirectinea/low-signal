@@ -2120,12 +2120,6 @@ a {
 }
 
 /* Site-wide hierarchy pass: content leads, metadata recedes. */
-.selected-campaign-copy > p:first-child {
-  font-size: clamp(28px, 2.35vw, 36px);
-  line-height: 0.96;
-  letter-spacing: -0.015em;
-}
-
 .mobile-selected-product-info h3 {
   font-size: 14px;
   line-height: 1.2;
@@ -2143,7 +2137,12 @@ a {
 }
 
 .material-form-section .editorial-section-title {
-  font-size: clamp(30px, 3.2vw, 48px);
+  max-width: 360px;
+  font-size: clamp(21px, 2vw, 28px);
+  font-weight: 500;
+  line-height: 1.16;
+  letter-spacing: 0.055em;
+  text-transform: uppercase;
 }
 
 .mobile-lookbook-hero-copy > div > .editorial-body,
@@ -2169,10 +2168,6 @@ a {
 }
 
 @media (max-width: 767.98px) {
-  .mobile-selected-editorial .selected-campaign-copy > p:first-child {
-    font-size: clamp(29px, 7.5vw, 32px);
-  }
-
   .mobile-collections-intro .editorial-body {
     margin-top: 22px;
     max-width: 34ch;
@@ -2220,16 +2215,16 @@ a {
 @media (max-width: 767.98px) {
   .mobile-selected-editorial {
     overflow: hidden;
-    padding-block: 16px 24px;
+    padding-block: 20px 46px;
   }
 
   .mobile-selected-editorial .selected-garments-header {
-    margin-bottom: 10px;
-    padding-bottom: 12px;
+    margin-bottom: 18px;
+    padding-bottom: 14px;
   }
 
   .mobile-selected-editorial .selected-garments-layout {
-    gap: 8px;
+    gap: 12px;
   }
 
   .mobile-selected-editorial .selected-campaign-card {
@@ -2249,16 +2244,19 @@ a {
 
   .mobile-selected-editorial .selected-campaign-copy {
     position: static;
-    gap: 7px;
-    padding: 6px 16px 12px;
+    gap: 8px;
+    padding: 10px 16px 22px;
     color: #11110f;
   }
 
   .mobile-selected-editorial .selected-campaign-copy > p:first-child {
     white-space: nowrap;
-    font-size: clamp(27px, 7.2vw, 31px);
-    line-height: 0.98;
-    letter-spacing: 0.035em;
+    font-family: var(--font-archivo), Arial, sans-serif;
+    font-size: clamp(29px, 7.2vw, 32px);
+    font-weight: 540;
+    line-height: 0.94;
+    letter-spacing: -0.012em;
+    text-transform: uppercase;
   }
 
   .mobile-selected-editorial .selected-campaign-copy > p:nth-child(2) {
@@ -2306,9 +2304,9 @@ a {
   }
 
   .mobile-selected-editorial .selected-rail-footer {
-    min-height: 34px;
-    margin-top: 10px;
-    padding-top: 9px;
+    min-height: 42px;
+    margin-top: 16px;
+    padding-top: 12px;
     color: rgb(18 18 17 / 0.72) !important;
   }
 
@@ -2352,26 +2350,31 @@ a {
   font-family: var(--font-archivo), Arial, sans-serif;
   font-size: clamp(32px, 4vw, 56px);
   font-weight: 500;
-  line-height: 0.96;
-  letter-spacing: -0.035em;
+  line-height: 0.9;
+  letter-spacing: -0.025em;
+  text-transform: uppercase;
   text-wrap: balance;
 }
 
 .editorial-lead {
   max-width: 36rem;
-  font-size: clamp(19px, 1.7vw, 26px);
+  font-family: var(--font-inter), sans-serif;
+  font-size: clamp(17px, 1.45vw, 22px);
   font-weight: 400;
-  line-height: 1.24;
-  letter-spacing: -0.018em;
+  line-height: 1.42;
+  letter-spacing: 0.065em;
+  text-transform: uppercase;
   text-wrap: pretty;
 }
 
 .editorial-body {
   max-width: 40rem;
-  font-size: clamp(15px, 1.1vw, 17px);
+  font-family: var(--font-inter), sans-serif;
+  font-size: clamp(14px, 1vw, 16px);
   font-weight: 400;
   line-height: 1.58;
-  letter-spacing: -0.008em;
+  letter-spacing: 0.045em;
+  text-transform: uppercase;
   text-wrap: pretty;
   opacity: 0.74;
 }
@@ -2485,8 +2488,9 @@ a {
   font-family: var(--font-archivo), Arial, sans-serif;
   font-size: clamp(24px, 3vw, 38px);
   font-weight: 500;
-  line-height: 1.04;
-  letter-spacing: -0.035em;
+  line-height: 0.98;
+  letter-spacing: -0.02em;
+  text-transform: uppercase;
 }
 
 .about-editorial-axis {
@@ -2557,10 +2561,11 @@ a {
 .about-editorial-material-list h3,
 .about-editorial-daily-notes h3 {
   font-family: var(--font-archivo), Arial, sans-serif;
-  font-size: 21px;
+  font-size: 19px;
   font-weight: 500;
-  line-height: 1.08;
-  letter-spacing: -0.025em;
+  line-height: 1.05;
+  letter-spacing: 0.025em;
+  text-transform: uppercase;
 }
 
 .about-editorial-material-list .editorial-body {
@@ -2598,8 +2603,10 @@ a {
 .about-editorial-daily-notes article > div > p {
   margin-top: 10px;
   max-width: 34rem;
-  font-size: 15px;
+  font-size: 14px;
   line-height: 1.55;
+  letter-spacing: 0.045em;
+  text-transform: uppercase;
   color: rgb(233 233 225 / 0.68);
 }
 
@@ -2798,7 +2805,7 @@ a {
 
   .about-editorial-material-list h3,
   .about-editorial-daily-notes h3 {
-    font-size: 25px;
+    font-size: 22px;
   }
 
   .about-editorial-daily {
