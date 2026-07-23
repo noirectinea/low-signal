@@ -73,7 +73,7 @@ export default async function LoginPage({ searchParams }: LoginPageProps) {
               <p className="mt-5 leading-[1.7] text-black/58">{params.error}</p>
             ) : null}
 
-            <AuthSubmitButton idleLabel="Sign in ->" pendingLabel="Signing in..." />
+            <AuthSubmitButton idleLabel="Sign in →" pendingLabel="Signing in..." />
             <Link
               className="mt-5 block text-center text-black/58"
               href={`/account/register?next=${encodeURIComponent(next)}`}

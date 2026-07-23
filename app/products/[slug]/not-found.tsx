@@ -29,7 +29,7 @@ export default function ProductNotFound() {
             className="mt-8 inline-flex border-b border-black/60 pb-1 text-[9px] uppercase tracking-[0.16em]"
             href="/collections"
           >
-            Return to collections -&gt;
+            Return to collections →
           </Link>
         </div>
       </section>

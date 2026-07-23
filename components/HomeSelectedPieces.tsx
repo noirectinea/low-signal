@@ -21,33 +21,21 @@ const selectedIds = [
   "pleated-pant",
 ] as const;
 
-const desktopSelectedProducts = selectedIds.map((id) => {
+const selectedProducts = selectedIds.map((id) => {
   const product = products.find((item) => item.id === id);
   if (!product) throw new Error(`Missing selected product: ${id}`);
   return product;
 });
-
-const mobileSelectedProducts = [
-  desktopSelectedProducts[0],
-  desktopSelectedProducts[3],
-  desktopSelectedProducts[1],
-  desktopSelectedProducts[4],
-  desktopSelectedProducts[2],
-  desktopSelectedProducts[5],
-];
 
 export function HomeSelectedPieces() {
   const railRef = useRef<HTMLDivElement>(null);
   const sectionRef = useRef<HTMLElement>(null);
   const frameRef = useRef<number | null>(null);
   const pauseAutoplayUntilRef = useRef(0);
-  const physicalIndexRef = useRef(desktopSelectedProducts.length);
+  const physicalIndexRef = useRef(selectedProducts.length);
   const [isMobile, setIsMobile] = useState(false);
   const [isInView, setIsInView] = useState(false);
   const [activeIndex, setActiveIndex] = useState(0);
-  const selectedProducts = isMobile
-    ? mobileSelectedProducts
-    : desktopSelectedProducts;
   const repeatedProducts = useMemo(
     () =>
       Array.from({ length: 3 }, (_, group) =>
@@ -58,7 +46,7 @@ export function HomeSelectedPieces() {
           product,
         })),
       ).flat(),
-    [selectedProducts],
+    [],
   );
 
   const scrollToPhysicalIndex = useCallback(
@@ -105,7 +93,7 @@ export function HomeSelectedPieces() {
       window.cancelAnimationFrame(frame);
       window.removeEventListener("resize", alignRail);
     };
-  }, [isMobile, scrollToPhysicalIndex, selectedProducts.length]);
+  }, [scrollToPhysicalIndex]);
 
   useEffect(() => {
     const section = sectionRef.current;
@@ -120,27 +108,36 @@ export function HomeSelectedPieces() {
   }, []);
 
   useEffect(() => {
-    if (!isMobile) return;
+    if (!isMobile || !isInView) return;
     const reducedMotion = window.matchMedia(
       "(prefers-reduced-motion: reduce)",
     );
-    const interval = window.setInterval(() => {
+    if (reducedMotion.matches) return;
+
+    let interval: number | undefined;
+    const advance = () => {
       if (
         reducedMotion.matches ||
         document.hidden ||
-        !isInView ||
         Date.now() < pauseAutoplayUntilRef.current
       ) {
         return;
       }
       scrollToPhysicalIndex(physicalIndexRef.current + 1, "smooth");
-    }, 3000);
+    };
+    const firstAdvance = window.setTimeout(() => {
+      advance();
+      interval = window.setInterval(advance, 3800);
+    }, 4500);
 
-    return () => window.clearInterval(interval);
+    return () => {
+      window.clearTimeout(firstAdvance);
+      if (interval !== undefined) window.clearInterval(interval);
+    };
   }, [isInView, isMobile, scrollToPhysicalIndex]);
 
   function pauseAutoplay() {
-    pauseAutoplayUntilRef.current = Date.now() + 7000;
+    pauseAutoplayUntilRef.current = Date.now() + 9000;
   }
 
   function handleScroll(event: UIEvent<HTMLDivElement>) {
@@ -197,27 +194,19 @@ export function HomeSelectedPieces() {
           <h2 className="font-normal" id="selected-garments-title">
             04 / Selected garments
           </h2>
-          <p className="hidden lg:block">Selected pieces available online.</p>
+          <p className="hidden lg:block">06 pieces / Spring 2026</p>
           <nav
             aria-label="Selected garment collections"
             className="flex gap-4 lg:gap-6"
           >
             <Link
-              className={`selected-gender-link border-b border-current/45 pb-1 ${
-                selectedProducts[activeIndex]?.gender === "men"
-                  ? "is-active"
-                  : ""
-              }`}
+              className="selected-gender-link"
               href="/collections/men"
             >
               Men
             </Link>
             <Link
-              className={`selected-gender-link border-b border-current/45 pb-1 ${
-                selectedProducts[activeIndex]?.gender === "women"
-                  ? "is-active"
-                  : ""
-              }`}
+              className="selected-gender-link"
               href="/collections/women"
             >
               Women
@@ -225,7 +214,7 @@ export function HomeSelectedPieces() {
           </nav>
         </header>
 
-        <div className="selected-garments-layout grid min-w-0 gap-5 lg:grid-cols-[minmax(320px,40%)_minmax(0,1fr)] lg:gap-6">
+        <div className="selected-garments-layout grid min-w-0 gap-5 lg:grid-cols-[minmax(320px,34%)_minmax(0,1fr)] lg:gap-6">
           <Link
             aria-label="Shop selected garments"
             className="selected-campaign-card group relative min-h-0 overflow-hidden border border-black/14 bg-[#c8cbc5]"
@@ -235,7 +224,7 @@ export function HomeSelectedPieces() {
               alt="Black LOW SIGNAL garment arranged on a studio chair"
               className="selected-campaign-image object-cover object-[54%_50%] brightness-[0.76] contrast-[1.06] saturate-[0.58] transition-transform duration-700 group-hover:scale-[1.012]"
               fill
-              sizes="(min-width: 1024px) 40vw, 100vw"
+              sizes="(min-width: 1024px) 34vw, 100vw"
               src="/images/low-signal/selected-garments-main.jpg"
             />
             <div className="selected-campaign-overlay absolute inset-0 bg-gradient-to-t from-black/66 via-black/5 to-black/5" />
@@ -258,6 +247,7 @@ export function HomeSelectedPieces() {
               className="selected-rail flex min-w-0 snap-x snap-mandatory gap-3 overflow-x-auto overscroll-x-contain scroll-smooth lg:gap-4"
               onPointerDown={pauseAutoplay}
               onScroll={handleScroll}
+              onTouchStart={pauseAutoplay}
               onWheel={pauseAutoplay}
               ref={railRef}
               role="region"
@@ -273,7 +263,7 @@ export function HomeSelectedPieces() {
             </div>
 
             <div className="selected-rail-footer mt-4 flex min-h-11 items-center justify-between border-t border-black/14 pt-3 text-[9px] uppercase tracking-[0.12em] text-black/54">
-              <span aria-live="polite">
+              <span className="selected-rail-index" aria-live="polite">
                 {String(activeIndex + 1).padStart(2, "0")} / 06
               </span>
               <div

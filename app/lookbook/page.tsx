@@ -6,8 +6,32 @@ import { MobileHomeHeader } from "@/components/MobileHomeHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 
 export const metadata: Metadata = {
-  description: "LOW SIGNAL Spring 2026 lookbook: coastal light, concrete rooms, and shoppable washed-black garments.",
+  alternates: { canonical: "/lookbook" },
+  description:
+    "LOW SIGNAL Spring 2026 lookbook: coastal light, concrete rooms, and shoppable dark-toned garments.",
+  openGraph: {
+    description:
+      "LOW SIGNAL Spring 2026 lookbook: coastal light, concrete rooms, and dark-toned garments.",
+    images: [
+      {
+        alt: "LOW SIGNAL Spring 2026 coastal campaign",
+        height: 630,
+        url: "/images/low-signal/og-preview.jpg",
+        width: 1200,
+      },
+    ],
+    title: "Lookbook 01 / LOW SIGNAL",
+    type: "website",
+    url: "/lookbook",
+  },
   title: "Lookbook 01 / LOW SIGNAL",
+  twitter: {
+    card: "summary_large_image",
+    description:
+      "LOW SIGNAL Spring 2026 lookbook: coastal light, concrete rooms, and dark-toned garments.",
+    images: ["/images/low-signal/og-preview.jpg"],
+    title: "Lookbook 01 / LOW SIGNAL",
+  },
 };
 
 const coastalFrames = [

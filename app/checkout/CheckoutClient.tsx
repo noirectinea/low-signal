@@ -344,7 +344,7 @@ export function CheckoutClient() {
                 disabled={status === "loading"}
                 type="submit"
               >
-                {status === "loading" ? "Saving order..." : "Place order ->"}
+                {status === "loading" ? "Saving order..." : "Place order →"}
               </button>
 
               {message ? (

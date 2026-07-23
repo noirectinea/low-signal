@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import type { Metadata } from "next";
 import { MobileHomeHeader } from "@/components/MobileHomeHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 import { getProductsByGender, type ProductGender } from "@/data/products";
@@ -41,8 +42,33 @@ const categoryPreviews = [
   },
 ];
 
-export const metadata = {
+export const metadata: Metadata = {
+  alternates: { canonical: "/collections" },
+  description:
+    "Shop LOW SIGNAL Spring 2026: outerwear, shirts, knitwear, and trousers for women and men.",
+  openGraph: {
+    description:
+      "Shop LOW SIGNAL Spring 2026: outerwear, shirts, knitwear, and trousers for women and men.",
+    images: [
+      {
+        alt: "LOW SIGNAL Spring 2026 coastal campaign",
+        height: 630,
+        url: "/images/low-signal/og-preview.jpg",
+        width: 1200,
+      },
+    ],
+    title: "Spring 2026 Collections / LOW SIGNAL",
+    type: "website",
+    url: "/collections",
+  },
   title: "Spring 2026 Collections / LOW SIGNAL",
+  twitter: {
+    card: "summary_large_image",
+    description:
+      "Shop LOW SIGNAL Spring 2026 outerwear, shirts, knitwear, and trousers.",
+    images: ["/images/low-signal/og-preview.jpg"],
+    title: "Spring 2026 Collections / LOW SIGNAL",
+  },
 };
 
 export default function CollectionsPage() {

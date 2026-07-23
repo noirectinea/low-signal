@@ -59,7 +59,7 @@ export default async function RegisterPage({
               <p className="mt-5 leading-[1.7] text-black/58">{params.error}</p>
             ) : null}
 
-            <AuthSubmitButton idleLabel="Create account ->" pendingLabel="Creating account..." />
+            <AuthSubmitButton idleLabel="Create account →" pendingLabel="Creating account..." />
             <Link
               className="mt-5 block text-center text-black/58"
               href={`/account/login?next=${encodeURIComponent(next)}`}

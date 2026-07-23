@@ -66,7 +66,7 @@ export default async function CheckoutSuccessPage({
                 className="add-to-cart-label flex justify-center bg-black px-5 py-4 text-[#ecece5] transition-opacity duration-300 hover:opacity-80"
                 href="/collections"
               >
-                Continue shopping -&gt;
+                Continue shopping →
               </Link>
               <Link
                 className="mx-auto w-fit border-b border-black/50 pb-1 text-black/64"

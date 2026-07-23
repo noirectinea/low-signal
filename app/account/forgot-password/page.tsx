@@ -58,7 +58,7 @@ export default async function ForgotPasswordPage({
               </p>
             ) : null}
             <AuthSubmitButton
-              idleLabel="Send reset link ->"
+              idleLabel="Send reset link →"
               pendingLabel="Sending..."
             />
             <Link

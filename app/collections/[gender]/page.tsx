@@ -1,4 +1,5 @@
 import { notFound } from "next/navigation";
+import type { Metadata } from "next";
 import type { ProductGender } from "@/data/products";
 import { getProductsByGender } from "@/lib/shop";
 import { CollectionShoppingPage } from "../CollectionShoppingPage";
@@ -19,7 +20,9 @@ export function generateStaticParams() {
   }));
 }
 
-export async function generateMetadata({ params }: CollectionGenderPageProps) {
+export async function generateMetadata({
+  params,
+}: CollectionGenderPageProps): Promise<Metadata> {
   const { gender } = await params;
 
   if (!isProductGender(gender)) {
@@ -28,8 +31,34 @@ export async function generateMetadata({ params }: CollectionGenderPageProps) {
     };
   }
 
+  const label = gender === "women" ? "Women" : "Men";
+  const title = `Spring 2026 ${label} / LOW SIGNAL`;
+  const description = `Shop LOW SIGNAL Spring 2026 ${label.toLowerCase()}'s outerwear, shirts, knitwear, and trousers.`;
+
   return {
-    title: `Spring 2026 ${gender.toUpperCase()} / LOW SIGNAL`,
+    alternates: { canonical: `/collections/${gender}` },
+    description,
+    openGraph: {
+      description,
+      images: [
+        {
+          alt: `LOW SIGNAL Spring 2026 ${label}`,
+          height: 630,
+          url: "/images/low-signal/og-preview.jpg",
+          width: 1200,
+        },
+      ],
+      title,
+      type: "website",
+      url: `/collections/${gender}`,
+    },
+    title,
+    twitter: {
+      card: "summary_large_image",
+      description,
+      images: ["/images/low-signal/og-preview.jpg"],
+      title,
+    },
   };
 }
 

@@ -30,10 +30,29 @@ const archivalDisplay = Libre_Caslon_Display({
 export const metadata: Metadata = {
   metadataBase: new URL("https://low-signal-nine.vercel.app"),
   title: "LOW SIGNAL",
-  description: "LOW SIGNAL is an independent clothing brand: quiet, observant, and slightly strange.",
+  description:
+    "LOW SIGNAL clothing shaped by proportion, texture, and daily use. Explore the Spring 2026 collection.",
   openGraph: {
+    description:
+      "LOW SIGNAL clothing shaped by proportion, texture, and daily use. Explore the Spring 2026 collection.",
+    images: [
+      {
+        alt: "LOW SIGNAL Spring 2026 coastal campaign",
+        height: 630,
+        url: "/images/low-signal/og-preview.jpg",
+        width: 1200,
+      },
+    ],
     siteName: "LOW SIGNAL",
+    title: "LOW SIGNAL / Spring 2026",
     type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    description:
+      "LOW SIGNAL clothing shaped by proportion, texture, and daily use.",
+    images: ["/images/low-signal/og-preview.jpg"],
+    title: "LOW SIGNAL / Spring 2026",
   },
 };
 

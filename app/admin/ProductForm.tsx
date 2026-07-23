@@ -144,7 +144,7 @@ export function ProductForm({
         <AdminSubmitButton
           className="w-full border border-black bg-[#171614] px-6 py-5 text-[#ecece5] sm:w-fit"
         >
-          Save product -&gt;
+          Save product →
         </AdminSubmitButton>
       </div>
 

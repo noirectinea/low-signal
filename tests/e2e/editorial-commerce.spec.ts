@@ -66,22 +66,22 @@ test("selected garments uses a light mobile campaign and swipe rail", async ({ p
   await expect(section.locator(".selected-rail-progress")).toBeVisible();
   await expect(section.locator("article h3")).toHaveText([
     "Field Jacket",
-    "Storm Parka",
     "Work Jacket",
-    "Double Face Coat",
     "Cotton Shirt",
+    "Storm Parka",
+    "Double Face Coat",
     "Double Pleat Trouser",
     "Field Jacket",
-    "Storm Parka",
     "Work Jacket",
-    "Double Face Coat",
     "Cotton Shirt",
+    "Storm Parka",
+    "Double Face Coat",
     "Double Pleat Trouser",
     "Field Jacket",
-    "Storm Parka",
     "Work Jacket",
-    "Double Face Coat",
     "Cotton Shirt",
+    "Storm Parka",
+    "Double Face Coat",
     "Double Pleat Trouser",
   ]);
   await section.locator(".selected-rail").evaluate((rail) => {
@@ -104,7 +104,7 @@ test("mobile selected garments autoplays, pauses after input, and respects reduc
   const index = page.locator("#selected-pieces .selected-rail-footer > span");
   await page.locator("#selected-pieces").scrollIntoViewIfNeeded();
   await expect(index).toHaveText("01 / 06");
-  await expect(index).toHaveText("02 / 06", { timeout: 4_000 });
+  await expect(index).toHaveText("02 / 06", { timeout: 5_500 });
 
   await page.locator("#selected-pieces .selected-rail").dispatchEvent("pointerdown");
   await page.locator("#selected-pieces .selected-rail").evaluate((rail) => {
@@ -113,7 +113,7 @@ test("mobile selected garments autoplays, pauses after input, and respects reduc
     rail.scrollTo({ behavior: "auto", left: target.offsetLeft - rail.offsetLeft });
   });
   await expect(index).toHaveText("03 / 06");
-  await page.waitForTimeout(4_200);
+  await page.waitForTimeout(8_200);
   await expect(index).toHaveText("03 / 06");
 
   await page.emulateMedia({ reducedMotion: "reduce" });

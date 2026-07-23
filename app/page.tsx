@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import type { Metadata } from "next";
 import { HomeSelectedPieces } from "@/components/HomeSelectedPieces";
 import { MaterialForm } from "@/components/MaterialForm";
 import { MobileHomeHeader } from "@/components/MobileHomeHeader";
@@ -22,6 +23,36 @@ const lookbookRows = [
   ["03", "Concrete room"],
   ["04", "Final look"],
 ];
+
+export const metadata: Metadata = {
+  alternates: { canonical: "/" },
+  description:
+    "LOW SIGNAL clothing shaped by proportion, texture, and daily use. Explore the Spring 2026 collection.",
+  openGraph: {
+    description:
+      "LOW SIGNAL clothing shaped by proportion, texture, and daily use. Explore the Spring 2026 collection.",
+    images: [
+      {
+        alt: "LOW SIGNAL Spring 2026 coastal campaign",
+        height: 630,
+        url: "/images/low-signal/og-preview.jpg",
+        width: 1200,
+      },
+    ],
+    title: "LOW SIGNAL / Spring 2026",
+    type: "website",
+    url: "/",
+  },
+  title: "LOW SIGNAL / Spring 2026",
+  twitter: {
+    card: "summary_large_image",
+    description:
+      "LOW SIGNAL clothing shaped by proportion, texture, and daily use.",
+    images: ["/images/low-signal/og-preview.jpg"],
+    title: "LOW SIGNAL / Spring 2026",
+  },
+};
+
 export default function Home() {
   return (
     <main className="mobile-home-root min-h-screen w-full bg-[#e4e5df] text-[#111]">
@@ -316,7 +347,7 @@ function LookbookContinuation() {
               >
                 <span>{number}</span>
                 <span>{label}</span>
-                <span>View -&gt;</span>
+                <span>View →</span>
               </Link>
             ))}
           </div>

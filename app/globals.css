@@ -181,6 +181,34 @@ a {
   opacity: 0.55;
 }
 
+.selected-gender-link {
+  position: relative;
+  padding-bottom: 4px;
+}
+
+.selected-gender-link::before {
+  position: absolute;
+  inset: -14px -6px;
+  content: "";
+}
+
+.selected-gender-link::after {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  height: 1px;
+  background: currentColor;
+  content: "";
+  opacity: 0;
+  transition: opacity 200ms ease;
+}
+
+.selected-gender-link:hover::after,
+.selected-gender-link:focus-visible::after {
+  opacity: 0.56;
+}
+
 .site-footer-link {
   display: inline-flex;
   min-height: 26px;
@@ -1782,6 +1810,26 @@ a {
     flex: 1;
   }
 
+  .selected-campaign-image {
+    object-position: 54% 50%;
+  }
+
+  .selected-products-column {
+    position: relative;
+  }
+
+  .selected-products-column::after {
+    position: absolute;
+    z-index: 4;
+    right: 0;
+    bottom: 59px;
+    width: 10.5%;
+    height: 104px;
+    background: #dedfd9;
+    content: "";
+    pointer-events: none;
+  }
+
   .related-products-section {
     max-height: 440px;
     overflow: hidden;
@@ -2113,14 +2161,6 @@ a {
     padding-bottom: 12px;
   }
 
-  .mobile-selected-editorial .selected-gender-link {
-    border-color: transparent !important;
-  }
-
-  .mobile-selected-editorial .selected-gender-link.is-active {
-    border-color: currentColor !important;
-  }
-
   .mobile-selected-editorial .selected-garments-layout {
     gap: 8px;
   }
@@ -2155,7 +2195,7 @@ a {
   }
 
   .mobile-selected-editorial .selected-campaign-copy > p:nth-child(2) {
-    color: rgb(18 18 17 / 0.52);
+    color: rgb(18 18 17 / 0.68);
   }
 
   .mobile-selected-editorial .selected-campaign-copy .selected-rail-link {
@@ -2202,20 +2242,53 @@ a {
     min-height: 34px;
     margin-top: 10px;
     padding-top: 9px;
+    color: rgb(18 18 17 / 0.72) !important;
+  }
+
+  .mobile-selected-editorial .selected-rail-index {
+    color: rgb(18 18 17 / 0.78) !important;
   }
 
   .selected-rail-progress {
     width: min(42vw, 150px);
     height: 1px;
     overflow: hidden;
-    background: rgb(18 18 17 / 0.16);
+    background: rgb(18 18 17 / 0.22);
   }
 
   .selected-rail-progress > span {
     display: block;
     height: 100%;
-    background: rgb(18 18 17 / 0.62);
+    background: rgb(18 18 17 / 0.78);
     transition: width 420ms ease;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .selected-rail-progress > span {
+    transition: none;
+  }
+}
+
+/* About: readable editorial copy without changing the underlying grid. */
+.about-body-copy {
+  font-size: 12px;
+  line-height: 1.62;
+  letter-spacing: 0.075em;
+  color: rgb(18 18 17 / 0.72);
+}
+
+.about-label {
+  font-size: 9px;
+  line-height: 1.55;
+  letter-spacing: 0.15em;
+}
+
+@media (max-width: 767.98px) {
+  .about-body-copy {
+    font-size: 12px;
+    line-height: 1.62;
+    letter-spacing: 0.065em;
   }
 }
 

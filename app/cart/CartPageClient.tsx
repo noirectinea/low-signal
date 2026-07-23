@@ -355,7 +355,7 @@ function OrderSummary({
           href="/checkout"
         >
           {isChecking ? "Checking stock" : "Proceed to checkout"}
-          <span aria-hidden="true">-&gt;</span>
+          <span aria-hidden="true">→</span>
         </Link>
       )}
       <Link
