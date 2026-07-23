@@ -319,10 +319,6 @@ a {
   font-size: 9px;
 }
 
-:where(p, span, a, button, summary, label, div).text-low-muted {
-  color: #918b82;
-}
-
 :where(p, span, a, button, summary, label, div)[class*="text-black/4"] {
   color: rgb(18 18 17 / 0.62);
 }
@@ -353,15 +349,6 @@ a {
   line-height: 1.5;
   letter-spacing: 0.05em;
   color: rgb(18 18 17 / 0.72);
-}
-
-.mobile-about-principles section p,
-.mobile-about-expansion section p,
-.mobile-about-images p {
-  font-size: 13px;
-  line-height: 1.55;
-  letter-spacing: 0.04em;
-  color: rgb(18 18 17 / 0.7);
 }
 
 /*
@@ -408,26 +395,6 @@ a {
 
   .mobile-hero-actions {
     grid-template-columns: 29% minmax(0, 1fr);
-  }
-
-  .mobile-spring-feature {
-    min-height: 0;
-  }
-
-  .mobile-spring-heading {
-    min-height: 104px;
-  }
-
-  .mobile-spring-image {
-    height: clamp(320px, 40svh, 380px);
-  }
-
-  .mobile-spring-footer {
-    min-height: 84px;
-  }
-
-  .mobile-lookbook-feature {
-    min-height: min(36svh, 310px);
   }
 
   .mobile-selected-editorial {
@@ -610,14 +577,6 @@ a {
     border-top: 0;
   }
 
-  .mobile-collection-entry-men {
-    grid-column: auto;
-  }
-
-  .mobile-collection-entry-women {
-    grid-column: auto;
-  }
-
   .mobile-collection-entry > a > div:first-child {
     aspect-ratio: 4 / 5.35;
   }
@@ -700,24 +659,6 @@ a {
     max-height: 540px;
     border-left: 0;
     border-right: 0;
-  }
-
-  .mobile-product-thumbnails {
-    width: calc(100% - 32px);
-    margin: -24px 16px 0;
-    position: relative;
-    z-index: 2;
-    gap: 8px;
-    overscroll-behavior-inline: contain;
-    scrollbar-width: none;
-  }
-
-  .mobile-product-thumbnails > div {
-    border-color: rgb(231 231 225 / 0.7);
-  }
-
-  .mobile-product-thumbnails::-webkit-scrollbar {
-    display: none;
   }
 
   .mobile-product-information {
@@ -827,67 +768,6 @@ a {
     grid-column: 1 / 10;
   }
 
-  .mobile-about-statement {
-    min-height: min(68svh, 580px);
-    padding: 34px 20px;
-  }
-
-  .mobile-about-statement h1 {
-    font-size: clamp(3.55rem, 15.5vw, 4.25rem);
-  }
-
-  .mobile-about-principles {
-    padding: 34px 20px;
-  }
-
-  .mobile-about-principles section {
-    padding-block: 20px;
-  }
-
-  .mobile-about-principles > div:nth-child(2) > section:nth-child(even) {
-    padding-left: 12%;
-  }
-
-  .mobile-about-principles > div:nth-child(2) > section:nth-child(odd) {
-    padding-right: 10%;
-  }
-
-  .mobile-about-images > div:first-child {
-    width: 88%;
-    min-height: 44svh;
-  }
-
-  .mobile-about-images > div:nth-child(2) {
-    width: 92%;
-    margin-left: 8%;
-    min-height: 220px;
-  }
-
-  .mobile-about-expansion {
-    padding: 38px 20px;
-  }
-
-  .mobile-about-expansion h2 {
-    font-size: clamp(3.1rem, 14vw, 4rem);
-  }
-
-  .mobile-about-uniform > div:first-child {
-    width: 88%;
-    min-height: 46svh;
-  }
-
-  .mobile-about-uniform > div:last-child {
-    width: 92%;
-    margin: -48px 0 0 8%;
-    position: relative;
-    background: #deded7;
-    padding-inline: 16px;
-  }
-
-  .mobile-about-uniform [class*="px-5"][class*="py-5"] {
-    padding-block: 12px;
-  }
-
   .mobile-menu-panel {
     padding: 0;
     background: #dfe0da;
@@ -949,26 +829,6 @@ a {
     justify-self: end;
     color: rgb(18 18 17 / 0.56);
     font-size: 11px;
-  }
-
-  .mobile-menu-cart-link::before {
-    content: "06";
-    font-size: 8px;
-    color: rgb(0 0 0 / 0.42);
-  }
-
-  .mobile-menu-cart-link::after {
-    content: "→";
-    justify-self: end;
-    font-size: 10px;
-    color: rgb(0 0 0 / 0.44);
-  }
-
-  .mobile-menu-campaign {
-    display: block;
-    min-height: 144px;
-    border: 0;
-    border-bottom: 1px solid rgb(0 0 0 / 0.16);
   }
 
   .mobile-menu-lower {
@@ -1055,20 +915,6 @@ a {
     letter-spacing: 0.16em;
   }
 
-  .mobile-spring-heading {
-    grid-template-columns: 90px minmax(0, 1fr);
-    min-height: 112px;
-  }
-
-  .mobile-spring-image,
-  .mobile-spring-footer {
-    margin-left: 90px;
-  }
-
-  .mobile-spring-image {
-    height: min(40svh, 410px);
-  }
-
   .mobile-menu-composition {
     display: grid;
     grid-template-columns: minmax(0, 1fr);
@@ -1105,24 +951,6 @@ a {
 
   .mobile-menu-arrow {
     justify-self: end;
-  }
-
-  .mobile-menu-cart-link::before {
-    content: "06";
-    font-size: 8px;
-    color: rgb(0 0 0 / 0.42);
-  }
-
-  .mobile-menu-cart-link::after {
-    content: "→";
-    justify-self: end;
-    font-size: 10px;
-    color: rgb(0 0 0 / 0.44);
-  }
-
-  .mobile-menu-campaign {
-    min-height: calc(100svh - 260px);
-    border-left: 1px solid rgb(0 0 0 / 0.16);
   }
 
   .mobile-menu-secondary {
