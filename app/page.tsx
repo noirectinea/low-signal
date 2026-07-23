@@ -165,7 +165,7 @@ function HeroPanel() {
 
 function EditorialGrid() {
   return (
-    <section className="mobile-home-editorial border-b border-black/20">
+    <section className="home-promo-section mobile-home-editorial border-b border-black/20">
       <div className="mobile-editorial-composition lg:hidden">
         <div className="mobile-editorial-index bg-[#e8e9e3]">
           <Link className="mobile-spring-teaser group flex min-h-0 items-center justify-between gap-4 border-y border-black/18 px-4 uppercase" href="/collections">
@@ -203,7 +203,7 @@ function EditorialGrid() {
         </div>
       </div>
 
-      <div className="hidden h-full grid-cols-[32.5vw_24vw_1fr] lg:grid">
+      <div className="desktop-home-editorial hidden h-full grid-cols-[32.5vw_24vw_1fr] lg:grid">
         <Link href="/collections" className="group relative grid grid-cols-[47.96%_52.04%] border-r transition-colors duration-300 hover:bg-black/[0.025]">
           <div className="flex h-full flex-col bg-[#e8e9e3] px-[27px] py-[34px]">
             <Kicker number="02" />

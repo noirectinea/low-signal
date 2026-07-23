@@ -2816,7 +2816,7 @@ a {
 .home-section-title,
 .home-editorial-statement {
   font-family: var(--font-archivo), Arial, sans-serif;
-  font-weight: 580;
+  font-weight: 540;
   text-transform: uppercase;
 }
 
@@ -2864,13 +2864,15 @@ a {
 }
 
 .selected-campaign-title {
-  font-size: clamp(26px, 2vw, 30px);
-  font-weight: 580;
-  letter-spacing: -0.012em;
+  font-size: clamp(20px, 1.4vw, 22px);
+  font-weight: 530;
+  line-height: 1;
+  letter-spacing: 0;
 }
 
 .mobile-selected-product-info .selected-product-title {
   font-size: clamp(15px, 1.1vw, 17px);
+  font-weight: 500;
   line-height: 1.15;
   letter-spacing: 0.015em;
 }
@@ -2896,7 +2898,7 @@ a {
 .material-form-section .editorial-section-title {
   max-width: 390px;
   font-size: clamp(24px, 2.25vw, 32px);
-  font-weight: 580;
+  font-weight: 540;
   line-height: 1.04;
   letter-spacing: 0.018em;
 }
@@ -2907,12 +2909,32 @@ a {
 }
 
 @media (min-width: 1024px) {
-  .mobile-home-editorial .home-section-title {
-    font-size: clamp(24px, 1.8vw, 28px);
+  .home-hero-image-note {
+    max-width: 290px;
+    font-size: clamp(10px, 0.72vw, 11px);
+    font-weight: 400;
+    line-height: 1.4;
+    letter-spacing: 0.12em;
   }
 
-  .mobile-home-editorial .home-editorial-body {
-    line-height: 1.4;
+  .desktop-home-editorial .home-section-title {
+    max-width: none;
+    font-size: clamp(18px, 1.32vw, 20px);
+    font-weight: 530;
+    line-height: 1.05;
+    letter-spacing: 0;
+  }
+
+  .desktop-home-editorial .home-editorial-body {
+    font-size: clamp(12px, 0.9vw, 14px);
+    font-weight: 400;
+    line-height: 1.45;
+    letter-spacing: 0.025em;
+  }
+
+  .desktop-home-editorial .home-editorial-cta {
+    font-size: clamp(11px, 0.8vw, 12px);
+    font-weight: 500;
   }
 
   .selected-garments-layout {
@@ -2927,6 +2949,132 @@ a {
   .selected-products-column {
     height: 100%;
   }
+}
+
+@media (min-width: 1280px) {
+  .selected-garments-section {
+    height: auto;
+    scroll-margin-top: 96px;
+    padding-block: 34px 42px;
+  }
+
+  .selected-garments-layout {
+    grid-template-columns: minmax(260px, 21.5%) minmax(0, 1fr);
+    gap: clamp(20px, 1.5vw, 24px);
+    height: auto;
+  }
+
+  .selected-campaign-card {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 3 / 4;
+  }
+
+  .selected-campaign-image {
+    object-position: 54% 50%;
+  }
+
+  .selected-campaign-overlay {
+    background: linear-gradient(
+      to top,
+      rgb(0 0 0 / 0.16),
+      rgb(0 0 0 / 0.04) 38%,
+      transparent 62%
+    );
+  }
+
+  .selected-campaign-copy {
+    gap: 9px;
+    padding: clamp(20px, 1.35vw, 24px);
+  }
+
+  .selected-campaign-copy .selected-rail-link {
+    margin-top: 4px;
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+  }
+
+  .selected-products-column,
+  .selected-rail,
+  .selected-products-column .mobile-selected-card {
+    height: auto;
+  }
+
+  .selected-rail {
+    gap: clamp(16px, 1.2vw, 20px);
+  }
+
+  .selected-products-column .mobile-selected-card {
+    width: calc((100% - 2 * clamp(16px, 1.2vw, 20px)) / 3);
+  }
+
+  .selected-products-column::after {
+    display: none;
+  }
+
+  .selected-products-column .mobile-selected-card > div:first-of-type {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 4 / 5;
+  }
+
+  .desktop-home-editorial > a:last-child {
+    grid-template-columns: minmax(260px, 50%) minmax(0, 1fr);
+  }
+
+  .desktop-home-editorial > a:last-child > div:last-child {
+    padding-inline: clamp(28px, 2.5vw, 40px);
+  }
+}
+
+@media (min-width: 1400px) and (max-width: 1599.98px) {
+  .selected-campaign-title {
+    width: max-content;
+    transform: scaleX(0.915);
+    transform-origin: left center;
+    white-space: nowrap;
+  }
+}
+
+@media (min-width: 1600px) and (max-width: 1799.98px) {
+  .selected-campaign-title {
+    width: max-content;
+    transform: scaleX(0.948);
+    transform-origin: left center;
+    white-space: nowrap;
+  }
+}
+
+@media (min-width: 1800px) {
+  .selected-campaign-title {
+    width: max-content;
+    transform: scaleX(0.99);
+    transform-origin: left center;
+    white-space: nowrap;
+  }
+}
+
+/* Homepage tonal sequence: a quiet descent from daylight into washed grey. */
+.home-promo-section {
+  background-color: #dee0da;
+}
+
+.desktop-home-editorial > a:first-child > div:first-child,
+.desktop-home-editorial > a:nth-child(2) {
+  background-color: #dee0da;
+}
+
+.selected-garments-section {
+  background-color: #d7d9d3;
+}
+
+.material-form-section {
+  background-color: #cdd0c9;
+}
+
+.mobile-journal {
+  background-color: #c2c5be;
 }
 
 @media (max-width: 767.98px) {
@@ -2989,7 +3137,7 @@ a {
   }
 
   .mobile-selected-editorial .selected-campaign-copy > p:first-child {
-    font-weight: 580;
+    font-weight: 540;
   }
 
   .mobile-selected-product-info h3 {

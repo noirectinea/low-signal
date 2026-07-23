@@ -8,6 +8,7 @@ const requestedViewports = [
   { height: 1024, width: 768 },
   { height: 800, width: 1280 },
   { height: 900, width: 1440 },
+  { height: 900, width: 1600 },
   { height: 1080, width: 1920 },
 ] as const;
 
@@ -49,6 +50,17 @@ test("Selected Garments and Lookbook remain composed at every requested viewport
       const campaign = document.querySelector<HTMLElement>(
         ".selected-campaign-card",
       );
+      const selectedLayout = document.querySelector<HTMLElement>(
+        ".selected-garments-layout",
+      );
+      const heroNote = document.querySelector<HTMLElement>(
+        ".home-hero-image-note",
+      );
+      const desktopPromoTitles = Array.from(
+        document.querySelectorAll<HTMLElement>(
+          ".desktop-home-editorial .home-section-title",
+        ),
+      );
       const visibleSectionTitle = Array.from(
         document.querySelectorAll<HTMLElement>(".home-section-title"),
       ).find((element) => element.getBoundingClientRect().width > 0);
@@ -63,13 +75,46 @@ test("Selected Garments and Lookbook remain composed at every requested viewport
       const imageRect = rect(image);
       const cardRect = rect(card);
       const campaignRect = rect(campaign);
+      const selectedLayoutRect = rect(selectedLayout);
       const leadRect = rect(lookbookLead);
+      const railRect = rect(rail);
+      const fullyVisibleProducts = Array.from(cards ?? []).filter((element) => {
+        const itemRect = rect(element);
+        return (
+          itemRect &&
+          railRect &&
+          itemRect.left >= railRect.left - 1 &&
+          itemRect.right <= railRect.right + 1
+        );
+      }).length;
 
       return {
+        campaignRatio: campaignRect
+          ? campaignRect.width / campaignRect.height
+          : 0,
+        campaignShare: campaignRect && selectedLayoutRect
+          ? campaignRect.width / selectedLayoutRect.width
+          : 0,
         campaignHeight: campaignRect?.height ?? 0,
         cardHeight: cardRect?.height ?? 0,
+        desktopPromoSizes: desktopPromoTitles.map((element) =>
+          Number.parseFloat(getComputedStyle(element).fontSize),
+        ),
+        desktopPromoWeights: desktopPromoTitles.map((element) =>
+          Number.parseInt(getComputedStyle(element).fontWeight, 10),
+        ),
         editorialBodySize: visibleEditorialBody
           ? Number.parseFloat(getComputedStyle(visibleEditorialBody).fontSize)
+          : 0,
+        editorialBodyWeight: visibleEditorialBody
+          ? Number.parseInt(getComputedStyle(visibleEditorialBody).fontWeight, 10)
+          : 0,
+        fullyVisibleProducts,
+        heroNoteSize: heroNote
+          ? Number.parseFloat(getComputedStyle(heroNote).fontSize)
+          : 0,
+        heroNoteWeight: heroNote
+          ? Number.parseInt(getComputedStyle(heroNote).fontWeight, 10)
           : 0,
         imageRatio: imageRect
           ? imageRect.width / imageRect.height
@@ -107,17 +152,24 @@ test("Selected Garments and Lookbook remain composed at every requested viewport
         selectedProductTitleSize: productTitle
           ? Number.parseFloat(getComputedStyle(productTitle).fontSize)
           : 0,
+        selectedProductTitleWeight: productTitle
+          ? Number.parseInt(getComputedStyle(productTitle).fontWeight, 10)
+          : 0,
       };
     });
 
     expect(measurements.overflow).toBeLessThanOrEqual(1);
     expect(measurements.nextCardStartsInsideRail).toBe(true);
     expect(measurements.selectedTitleWeight).toBeGreaterThanOrEqual(520);
-    expect(measurements.sectionTitleSize).toBeGreaterThanOrEqual(22);
-    expect(measurements.sectionTitleWeight).toBeGreaterThanOrEqual(550);
+    expect(measurements.selectedTitleWeight).toBeLessThanOrEqual(560);
+    expect(measurements.sectionTitleWeight).toBeGreaterThanOrEqual(520);
+    expect(measurements.sectionTitleWeight).toBeLessThanOrEqual(560);
     expect(measurements.selectedProductTitleSize).toBeGreaterThanOrEqual(15);
+    expect(measurements.selectedProductTitleSize).toBeLessThanOrEqual(17);
+    expect(measurements.selectedProductTitleWeight).toBeGreaterThanOrEqual(500);
 
     if (viewport.width < 768) {
+      expect(measurements.sectionTitleSize).toBeGreaterThanOrEqual(22);
       expect(measurements.lookbookCompositionPosition).toBe("static");
       expect(measurements.lookbookDetailsDisplay).toBe("none");
       expect(measurements.lookbookHeight).toBeLessThanOrEqual(450);
@@ -129,13 +181,78 @@ test("Selected Garments and Lookbook remain composed at every requested viewport
         measurements.cardHeight - 35,
       );
       expect(measurements.campaignHeight).toBeLessThanOrEqual(620);
-      expect(measurements.editorialBodySize).toBeGreaterThanOrEqual(14);
+      expect(measurements.desktopPromoSizes).toEqual(
+        expect.arrayContaining([
+          expect.any(Number),
+          expect.any(Number),
+          expect.any(Number),
+        ]),
+      );
+      for (const size of measurements.desktopPromoSizes) {
+        expect(size).toBeGreaterThanOrEqual(18);
+        expect(size).toBeLessThanOrEqual(20);
+      }
+      for (const weight of measurements.desktopPromoWeights) {
+        expect(weight).toBeGreaterThanOrEqual(520);
+        expect(weight).toBeLessThanOrEqual(540);
+      }
+      expect(measurements.editorialBodySize).toBeGreaterThanOrEqual(12);
+      expect(measurements.editorialBodySize).toBeLessThanOrEqual(14);
+      expect(measurements.editorialBodyWeight).toBe(400);
+      expect(measurements.heroNoteSize).toBeGreaterThanOrEqual(10);
+      expect(measurements.heroNoteSize).toBeLessThanOrEqual(11);
+      expect(measurements.heroNoteWeight).toBe(400);
       expect(measurements.imageRatio).toBeGreaterThan(0.77);
       expect(measurements.imageRatio).toBeLessThan(0.83);
+    }
+    if (viewport.width >= 1280) {
+      expect(measurements.fullyVisibleProducts).toBe(3);
+      expect(measurements.campaignShare).toBeGreaterThanOrEqual(0.2);
+      expect(measurements.campaignShare).toBeLessThanOrEqual(0.22);
+      expect(measurements.campaignRatio).toBeGreaterThan(0.74);
+      expect(measurements.campaignRatio).toBeLessThan(0.76);
     }
   }
 
   expect(runtimeErrors).toEqual([]);
+});
+
+test("homepage tones descend quietly and the Selected anchor clears the header", async ({
+  page,
+}) => {
+  await page.setViewportSize({ height: 900, width: 1440 });
+  await page.goto("/#selected-pieces");
+  await page.locator("#selected-pieces").waitFor();
+  await page.waitForTimeout(250);
+
+  const measurements = await page.evaluate(() => {
+    const selectors = [
+      ".home-promo-section",
+      ".selected-garments-section",
+      ".material-form-section",
+      ".mobile-journal",
+    ];
+    const lightness = (value: string) => {
+      const channels = value.match(/\d+/g)?.slice(0, 3).map(Number) ?? [];
+      return channels.reduce((sum, channel) => sum + channel, 0);
+    };
+    const tones = selectors.map((selector) =>
+      getComputedStyle(document.querySelector(selector)!).backgroundColor,
+    );
+    const selectedTop = document
+      .querySelector("#selected-pieces")!
+      .getBoundingClientRect().top;
+
+    return {
+      selectedTop,
+      toneLightness: tones.map(lightness),
+    };
+  });
+
+  expect(measurements.selectedTop).toBeGreaterThanOrEqual(80);
+  expect(measurements.toneLightness).toEqual(
+    [...measurements.toneLightness].sort((a, b) => b - a),
+  );
 });
 
 test("desktop autoplay pauses for hover and never opens Collections", async ({

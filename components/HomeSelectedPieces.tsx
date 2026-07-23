@@ -366,7 +366,7 @@ export function HomeSelectedPieces() {
               alt="Black LOW SIGNAL garment arranged on a studio chair"
               className="selected-campaign-image object-cover object-[54%_50%] brightness-[0.76] contrast-[1.06] saturate-[0.58] transition-transform duration-700 group-hover:scale-[1.012]"
               fill
-              sizes="(min-width: 1024px) 34vw, 100vw"
+              sizes="(min-width: 1280px) 22vw, (min-width: 1024px) 34vw, 100vw"
               src="/images/low-signal/selected-garments-main.jpg"
             />
             <div className="selected-campaign-overlay absolute inset-0 bg-gradient-to-t from-black/66 via-black/5 to-black/5" />
@@ -520,7 +520,7 @@ function SelectedProductCard({
             product.objectPosition ?? "object-center"
           }`}
           fill
-          sizes="(min-width: 1024px) 23vw, 78vw"
+          sizes="(min-width: 1280px) 25vw, (min-width: 1024px) 23vw, 78vw"
           src={product.image}
         />
       </div>
