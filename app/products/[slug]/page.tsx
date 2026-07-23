@@ -183,12 +183,15 @@ export default async function ProductPage({
               <h1 className="product-display-title max-w-[600px] text-[38px] text-black/94 sm:text-[54px] lg:text-[62px]">
                 {product.name}
               </h1>
-              <div className="mt-5 grid gap-3 text-[13px] uppercase tracking-[0.05em] sm:grid-cols-[auto_1fr] sm:items-center">
-                <span>${product.price}</span>
-                <span className="text-black/58 sm:text-right">
+              <div className="product-commercial-summary mt-5 grid gap-3 sm:grid-cols-[auto_1fr] sm:items-start">
+                <span className="text-[17px]">${product.price}</span>
+                <span className="max-w-[440px] text-[15px] leading-[1.5] text-black/68 sm:justify-self-end sm:text-right">
                   {product.materials || product.color || "Washed material"}
                 </span>
               </div>
+              <p className="mt-6 max-w-[560px] text-[15px] leading-[1.58] tracking-[-0.005em] text-black/72 lg:text-[16px]">
+                {product.description}
+              </p>
             </div>
 
             <ProductPurchasePanel product={product} />
@@ -226,9 +229,11 @@ export default async function ProductPage({
       {relatedProducts.length ? (
         <section className="related-products-section border-t border-black/16 bg-[#deded7] px-4 py-7 sm:px-6 lg:px-12 lg:py-9">
           <div className="mx-auto max-w-[1500px]">
-            <div className="flex items-center justify-between border-b border-black/16 pb-4 text-[9px] uppercase tracking-[0.14em] text-black/50">
-              <h2 className="font-normal text-black/72">Related products</h2>
-              <span>{genderLabel} / Spring 2026</span>
+            <div className="flex items-end justify-between border-b border-black/16 pb-4 text-black/50">
+              <h2 className="text-[24px] font-medium tracking-[-0.03em] text-black/82 sm:text-[30px]">
+                Related products
+              </h2>
+              <span className="editorial-label">{genderLabel} / Spring 2026</span>
             </div>
             <div className="related-products-rail mt-4 flex snap-x snap-mandatory gap-3 overflow-x-auto overscroll-x-contain sm:grid sm:grid-cols-3 lg:gap-5">
               {relatedProducts.map((relatedProduct, index) => (
@@ -251,7 +256,7 @@ export default async function ProductPage({
                     />
                   </div>
                   <div className="mt-3 grid gap-2 uppercase">
-                    <h3 className="text-[11px] font-normal tracking-[0.05em] sm:text-[12px]">
+                    <h3 className="text-[13px] font-normal tracking-[0.025em] sm:text-[14px]">
                       {relatedProduct.name}
                     </h3>
                     <span className="text-[10px] text-black/64">${relatedProduct.price}</span>
@@ -283,12 +288,14 @@ function ProductDetail({
   label: string;
 }>) {
   return (
-    <details className="group py-2 text-[12px] uppercase leading-[1.55] tracking-[0.05em] text-black/68">
-      <summary className="flex min-h-11 cursor-pointer list-none items-center justify-between text-[11px] text-black">
+    <details className="group py-2 text-black/68">
+      <summary className="flex min-h-12 cursor-pointer list-none items-center justify-between text-[11px] uppercase tracking-[0.08em] text-black">
         <span>{label}</span>
         <span className="transition-transform duration-300 group-open:rotate-45">+</span>
       </summary>
-      <div className="grid max-w-[520px] gap-3 pb-4 pt-2">{children}</div>
+      <div className="grid max-w-[520px] gap-3 pb-5 pt-2 text-[15px] leading-[1.58] tracking-[-0.005em]">
+        {children}
+      </div>
     </details>
   );
 }

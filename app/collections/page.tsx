@@ -85,9 +85,9 @@ export default function CollectionsPage() {
             </span>
           </h1>
 
-          <p className="mt-8 hidden max-w-[430px] text-[11px] uppercase leading-[1.82] tracking-[0.17em] text-black/60 lg:block">
-            Dark neutral clothing, cut for daily repeat. Washed fabrics, quiet
-            volume, and pieces that move with you.
+          <p className="editorial-body mt-7 max-w-[430px] lg:mt-8">
+            Dark neutral clothing with deliberate volume, tactile surfaces,
+            and room for movement and layering.
           </p>
 
         </header>
@@ -109,9 +109,9 @@ export default function CollectionsPage() {
             <p className="text-[9px] uppercase tracking-[0.18em] text-black/54">
               Collection notes
             </p>
-            <p className="mt-6 max-w-[360px] text-[11px] uppercase leading-[1.78] tracking-[0.15em] text-black/64">
+            <p className="editorial-body mt-6 max-w-[360px]">
               Spring 2026 is built around dark neutrals, concrete light, and
-              garments that sit close to daily routine.
+              garments designed to work together across changing layers.
             </p>
           </div>
 
@@ -141,9 +141,11 @@ export default function CollectionsPage() {
                   src={preview.image}
                 />
               </div>
-              <div className="grid gap-3 text-[9px] uppercase leading-[1.7] tracking-[0.16em]">
-                <p className="text-black">{preview.label}</p>
-                <p className="text-black/58">{preview.note}</p>
+              <div className="grid gap-3">
+                <p className="text-[18px] font-medium tracking-[-0.02em] text-black">
+                  {preview.label}
+                </p>
+                <p className="editorial-body text-[15px]">{preview.note}</p>
               </div>
             </Link>
           ))}

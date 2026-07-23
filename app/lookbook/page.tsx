@@ -167,7 +167,7 @@ function LookbookHero() {
             <br />
             Spring 2026
           </h1>
-          <p className="mt-10 max-w-[430px] text-[12px] uppercase leading-[1.78] tracking-[0.16em] text-black/58">
+          <p className="editorial-body mt-10 max-w-[430px]">
             Washed black garments, coastal air, concrete rooms, and pieces cut
             for regular wear.
           </p>
@@ -338,11 +338,11 @@ function ChapterShell({
     >
       <div className="mx-auto max-w-[1540px]">
         <div
-          className={`mobile-lookbook-chapter-heading mb-8 grid gap-5 border-b pb-5 text-[10px] uppercase tracking-[0.18em] lg:grid-cols-[220px_1fr_360px] lg:items-end ${
+          className={`mobile-lookbook-chapter-heading mb-8 grid gap-5 border-b pb-5 lg:grid-cols-[180px_1fr_400px] lg:items-end ${
             isDark ? "border-[#e6e6de]/16 text-[#e6e6de]/58" : "border-black/16 text-black/54"
           }`}
         >
-          <p>{eyebrow} / {progress}</p>
+          <p className="editorial-label">{eyebrow} / {progress}</p>
           <h2
             className={`controlled-display-title text-[34px] sm:text-[46px] lg:text-[60px] ${
               isDark ? "text-[#e6e6de]" : "text-black/94"
@@ -350,7 +350,7 @@ function ChapterShell({
           >
             {title}
           </h2>
-          <p className="max-w-[390px] leading-[1.7] lg:justify-self-end lg:text-right">
+          <p className="editorial-body max-w-[400px] lg:justify-self-end lg:text-right">
             {note}
           </p>
         </div>

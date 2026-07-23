@@ -50,7 +50,7 @@ export function MaterialForm() {
             05 / Material & Form
           </p>
           <h2
-            className="mt-5 max-w-[360px] text-[17px] font-normal uppercase leading-[1.28] tracking-[0.1em] lg:mt-8 lg:text-[22px]"
+            className="editorial-section-title mt-5 max-w-[420px] lg:mt-8"
             id="material-form-title"
           >
             Materials that age quietly and take on character over time.
@@ -104,12 +104,12 @@ export function MaterialForm() {
               <div className="absolute inset-0 bg-[#11110f]/8" />
             </div>
 
-            <div className="grid gap-3 border-t border-black/16 pt-4 text-[10px] uppercase tracking-[0.08em] lg:grid-cols-[1fr_auto] lg:items-start">
-              <p className="max-w-[420px] leading-[1.55] text-black/58">
+            <div className="grid gap-4 border-t border-black/16 pt-4 lg:grid-cols-[1fr_auto] lg:items-start">
+              <p className="editorial-body max-w-[420px]">
                 {activeMaterial.caption}
               </p>
               <Link
-                className="w-fit border-b border-black/50 pb-1 text-black"
+                className="flex min-h-11 w-fit items-center border-b border-black/50 text-[10px] uppercase tracking-[0.1em] text-black"
                 href={activeMaterial.href}
               >
                 View garments →

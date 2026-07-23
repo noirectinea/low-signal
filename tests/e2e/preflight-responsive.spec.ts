@@ -113,3 +113,50 @@ test("public metadata and critical accessibility checks are release-ready", asyn
   );
   expect(seriousViolations).toEqual([]);
 });
+
+test("About uses five readable editorial chapters with a valid heading hierarchy", async ({
+  page,
+}) => {
+  for (const viewport of [
+    { height: 667, width: 375 },
+    { height: 900, width: 1440 },
+  ]) {
+    await page.setViewportSize(viewport);
+    await page.goto("/about");
+    await expect(page.getByRole("heading", { level: 1 })).toHaveText(
+      /MATERIAL\s*FIRST\.\s*WORN\s*OFTEN\./i,
+    );
+    await expect(page.getByRole("heading", { level: 2 })).toHaveCount(5);
+    await expect(page.getByRole("heading", { level: 3 })).toHaveCount(7);
+
+    const typography = await page.evaluate(() => {
+      const sectionHeading = document.querySelector<HTMLElement>(
+        ".editorial-section-title",
+      );
+      const body = document.querySelector<HTMLElement>(".editorial-body");
+      return {
+        body: body ? Number.parseFloat(getComputedStyle(body).fontSize) : 0,
+        overflow:
+          document.documentElement.scrollWidth -
+          document.documentElement.clientWidth,
+        sectionHeading: sectionHeading
+          ? Number.parseFloat(getComputedStyle(sectionHeading).fontSize)
+          : 0,
+      };
+    });
+    expect(typography.body).toBeGreaterThanOrEqual(15);
+    expect(typography.sectionHeading).toBeGreaterThanOrEqual(28);
+    expect(typography.overflow).toBeLessThanOrEqual(1);
+  }
+
+  await page.setViewportSize({ height: 844, width: 390 });
+  await page.goto("/about");
+  const results = await new AxeBuilder({ page })
+    .exclude(".mobile-site-header")
+    .withTags(["wcag2a", "wcag2aa"])
+    .analyze();
+  const seriousViolations = results.violations.filter(
+    ({ impact }) => impact === "serious" || impact === "critical",
+  );
+  expect(seriousViolations).toEqual([]);
+});
