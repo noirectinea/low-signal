@@ -3345,9 +3345,12 @@ a {
     column-gap: clamp(36px, 4vw, 64px);
   }
 
+  .checkout-order-summary-column {
+    padding-top: 106px;
+  }
+
   .checkout-order-summary-desktop {
-    position: sticky;
-    top: 96px;
+    position: static;
     padding: 22px;
     font-size: 11px;
   }
@@ -3380,6 +3383,13 @@ a {
     min-height: 54px;
     padding-top: 14px;
     font-size: 17px;
+  }
+}
+
+@media (min-width: 1280px) {
+  .checkout-shell {
+    grid-template-columns: minmax(0, 1fr) minmax(500px, 570px);
+    column-gap: clamp(32px, 3vw, 48px);
   }
 }
 

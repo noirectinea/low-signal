@@ -152,10 +152,15 @@ test("desktop checkout gives the permanent order summary a full product rail", a
 
   const geometry = await summary.evaluate((element) => {
     const rect = element.getBoundingClientRect();
+    const form = document
+      .querySelector(".checkout-form")
+      ?.getBoundingClientRect();
     const image = element.querySelector("img")?.getBoundingClientRect();
 
     return {
+      alignmentDelta: Math.abs(rect.top - (form?.top ?? 0)),
       imageWidth: image?.width ?? 0,
+      position: getComputedStyle(element).position,
       rightGap: document.documentElement.clientWidth - rect.right,
       summaryWidth: rect.width,
       overflow:
@@ -164,9 +169,11 @@ test("desktop checkout gives the permanent order summary a full product rail", a
     };
   });
 
-  expect(geometry.summaryWidth).toBeGreaterThanOrEqual(390);
-  expect(geometry.summaryWidth).toBeLessThanOrEqual(462);
+  expect(geometry.summaryWidth).toBeGreaterThanOrEqual(560);
+  expect(geometry.summaryWidth).toBeLessThanOrEqual(572);
+  expect(geometry.alignmentDelta).toBeLessThanOrEqual(2);
   expect(geometry.imageWidth).toBeGreaterThanOrEqual(80);
+  expect(geometry.position).toBe("static");
   expect(geometry.rightGap).toBeLessThanOrEqual(50);
   expect(geometry.overflow).toBeLessThanOrEqual(1);
 });

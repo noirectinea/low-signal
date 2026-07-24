@@ -400,7 +400,7 @@ export function CheckoutClient() {
           )}
         </div>
 
-        <div className="hidden lg:block">
+        <div className="checkout-order-summary-column hidden lg:block">
           <OrderSummary desktop items={items} subtotal={subtotal} />
         </div>
       </section>
