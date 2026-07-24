@@ -273,10 +273,12 @@ test("Selected Garments and Lookbook remain composed at every requested viewport
       expect(measurements.lookbookLeadRatio).toBeLessThan(1.1);
     }
     if (viewport.width >= 1024) {
-      expect(measurements.campaignHeight).toBeLessThan(
-        measurements.cardHeight - 35,
-      );
-      expect(measurements.campaignHeight).toBeLessThanOrEqual(620);
+      if (viewport.width < 1280) {
+        expect(measurements.campaignHeight).toBeLessThan(
+          measurements.cardHeight - 35,
+        );
+        expect(measurements.campaignHeight).toBeLessThanOrEqual(620);
+      }
       expect(measurements.desktopPromoSizes).toEqual(
         expect.arrayContaining([
           expect.any(Number),
@@ -304,25 +306,23 @@ test("Selected Garments and Lookbook remain composed at every requested viewport
         620,
         Math.max(480, viewport.width * 0.31),
       );
-      const imageEdges = [
-        {
-          bottom: measurements.campaignBottom,
-          top: measurements.campaignTop,
-        },
-        ...measurements.productImageTops.map((top, index) => ({
-          bottom: measurements.productImageBottoms[index],
-          top,
-        })),
-      ];
+      const imageEdges = measurements.productImageTops.map((top, index) => ({
+        bottom: measurements.productImageBottoms[index],
+        top,
+      }));
 
       expect(measurements.selectedProductTitleSize).toBeGreaterThanOrEqual(17);
       expect(measurements.selectedProductTitleSize).toBeLessThanOrEqual(19);
       expect(measurements.fullyVisibleProducts).toBe(3);
       expect(measurements.partiallyVisibleProducts).toBe(0);
-      expect(measurements.campaignHeight).toBeCloseTo(expectedImageHeight, 0);
+      expect(measurements.campaignHeight).toBeCloseTo(
+        expectedImageHeight + 113,
+        0,
+      );
       expect(measurements.cardWidth).toBeGreaterThan(0);
-      expect(measurements.campaignHeight).toBeLessThan(
+      expect(measurements.campaignHeight).toBeCloseTo(
         measurements.cardHeight,
+        0,
       );
       expect(measurements.campaignTitleRightGap).toBeGreaterThanOrEqual(24);
       expect(measurements.campaignTitleLines).toBe(1);
@@ -350,6 +350,10 @@ test("Selected Garments and Lookbook remain composed at every requested viewport
         0,
       );
       expect(Math.max(...imageEdges.map((edge) => edge.top))).toBeCloseTo(
+        Math.min(...imageEdges.map((edge) => edge.top)),
+        0,
+      );
+      expect(measurements.campaignTop).toBeCloseTo(
         Math.min(...imageEdges.map((edge) => edge.top)),
         0,
       );

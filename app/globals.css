@@ -2980,7 +2980,7 @@ a {
 
   .selected-campaign-card {
     width: 100%;
-    height: var(--selected-desktop-media-height);
+    height: calc(var(--selected-desktop-media-height) + 113px);
     aspect-ratio: auto;
   }
 
