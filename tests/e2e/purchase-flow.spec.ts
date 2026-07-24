@@ -47,6 +47,52 @@ test("product, cart persistence, quantity, and guest checkout", async ({
   await page.getByText(/Order summary/).first().click();
   await expect(page.getByText("Field Jacket", { exact: true }).first()).toBeVisible();
   const email = page.getByRole("textbox", { name: "Email *" });
+  await expect(email).toHaveAttribute("autocomplete", "email");
+  await expect(
+    page.getByRole("textbox", { name: "Phone" }),
+  ).toHaveAttribute("autocomplete", "tel");
+  await expect(
+    page.getByRole("textbox", { name: "First name *" }),
+  ).toHaveAttribute("autocomplete", "given-name");
+  await expect(
+    page.getByRole("textbox", { name: "Address line 1 *" }),
+  ).toHaveAttribute("autocomplete", "street-address");
+
+  const checkoutGeometry = await page.evaluate(() => {
+    const fields = Array.from(
+      document.querySelectorAll<HTMLElement>(".checkout-field"),
+    );
+    const steps = Array.from(
+      document.querySelectorAll<HTMLElement>(".checkout-form-step"),
+    );
+    const rect = (element: HTMLElement) => element.getBoundingClientRect();
+
+    return {
+      fieldHeights: fields.map((field) => rect(field).height),
+      formWidth:
+        document.querySelector<HTMLElement>(".checkout-form")
+          ?.getBoundingClientRect().width ?? 0,
+      overflow:
+        document.documentElement.scrollWidth -
+        document.documentElement.clientWidth,
+      stepGaps: steps.slice(1).map((step, index) => {
+        const previous = rect(steps[index]);
+        return rect(step).top - previous.bottom;
+      }),
+    };
+  });
+
+  expect(checkoutGeometry.overflow).toBeLessThanOrEqual(1);
+  expect(checkoutGeometry.formWidth).toBeLessThanOrEqual(350);
+  for (const height of checkoutGeometry.fieldHeights) {
+    expect(height).toBeGreaterThanOrEqual(56);
+    expect(height).toBeLessThanOrEqual(76);
+  }
+  for (const gap of checkoutGeometry.stepGaps) {
+    expect(gap).toBeGreaterThanOrEqual(15);
+    expect(gap).toBeLessThanOrEqual(20);
+  }
+
   await email.fill("guest@example.com");
   await page.reload();
   await expect(email).toHaveValue("guest@example.com");

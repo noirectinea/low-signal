@@ -200,167 +200,197 @@ export function CheckoutClient() {
     <main className="min-h-screen overflow-x-hidden bg-[#e5e6e1] text-[#121211]">
       <MobileHomeHeader mode="paper" />
 
-      <section className="mx-auto grid max-w-[1320px] gap-7 px-5 pb-12 pt-[84px] lg:grid-cols-[1fr_360px] lg:gap-10 lg:px-12 lg:pb-16 lg:pt-[96px]">
+      <section className="checkout-shell mx-auto grid max-w-[1260px] gap-7 px-5 pb-12 pt-[82px] lg:grid-cols-[minmax(0,820px)_340px] lg:justify-between lg:gap-12 lg:px-12 lg:pb-16 lg:pt-[92px]">
         <div>
           <p className="text-[10px] uppercase tracking-[0.12em] text-black/58">
             Checkout
           </p>
-          <h1 className="controlled-display-title mt-3 text-[36px] uppercase sm:text-[58px] lg:mt-5 lg:text-[66px]">
+          <h1 className="controlled-display-title mt-3 text-[36px] uppercase sm:text-[54px] lg:mt-4 lg:text-[58px]">
             Complete order
           </h1>
 
           {!hydrated ? (
-            <div className="mt-10 border-y border-black/16 py-10 text-[9px] uppercase leading-[1.8] tracking-[0.16em] text-black/64">
-              Preparing checkout.
+            <div className="mt-8 border-y border-black/16 py-8 text-[9px] uppercase leading-[1.8] tracking-[0.16em] text-black/64">
+              Preparing checkout…
             </div>
           ) : items.length ? (
             <>
-            <div className="mt-5 lg:hidden">
-              <OrderSummary items={items} subtotal={subtotal} />
-            </div>
-            <form
-              className="mt-6 grid gap-4 border-t border-black/16 pt-5 lg:mt-8 lg:gap-5 lg:pt-6"
-              onSubmit={submitOrder}
-              onInput={(event) =>
-                saveCheckoutDraft(event.currentTarget)
-              }
-              ref={formRef}
-            >
-              {profile ? (
-                <p className="text-[10px] uppercase leading-[1.5] tracking-[0.08em] text-black/54">
-                  Using saved details / {profile.email}
-                </p>
-              ) : (
-                <p className="text-[10px] uppercase leading-[1.5] tracking-[0.08em] text-black/58">
-                  <Link className="border-b border-black/50 pb-1 text-black" href="/account/login?next=%2Fcheckout">Sign in</Link>{" "}
-                  or continue as guest.
-                </p>
-              )}
-              <CheckoutStepHeading number="01" title="Contact" />
-              <div className="grid grid-cols-2 gap-3">
-                <CheckoutField
-                  defaultValue={profile?.email ?? ""}
-                  label="Email"
-                  name="email"
-                  required
-                  type="email"
-                />
-                <CheckoutField
-                  defaultValue={profile?.phone ?? ""}
-                  label="Phone"
-                  name="phone"
-                  type="tel"
-                />
+              <div className="mt-4 lg:hidden">
+                <OrderSummary items={items} subtotal={subtotal} />
               </div>
-
-              <CheckoutStepHeading number="02" title="Shipping address" />
-              <div className="grid grid-cols-2 gap-3">
-                <CheckoutField
-                  defaultValue={splitName(profile?.full_name).firstName}
-                  label="First name"
-                  name="firstName"
-                  required
-                />
-                <CheckoutField
-                  defaultValue={splitName(profile?.full_name).lastName}
-                  label="Last name"
-                  name="lastName"
-                  required
-                />
-              </div>
-              <CheckoutField
-                defaultValue={profile?.default_address ?? ""}
-                label="Address line 1"
-                name="addressLine1"
-                required
-              />
-              <div className="grid grid-cols-2 gap-3">
-                <CheckoutField
-                  defaultValue={profile?.default_city ?? ""}
-                  label="City"
-                  name="city"
-                  required
-                />
-                <CheckoutField label="Region / optional" name="region" />
-              </div>
-              <div className="grid grid-cols-2 gap-3">
-                <CheckoutField
-                  defaultValue={profile?.default_postal_code ?? ""}
-                  label="Postal code"
-                  name="postalCode"
-                  required
-                />
-                <CheckoutField
-                  defaultValue={profile?.default_country ?? ""}
-                  label="Country"
-                  name="country"
-                  required
-                />
-              </div>
-
-              <CheckoutStepHeading number="03" title="Delivery method" />
-              <div className="grid grid-cols-2 gap-px bg-black/14 text-[13px] uppercase tracking-[0.06em]">
-                <CheckoutChoice
-                  defaultChecked
-                  detail="Tracked / calculated at checkout"
-                  label="Standard delivery"
-                  name="deliveryMethod"
-                  value="standard"
-                />
-                <CheckoutChoice
-                  detail="Priority / when available"
-                  label="Express delivery"
-                  name="deliveryMethod"
-                  value="express"
-                />
-              </div>
-
-              <CheckoutStepHeading number="04" title="Payment" />
-              <div className="border-y border-black/14 py-5">
-                <CheckoutChoice
-                  defaultChecked
-                  detail="Order remains pending until payment is confirmed"
-                  label="Payment on confirmation"
-                  name="paymentMethod"
-                  value="confirmation"
-                />
-              </div>
-
-              <label className="flex min-h-11 items-center gap-3 border-y border-black/14 text-[11px] uppercase tracking-[0.05em] text-black/68">
-                <input
-                  className="accent-black"
-                  defaultChecked
-                  name="billingSameAsShipping"
-                  type="checkbox"
-                />
-                <span>Use shipping address for billing</span>
-              </label>
-
-              <CheckoutStepHeading number="05" title="Order note / optional" />
-              <CheckoutField label="Notes" name="notes" />
-
-              <button
-                className="add-to-cart-label mt-3 w-full border border-black bg-[#171614] px-6 py-5 text-[12px] uppercase text-[#ecece5] transition-opacity duration-300 hover:opacity-82 disabled:cursor-not-allowed disabled:opacity-50 sm:w-fit"
-                disabled={status === "loading"}
-                type="submit"
+              <form
+                className="checkout-form"
+                onSubmit={submitOrder}
+                onInput={(event) =>
+                  saveCheckoutDraft(event.currentTarget)
+                }
+                ref={formRef}
               >
-                {status === "loading" ? "Saving order..." : "Place order →"}
-              </button>
+                {profile ? (
+                  <p className="checkout-form-account text-[10px] uppercase leading-[1.5] tracking-[0.08em] text-black/54">
+                    Using saved details / {profile.email}
+                  </p>
+                ) : (
+                  <p className="checkout-form-account text-[10px] uppercase leading-[1.5] tracking-[0.08em] text-black/58">
+                    <Link className="border-b border-black/50 pb-1 text-black" href="/account/login?next=%2Fcheckout">Sign in</Link>{" "}
+                    or continue as guest.
+                  </p>
+                )}
 
-              {message ? (
-                <p className="text-[13px] uppercase leading-[1.5] tracking-[0.05em] text-black/72">
-                  {message}
-                </p>
-              ) : null}
-              {debugMessage && process.env.NODE_ENV !== "production" ? (
-                <p className="text-[9px] uppercase leading-[1.7] tracking-[0.16em] text-black/42">
-                  {debugMessage}
-                </p>
-              ) : null}
-            </form>
+                <section className="checkout-form-step">
+                  <CheckoutStepHeading number="01" title="Contact" />
+                  <div className="checkout-field-grid checkout-contact-grid">
+                    <CheckoutField
+                      autoComplete="email"
+                      defaultValue={profile?.email ?? ""}
+                      inputMode="email"
+                      label="Email"
+                      name="email"
+                      required
+                      spellCheck={false}
+                      type="email"
+                    />
+                    <CheckoutField
+                      autoComplete="tel"
+                      defaultValue={profile?.phone ?? ""}
+                      inputMode="tel"
+                      label="Phone"
+                      name="phone"
+                      type="tel"
+                    />
+                  </div>
+                </section>
+
+                <section className="checkout-form-step">
+                  <CheckoutStepHeading number="02" title="Shipping address" />
+                  <div className="checkout-field-grid">
+                    <CheckoutField
+                      autoComplete="given-name"
+                      defaultValue={splitName(profile?.full_name).firstName}
+                      label="First name"
+                      name="firstName"
+                      required
+                    />
+                    <CheckoutField
+                      autoComplete="family-name"
+                      defaultValue={splitName(profile?.full_name).lastName}
+                      label="Last name"
+                      name="lastName"
+                      required
+                    />
+                    <CheckoutField
+                      autoComplete="street-address"
+                      className="checkout-field-wide"
+                      defaultValue={profile?.default_address ?? ""}
+                      label="Address line 1"
+                      name="addressLine1"
+                      required
+                    />
+                    <CheckoutField
+                      autoComplete="address-level2"
+                      defaultValue={profile?.default_city ?? ""}
+                      label="City"
+                      name="city"
+                      required
+                    />
+                    <CheckoutField
+                      autoComplete="address-level1"
+                      label="Region / optional"
+                      name="region"
+                    />
+                    <CheckoutField
+                      autoComplete="postal-code"
+                      defaultValue={profile?.default_postal_code ?? ""}
+                      label="Postal code"
+                      name="postalCode"
+                      required
+                    />
+                    <CheckoutField
+                      autoComplete="country-name"
+                      defaultValue={profile?.default_country ?? ""}
+                      label="Country"
+                      name="country"
+                      required
+                    />
+                  </div>
+                </section>
+
+                <section className="checkout-form-step">
+                  <CheckoutStepHeading number="03" title="Delivery method" />
+                  <div className="checkout-choice-grid">
+                    <CheckoutChoice
+                      defaultChecked
+                      detail="Tracked / calculated at checkout"
+                      label="Standard delivery"
+                      name="deliveryMethod"
+                      value="standard"
+                    />
+                    <CheckoutChoice
+                      detail="Priority / when available"
+                      label="Express delivery"
+                      name="deliveryMethod"
+                      value="express"
+                    />
+                  </div>
+                </section>
+
+                <section className="checkout-form-step">
+                  <CheckoutStepHeading number="04" title="Payment" />
+                  <div className="checkout-payment-choice">
+                    <CheckoutChoice
+                      defaultChecked
+                      detail="Order remains pending until payment is confirmed"
+                      label="Payment on confirmation"
+                      name="paymentMethod"
+                      value="confirmation"
+                    />
+                  </div>
+
+                  <label className="checkout-billing-row">
+                    <input
+                      className="accent-black"
+                      defaultChecked
+                      name="billingSameAsShipping"
+                      type="checkbox"
+                    />
+                    <span>Use shipping address for billing</span>
+                  </label>
+                </section>
+
+                <section className="checkout-form-step">
+                  <CheckoutStepHeading number="05" title="Order note / optional" />
+                  <CheckoutField
+                    autoComplete="off"
+                    label="Notes"
+                    name="notes"
+                  />
+                </section>
+
+                <button
+                  className="checkout-submit add-to-cart-label w-full border border-black bg-[#171614] px-6 text-[12px] uppercase text-[#ecece5] transition-opacity duration-300 hover:opacity-82 disabled:cursor-not-allowed disabled:opacity-50 sm:w-fit"
+                  disabled={status === "loading"}
+                  type="submit"
+                >
+                  {status === "loading" ? "Saving order…" : "Place order →"}
+                </button>
+
+                {message ? (
+                  <p
+                    aria-live="polite"
+                    className="text-[13px] uppercase leading-[1.5] tracking-[0.05em] text-black/72"
+                  >
+                    {message}
+                  </p>
+                ) : null}
+                {debugMessage && process.env.NODE_ENV !== "production" ? (
+                  <p className="text-[9px] uppercase leading-[1.7] tracking-[0.16em] text-black/42">
+                    {debugMessage}
+                  </p>
+                ) : null}
+              </form>
             </>
           ) : (
-            <div className="mt-10 border-y border-black/16 py-10 text-[13px] uppercase leading-[1.5] tracking-[0.05em] text-black/72">
+            <div className="mt-8 border-y border-black/16 py-8 text-[13px] uppercase leading-[1.5] tracking-[0.05em] text-black/72">
               Your cart is empty.{" "}
               <Link className="border-b border-black/50 pb-1" href="/collections">
                 Return to collections
@@ -387,29 +417,39 @@ function logCheckoutDebug(label: string, value: unknown) {
 }
 
 function CheckoutField({
+  autoComplete,
+  className = "",
   defaultValue = "",
+  inputMode,
   label,
   name,
   required,
+  spellCheck,
   type = "text",
 }: Readonly<{
+  autoComplete?: string;
+  className?: string;
   defaultValue?: string;
+  inputMode?: "email" | "numeric" | "search" | "tel" | "text" | "url";
   label: string;
   name: string;
   required?: boolean;
+  spellCheck?: boolean;
   type?: string;
 }>) {
   const [error, setError] = useState("");
   const errorId = `${name}-error`;
 
   return (
-    <label className="grid gap-1 border-b border-black/16 pb-2 text-[11px] uppercase tracking-[0.05em] text-black/68 focus-within:border-black/52">
+    <label className={`checkout-field ${className}`}>
       <span>{label}{required ? " *" : ""}</span>
       <input
         aria-describedby={error ? errorId : undefined}
         aria-invalid={Boolean(error)}
-        className="min-h-11 bg-transparent py-1 text-[14px] tracking-[0.02em] text-black outline-none placeholder:text-black/42"
+        autoComplete={autoComplete}
+        className="checkout-input"
         defaultValue={defaultValue}
+        inputMode={inputMode}
         name={name}
         onInput={() => setError("")}
         onInvalid={(event) => {
@@ -420,6 +460,7 @@ function CheckoutField({
           );
         }}
         required={required}
+        spellCheck={spellCheck}
         type={type}
       />
       {error ? (
@@ -439,7 +480,7 @@ function CheckoutStepHeading({
   title: string;
 }) {
   return (
-    <div className="mt-2 flex min-h-11 items-center gap-4 border-b border-black/16 pb-2 text-[11px] uppercase tracking-[0.05em]">
+    <div className="checkout-step-heading">
       <span className="text-black/42">{number}</span>
       <h2>{title}</h2>
     </div>
@@ -460,7 +501,7 @@ function CheckoutChoice({
   value: string;
 }) {
   return (
-    <label className="grid min-h-[68px] cursor-pointer grid-cols-[auto_1fr] items-start gap-3 bg-[#e5e6e1] p-3">
+    <label className="checkout-choice">
       <input
         className="mt-1 accent-black"
         defaultChecked={defaultChecked}
