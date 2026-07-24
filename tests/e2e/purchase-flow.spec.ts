@@ -169,11 +169,11 @@ test("desktop checkout gives the permanent order summary a full product rail", a
     };
   });
 
-  expect(geometry.summaryWidth).toBeGreaterThanOrEqual(560);
-  expect(geometry.summaryWidth).toBeLessThanOrEqual(572);
+  expect(geometry.summaryWidth).toBeGreaterThanOrEqual(598);
+  expect(geometry.summaryWidth).toBeLessThanOrEqual(602);
   expect(geometry.alignmentDelta).toBeLessThanOrEqual(2);
   expect(geometry.imageWidth).toBeGreaterThanOrEqual(80);
   expect(geometry.position).toBe("static");
-  expect(geometry.rightGap).toBeLessThanOrEqual(50);
+  expect(geometry.rightGap).toBeLessThanOrEqual(26);
   expect(geometry.overflow).toBeLessThanOrEqual(1);
 });
