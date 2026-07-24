@@ -7,7 +7,7 @@ test("selected garments uses a one-row cyclical desktop rail", async ({ page }) 
   const section = page.locator("#selected-pieces");
   await expect(section.getByLabel("Shop selected garments")).toBeVisible();
   await expect(
-    section.getByAltText("Black LOW SIGNAL garment arranged on a studio chair"),
+    section.getByAltText("Close-up of washed black cotton twill"),
   ).toBeVisible();
   await expect(section.locator("article")).toHaveCount(18);
   await expect(section.locator(".selected-rail")).toBeVisible();
@@ -35,7 +35,7 @@ test("selected garments uses a light mobile campaign and swipe rail", async ({ p
   const campaign = section.getByLabel("Shop selected garments");
   await expect(campaign).toBeVisible();
   await expect(
-    section.getByAltText("Black LOW SIGNAL garment arranged on a studio chair"),
+    section.getByAltText("Close-up of washed black cotton twill"),
   ).toBeHidden();
   await expect(campaign.getByText("Selected garments", { exact: true })).toBeVisible();
   await expect(campaign.getByText("06 pieces", { exact: true })).toBeVisible();

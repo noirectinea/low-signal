@@ -363,11 +363,11 @@ export function HomeSelectedPieces() {
             href="/collections"
           >
             <Image
-              alt="Black LOW SIGNAL garment arranged on a studio chair"
-              className="selected-campaign-image object-cover object-[54%_50%] brightness-[0.76] contrast-[1.06] saturate-[0.58] transition-transform duration-700 group-hover:scale-[1.012]"
+              alt="Close-up of washed black cotton twill"
+              className="selected-campaign-image object-cover object-[50%_56%] brightness-[0.86] contrast-[1.04] saturate-[0.62] transition-transform duration-700 group-hover:scale-[1.012]"
               fill
               sizes="(min-width: 1280px) 22vw, (min-width: 1024px) 34vw, 100vw"
-              src="/images/low-signal/selected-garments-main.jpg"
+              src="/images/low-signal/selected-garments-material-cover.jpg"
             />
             <div className="selected-campaign-overlay absolute inset-0 bg-gradient-to-t from-black/66 via-black/5 to-black/5" />
             <div className="selected-campaign-copy absolute inset-x-0 bottom-0 grid gap-2 p-5 text-[#f1f1ea] lg:p-7">
