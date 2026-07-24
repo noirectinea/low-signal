@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { FormEvent, useEffect, useRef, useState } from "react";
@@ -200,7 +201,7 @@ export function CheckoutClient() {
     <main className="min-h-screen overflow-x-hidden bg-[#e5e6e1] text-[#121211]">
       <MobileHomeHeader mode="paper" />
 
-      <section className="checkout-shell mx-auto grid max-w-[1260px] gap-7 px-5 pb-12 pt-[82px] lg:grid-cols-[minmax(0,820px)_340px] lg:justify-between lg:gap-12 lg:px-12 lg:pb-16 lg:pt-[92px]">
+      <section className="checkout-shell mx-auto grid gap-7 px-5 pb-12 pt-[82px] lg:px-12 lg:pb-16 lg:pt-[92px]">
         <div>
           <p className="text-[10px] uppercase tracking-[0.12em] text-black/58">
             Checkout
@@ -528,30 +529,46 @@ function OrderSummary({
   subtotal: number;
 }>) {
   return (
-    <details
-      className="h-fit border border-black/16 p-4 text-[11px] uppercase tracking-[0.05em] lg:sticky lg:top-[96px] lg:p-5"
-      open={desktop}
+    <aside
+      aria-label="Order summary"
+      className={`checkout-order-summary ${desktop ? "checkout-order-summary-desktop" : "checkout-order-summary-mobile"}`}
     >
-      <summary className="flex min-h-11 cursor-pointer list-none items-center justify-between border-b border-black/16 text-black/76">
+      <div className="checkout-order-summary-heading">
         <span>Order summary / {items.length} pieces</span>
-        <span>{desktop ? `$${subtotal}` : "+"}</span>
-      </summary>
-      <div className="divide-y divide-black/12">
-        {items.map((item) => (
-          <div className="grid gap-1 py-3" key={item.id}>
-            <div className="flex items-center justify-between gap-5">
-              <span>{item.name}</span>
-              <span>× {item.quantity}</span>
+        <span>${subtotal}</span>
+      </div>
+      <div className="checkout-order-items">
+        {items.map((item, itemIndex) => (
+          <div className="checkout-order-item" key={item.id}>
+            <div className="checkout-order-image">
+              <Image
+                alt=""
+                fill
+                loading={itemIndex === 0 ? "eager" : "lazy"}
+                sizes={desktop ? "(min-width: 1024px) 92px" : "52px"}
+                src={item.image}
+              />
             </div>
-            <p className="text-[10px] text-black/58">Size {item.size ?? "M"}</p>
+            <div className="checkout-order-copy">
+              <p className="checkout-order-name">{item.name}</p>
+              <p>{item.category}</p>
+              <p>
+                {item.color ? `${item.color} / ` : ""}
+                Size {item.size ?? "M"}
+              </p>
+            </div>
+            <div className="checkout-order-meta">
+              <span>× {item.quantity}</span>
+              <span>${item.price * item.quantity}</span>
+            </div>
           </div>
         ))}
       </div>
-      <div className="flex items-center justify-between border-t border-black/16 pt-4 text-[15px] text-black">
+      <div className="checkout-order-total">
         <span>Total</span>
         <span>${subtotal}</span>
       </div>
-    </details>
+    </aside>
   );
 }
 

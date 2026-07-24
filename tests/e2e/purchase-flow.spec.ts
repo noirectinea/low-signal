@@ -44,7 +44,10 @@ test("product, cart persistence, quantity, and guest checkout", async ({
   await page.getByRole("link", { name: /Proceed to checkout/ }).click();
   await expect(page).toHaveURL(/\/checkout$/);
   await expect(page.getByText(/continue as guest/)).toBeVisible();
-  await page.getByText(/Order summary/).first().click();
+  const orderSummary = page.locator(".checkout-order-summary-mobile");
+  await expect(orderSummary).toBeVisible();
+  await expect(orderSummary.locator("summary")).toHaveCount(0);
+  await expect(orderSummary.locator("img")).toHaveCount(1);
   await expect(page.getByText("Field Jacket", { exact: true }).first()).toBeVisible();
   const email = page.getByRole("textbox", { name: "Email *" });
   await expect(email).toHaveAttribute("autocomplete", "email");
@@ -97,4 +100,73 @@ test("product, cart persistence, quantity, and guest checkout", async ({
   await page.reload();
   await expect(email).toHaveValue("guest@example.com");
   expect(pageErrors).toEqual([]);
+});
+
+test("desktop checkout gives the permanent order summary a full product rail", async ({
+  page,
+}) => {
+  await page.setViewportSize({ height: 900, width: 1440 });
+  await page.addInitScript(() => {
+    localStorage.setItem(
+      "low-signal-cart",
+      JSON.stringify([
+        {
+          category: "Outerwear",
+          color: "Washed Black",
+          description: "Field Jacket",
+          gender: "men",
+          id: "field-jacket-m",
+          image: "/images/low-signal/products/product-01.jpg",
+          materials: "Cotton",
+          name: "Field Jacket",
+          price: 180,
+          productId: "field-jacket",
+          quantity: 1,
+          size: "M",
+          slug: "field-jacket",
+        },
+        {
+          category: "Knitwear",
+          color: "Black",
+          description: "Rib Cardigan",
+          gender: "women",
+          id: "rib-cardigan-l",
+          image: "/images/low-signal/products/product-07.jpg",
+          materials: "Cotton wool",
+          name: "Rib Cardigan",
+          price: 165,
+          productId: "rib-cardigan",
+          quantity: 1,
+          size: "L",
+          slug: "rib-cardigan",
+        },
+      ]),
+    );
+  });
+
+  await page.goto("/checkout");
+  const summary = page.locator(".checkout-order-summary-desktop");
+  await expect(summary).toBeVisible();
+  await expect(summary.locator("summary")).toHaveCount(0);
+  await expect(summary.locator("img")).toHaveCount(2);
+
+  const geometry = await summary.evaluate((element) => {
+    const rect = element.getBoundingClientRect();
+    const image = element.querySelector("img")?.getBoundingClientRect();
+
+    return {
+      imageWidth: image?.width ?? 0,
+      rightGap: document.documentElement.clientWidth - rect.right,
+      summaryWidth: rect.width,
+      overflow:
+        document.documentElement.scrollWidth -
+        document.documentElement.clientWidth,
+    };
+  });
+
+  expect(geometry.summaryWidth).toBeGreaterThanOrEqual(390);
+  expect(geometry.summaryWidth).toBeLessThanOrEqual(462);
+  expect(geometry.imageWidth).toBeGreaterThanOrEqual(80);
+  expect(geometry.rightGap).toBeLessThanOrEqual(50);
+  expect(geometry.overflow).toBeLessThanOrEqual(1);
 });
