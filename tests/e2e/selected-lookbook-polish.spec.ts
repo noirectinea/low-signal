@@ -37,6 +37,7 @@ test("Selected Garments and Lookbook remain composed at every requested viewport
       const card = cards?.[6];
       const nextCard = cards?.[7];
       const image = card?.querySelector<HTMLElement>(":scope > div");
+      const section = document.querySelector<HTMLElement>("#selected-pieces");
       const lookbook = document.querySelector<HTMLElement>(".mobile-journal");
       const lookbookComposition = document.querySelector<HTMLElement>(
         ".mobile-journal-composition",
@@ -88,15 +89,47 @@ test("Selected Garments and Lookbook remain composed at every requested viewport
       const selectedLayoutRect = rect(selectedLayout);
       const leadRect = rect(lookbookLead);
       const railRect = rect(rail);
-      const fullyVisibleProducts = Array.from(cards ?? []).filter((element) => {
+      const intersectingProducts = Array.from(cards ?? []).filter((element) => {
         const itemRect = rect(element);
         return (
           itemRect &&
           railRect &&
-          itemRect.left >= railRect.left - 1 &&
-          itemRect.right <= railRect.right + 1
+          itemRect.right > railRect.left + 1 &&
+          itemRect.left < railRect.right - 1
         );
-      }).length;
+      });
+      const fullyVisibleProductCards = intersectingProducts.filter(
+        (element) => {
+          const itemRect = rect(element);
+          return (
+            itemRect &&
+            railRect &&
+            itemRect.left >= railRect.left - 1 &&
+            itemRect.right <= railRect.right + 1
+          );
+        },
+      );
+      const fullyVisibleProducts = fullyVisibleProductCards.length;
+      const partiallyVisibleProducts =
+        intersectingProducts.length - fullyVisibleProducts;
+      const visibleProductImages = fullyVisibleProductCards.map((element) =>
+        element.querySelector<HTMLElement>(":scope > div"),
+      );
+      const visibleProductInfo = fullyVisibleProductCards.map((element) =>
+        element.querySelector<HTMLElement>(".mobile-selected-product-info"),
+      );
+      const visibleProductCtas = fullyVisibleProductCards.map((element) =>
+        element.querySelector<HTMLElement>(".selected-product-cta"),
+      );
+      const footer = document.querySelector<HTMLElement>(
+        ".selected-rail-footer",
+      );
+      const materialSection = document.querySelector<HTMLElement>(
+        ".material-form-section",
+      );
+      const header = document.querySelector<HTMLElement>(
+        ".selected-garments-header",
+      );
 
       return {
         campaignRatio: campaignRect
@@ -105,6 +138,10 @@ test("Selected Garments and Lookbook remain composed at every requested viewport
         campaignShare: campaignRect && selectedLayoutRect
           ? campaignRect.width / selectedLayoutRect.width
           : 0,
+        campaignToCardWidth:
+          campaignRect && cardRect ? campaignRect.width / cardRect.width : 0,
+        campaignTop: campaignRect?.top ?? 0,
+        campaignBottom: campaignRect?.bottom ?? 0,
         campaignHeight: campaignRect?.height ?? 0,
         campaignTitleLines: campaignTitle
           ? Math.round(
@@ -115,6 +152,7 @@ test("Selected Garments and Lookbook remain composed at every requested viewport
         campaignTitleRightGap: campaignRect && campaignTitleRect
           ? campaignRect.right - campaignTitleRect.right
           : 0,
+        cardWidth: cardRect?.width ?? 0,
         cardHeight: cardRect?.height ?? 0,
         desktopPromoSizes: desktopPromoTitles.map((element) =>
           Number.parseFloat(getComputedStyle(element).fontSize),
@@ -129,6 +167,31 @@ test("Selected Garments and Lookbook remain composed at every requested viewport
           ? Number.parseInt(getComputedStyle(visibleEditorialBody).fontWeight, 10)
           : 0,
         fullyVisibleProducts,
+        partiallyVisibleProducts,
+        productCtaBottoms: visibleProductCtas.map(
+          (element) => rect(element)?.bottom ?? 0,
+        ),
+        productImageBottoms: visibleProductImages.map(
+          (element) => rect(element)?.bottom ?? 0,
+        ),
+        productImageHeights: visibleProductImages.map(
+          (element) => rect(element)?.height ?? 0,
+        ),
+        productImageTops: visibleProductImages.map(
+          (element) => rect(element)?.top ?? 0,
+        ),
+        productInfoHeights: visibleProductInfo.map(
+          (element) => rect(element)?.height ?? 0,
+        ),
+        railFooterGap:
+          (rect(footer)?.top ?? 0) - (rect(rail)?.bottom ?? 0),
+        footerHeight: rect(footer)?.height ?? 0,
+        sectionBottomPadding:
+          (rect(section)?.bottom ?? 0) - (rect(footer)?.bottom ?? 0),
+        materialGap:
+          (rect(materialSection)?.top ?? 0) - (rect(section)?.bottom ?? 0),
+        headerToMediaGap:
+          (rect(selectedLayout)?.top ?? 0) - (rect(header)?.bottom ?? 0),
         heroNoteSize: heroNote
           ? Number.parseFloat(getComputedStyle(heroNote).fontSize)
           : 0,
@@ -188,11 +251,11 @@ test("Selected Garments and Lookbook remain composed at every requested viewport
     expect(measurements.selectedTitleWeight).toBeLessThanOrEqual(560);
     expect(measurements.sectionTitleWeight).toBeGreaterThanOrEqual(520);
     expect(measurements.sectionTitleWeight).toBeLessThanOrEqual(560);
-    expect(measurements.selectedProductTitleSize).toBeGreaterThanOrEqual(15);
-    expect(measurements.selectedProductTitleSize).toBeLessThanOrEqual(17);
     expect(measurements.selectedProductTitleWeight).toBeGreaterThanOrEqual(500);
 
     if (viewport.width < 768) {
+      expect(measurements.selectedProductTitleSize).toBeGreaterThanOrEqual(15);
+      expect(measurements.selectedProductTitleSize).toBeLessThanOrEqual(17);
       expect(measurements.sectionTitleSize).toBeGreaterThanOrEqual(22);
       expect(measurements.lookbookCompositionPosition).toBe("static");
       expect(measurements.lookbookDetailsDisplay).toBe("none");
@@ -235,28 +298,69 @@ test("Selected Garments and Lookbook remain composed at every requested viewport
       expect(measurements.heroNoteSize).toBeGreaterThanOrEqual(10);
       expect(measurements.heroNoteSize).toBeLessThanOrEqual(11);
       expect(measurements.heroNoteWeight).toBe(400);
-      expect(measurements.imageRatio).toBeGreaterThan(0.68);
-      expect(measurements.imageRatio).toBeLessThan(0.76);
     }
     if (viewport.width >= 1280) {
+      const expectedImageHeight = Math.min(
+        620,
+        Math.max(480, viewport.width * 0.31),
+      );
+      const imageEdges = [
+        {
+          bottom: measurements.campaignBottom,
+          top: measurements.campaignTop,
+        },
+        ...measurements.productImageTops.map((top, index) => ({
+          bottom: measurements.productImageBottoms[index],
+          top,
+        })),
+      ];
+
+      expect(measurements.selectedProductTitleSize).toBeGreaterThanOrEqual(17);
+      expect(measurements.selectedProductTitleSize).toBeLessThanOrEqual(19);
       expect(measurements.fullyVisibleProducts).toBe(3);
-      expect(measurements.campaignShare).toBeGreaterThanOrEqual(0.23);
-      expect(measurements.campaignShare).toBeLessThanOrEqual(0.24);
-      expect(measurements.campaignRatio).toBeGreaterThan(0.79);
-      expect(measurements.campaignRatio).toBeLessThan(0.81);
-      expect(measurements.campaignTitleRightGap).toBeGreaterThanOrEqual(20);
-      const heightRange =
-        viewport.width === 1280
-          ? [400, 430]
-          : viewport.width === 1440
-            ? [430, 460]
-            : viewport.width === 1600
-              ? [470, 500]
-              : [500, 540];
-      expect(measurements.imageHeight).toBeGreaterThanOrEqual(heightRange[0]);
-      expect(measurements.imageHeight).toBeLessThanOrEqual(heightRange[1]);
-    }
-    if (viewport.width >= 1440) {
+      expect(measurements.partiallyVisibleProducts).toBe(0);
+      expect(measurements.campaignHeight).toBeCloseTo(expectedImageHeight, 0);
+      expect(measurements.cardWidth).toBeGreaterThan(0);
+      expect(measurements.campaignHeight).toBeLessThan(
+        measurements.cardHeight,
+      );
+      expect(measurements.campaignTitleRightGap).toBeGreaterThanOrEqual(24);
+      expect(measurements.campaignTitleLines).toBe(1);
+      expect(measurements.headerToMediaGap).toBeGreaterThanOrEqual(28);
+      expect(measurements.headerToMediaGap).toBeLessThanOrEqual(32);
+      expect(measurements.railFooterGap).toBeGreaterThanOrEqual(18);
+      expect(measurements.railFooterGap).toBeLessThanOrEqual(24);
+      expect(measurements.footerHeight).toBeGreaterThanOrEqual(42);
+      expect(measurements.footerHeight).toBeLessThanOrEqual(48);
+      expect(measurements.sectionBottomPadding).toBeGreaterThanOrEqual(30);
+      expect(measurements.sectionBottomPadding).toBeLessThanOrEqual(40);
+      expect(measurements.materialGap).toBe(0);
+      expect(measurements.campaignToCardWidth).toBeGreaterThanOrEqual(0.93);
+      expect(measurements.campaignToCardWidth).toBeLessThanOrEqual(0.99);
+      expect(measurements.productImageHeights).toHaveLength(3);
+      for (const height of measurements.productImageHeights) {
+        expect(height).toBeCloseTo(expectedImageHeight, 0);
+      }
+      for (const infoHeight of measurements.productInfoHeights) {
+        expect(infoHeight).toBeGreaterThanOrEqual(108);
+        expect(infoHeight).toBeLessThanOrEqual(118);
+      }
+      expect(Math.max(...measurements.productCtaBottoms)).toBeCloseTo(
+        Math.min(...measurements.productCtaBottoms),
+        0,
+      );
+      expect(Math.max(...imageEdges.map((edge) => edge.top))).toBeCloseTo(
+        Math.min(...imageEdges.map((edge) => edge.top)),
+        0,
+      );
+      expect(Math.max(...imageEdges.map((edge) => edge.bottom))).toBeCloseTo(
+        Math.min(...imageEdges.map((edge) => edge.bottom)),
+        0,
+      );
+    } else if (viewport.width >= 768) {
+      expect(measurements.selectedProductTitleSize).toBeGreaterThanOrEqual(15);
+      expect(measurements.selectedProductTitleSize).toBeLessThanOrEqual(17);
+    } else {
       expect(measurements.campaignTitleLines).toBe(1);
     }
   }
