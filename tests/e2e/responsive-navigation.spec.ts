@@ -18,6 +18,7 @@ test("mobile header and menu expose ecommerce navigation", async ({ page }) => {
     "Lookbook",
     "About",
     "Search",
+    "Account",
     "Cart (0)",
     "Shipping",
     "Returns",
@@ -47,6 +48,58 @@ test("desktop header keeps primary navigation and commerce actions", async ({
   await expect(header.getByLabel("Sign in to account")).toHaveText("Account");
   await expect(header.getByLabel(/Cart, \d+ items/).last()).toBeVisible();
   await expect(header.getByRole("button", { name: "Menu" })).toBeHidden();
+});
+
+test("account navigation resolves once and reflects guest and profile states", async ({
+  page,
+}) => {
+  let authenticated = true;
+  let requestCount = 0;
+  let releaseFirstRequest: () => void = () => {};
+  const firstRequestGate = new Promise<void>((resolve) => {
+    releaseFirstRequest = resolve;
+  });
+
+  await page.route("**/api/account/me", async (route) => {
+    requestCount += 1;
+    if (requestCount === 1) await firstRequestGate;
+    await route.fulfill({
+      body: JSON.stringify({ authenticated, ok: true, profile: {} }),
+      contentType: "application/json",
+      status: 200,
+    });
+  });
+
+  await page.setViewportSize({ height: 900, width: 1440 });
+  await page.goto("/");
+  const pendingAccount = page.locator(".account-header-link");
+  await expect(pendingAccount).toBeHidden();
+  await expect(pendingAccount).toHaveAttribute("aria-hidden", "true");
+
+  releaseFirstRequest();
+  const profile = page.getByLabel("Open profile");
+  await expect(profile).toBeVisible();
+  await expect(profile).toHaveText("Profile");
+  await expect(profile).toHaveAttribute("href", "/account");
+  expect(requestCount).toBe(1);
+
+  await page.setViewportSize({ height: 844, width: 390 });
+  await page.getByRole("button", { name: "Menu" }).click();
+  const menu = page.getByRole("dialog", { name: "Site menu" });
+  await expect(menu.getByLabel("Open profile")).toHaveText("Profile");
+  await expect(menu.getByLabel("Open profile")).toHaveAttribute(
+    "href",
+    "/account",
+  );
+  expect(requestCount).toBe(1);
+
+  authenticated = false;
+  await page.reload();
+  const account = page.getByLabel("Sign in to account");
+  await expect(account).toBeVisible();
+  await expect(account).toHaveText("Account");
+  await expect(account).toHaveAttribute("href", "/account/login");
+  expect(requestCount).toBe(2);
 });
 
 test("mobile home keeps the first screen exact and removes the large footer", async ({

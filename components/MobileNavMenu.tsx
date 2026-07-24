@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
+import { AccountHeaderLink } from "./AccountHeaderLink";
 import { CartCountLink } from "./CartCountLink";
 
 const links = [
@@ -15,8 +16,10 @@ const links = [
 ] as const;
 
 export function MobileNavMenu({
+  authenticated,
   onOpenChange,
 }: Readonly<{
+  authenticated: boolean | null;
   onOpenChange?: (open: boolean) => void;
 }>) {
   const [open, setOpen] = useState(false);
@@ -124,7 +127,10 @@ export function MobileNavMenu({
           <div className="mobile-menu-lower">
             <nav aria-label="Utility navigation" className="mobile-menu-utility">
               <Link href="/search" onClick={() => setOpen(false)}>Search</Link>
-              <Link href="/account" onClick={() => setOpen(false)}>Account</Link>
+              <AccountHeaderLink
+                authenticated={authenticated}
+                onClick={() => setOpen(false)}
+              />
               <CartCountLink onClick={() => setOpen(false)} />
             </nav>
             <nav aria-label="Service navigation" className="mobile-menu-secondary">

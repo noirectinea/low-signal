@@ -19,7 +19,7 @@ export function SiteFooter() {
       <footer className="mobile-compact-footer border-t border-black/18 bg-[#d8d9d3] px-4 py-4 text-[9px] font-normal uppercase tracking-[0.07em] text-[#121211] lg:hidden">
         <div className="flex items-center justify-between gap-5">
           <p className="text-[11px] tracking-[0.1em]">LOW SIGNAL</p>
-          <span className="text-[8px] tracking-[0.06em] text-black/48">
+          <span className="home-footer-muted text-[8px] tracking-[0.06em] text-black/48">
             © 2026
           </span>
         </div>

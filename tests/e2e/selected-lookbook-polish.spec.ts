@@ -50,6 +50,9 @@ test("Selected Garments and Lookbook remain composed at every requested viewport
       const campaign = document.querySelector<HTMLElement>(
         ".selected-campaign-card",
       );
+      const campaignTitle = document.querySelector<HTMLElement>(
+        ".selected-campaign-title",
+      );
       const selectedLayout = document.querySelector<HTMLElement>(
         ".selected-garments-layout",
       );
@@ -75,6 +78,7 @@ test("Selected Garments and Lookbook remain composed at every requested viewport
       const imageRect = rect(image);
       const cardRect = rect(card);
       const campaignRect = rect(campaign);
+      const campaignTitleRect = rect(campaignTitle);
       const selectedLayoutRect = rect(selectedLayout);
       const leadRect = rect(lookbookLead);
       const railRect = rect(rail);
@@ -96,6 +100,15 @@ test("Selected Garments and Lookbook remain composed at every requested viewport
           ? campaignRect.width / selectedLayoutRect.width
           : 0,
         campaignHeight: campaignRect?.height ?? 0,
+        campaignTitleLines: campaignTitle
+          ? Math.round(
+              (campaignTitleRect?.height ?? 0) /
+                Number.parseFloat(getComputedStyle(campaignTitle).lineHeight),
+            )
+          : 0,
+        campaignTitleRightGap: campaignRect && campaignTitleRect
+          ? campaignRect.right - campaignTitleRect.right
+          : 0,
         cardHeight: cardRect?.height ?? 0,
         desktopPromoSizes: desktopPromoTitles.map((element) =>
           Number.parseFloat(getComputedStyle(element).fontSize),
@@ -119,6 +132,7 @@ test("Selected Garments and Lookbook remain composed at every requested viewport
         imageRatio: imageRect
           ? imageRect.width / imageRect.height
           : 0,
+        imageHeight: imageRect?.height ?? 0,
         lookbookCompositionPosition: lookbookComposition
           ? getComputedStyle(lookbookComposition).position
           : "",
@@ -202,22 +216,36 @@ test("Selected Garments and Lookbook remain composed at every requested viewport
       expect(measurements.heroNoteSize).toBeGreaterThanOrEqual(10);
       expect(measurements.heroNoteSize).toBeLessThanOrEqual(11);
       expect(measurements.heroNoteWeight).toBe(400);
-      expect(measurements.imageRatio).toBeGreaterThan(0.77);
-      expect(measurements.imageRatio).toBeLessThan(0.83);
+      expect(measurements.imageRatio).toBeGreaterThan(0.68);
+      expect(measurements.imageRatio).toBeLessThan(0.76);
     }
     if (viewport.width >= 1280) {
       expect(measurements.fullyVisibleProducts).toBe(3);
-      expect(measurements.campaignShare).toBeGreaterThanOrEqual(0.2);
-      expect(measurements.campaignShare).toBeLessThanOrEqual(0.22);
-      expect(measurements.campaignRatio).toBeGreaterThan(0.74);
-      expect(measurements.campaignRatio).toBeLessThan(0.76);
+      expect(measurements.campaignShare).toBeGreaterThanOrEqual(0.23);
+      expect(measurements.campaignShare).toBeLessThanOrEqual(0.24);
+      expect(measurements.campaignRatio).toBeGreaterThan(0.79);
+      expect(measurements.campaignRatio).toBeLessThan(0.81);
+      expect(measurements.campaignTitleRightGap).toBeGreaterThanOrEqual(20);
+      const heightRange =
+        viewport.width === 1280
+          ? [400, 430]
+          : viewport.width === 1440
+            ? [430, 460]
+            : viewport.width === 1600
+              ? [470, 500]
+              : [500, 540];
+      expect(measurements.imageHeight).toBeGreaterThanOrEqual(heightRange[0]);
+      expect(measurements.imageHeight).toBeLessThanOrEqual(heightRange[1]);
+    }
+    if (viewport.width >= 1440) {
+      expect(measurements.campaignTitleLines).toBe(1);
     }
   }
 
   expect(runtimeErrors).toEqual([]);
 });
 
-test("homepage tones descend quietly and the Selected anchor clears the header", async ({
+test("homepage tones descend quietly, joins its footer, and clears the header", async ({
   page,
 }) => {
   await page.setViewportSize({ height: 900, width: 1440 });
@@ -242,16 +270,31 @@ test("homepage tones descend quietly and the Selected anchor clears the header",
     const selectedTop = document
       .querySelector("#selected-pieces")!
       .getBoundingClientRect().top;
+    const finalSurface = getComputedStyle(
+      document.querySelector(".mobile-journal")!,
+    ).backgroundColor;
+    const footerSurface = getComputedStyle(
+      document.querySelector(".site-footer")!,
+    ).backgroundColor;
 
     return {
+      finalSurface,
+      footerSurface,
       selectedTop,
       toneLightness: tones.map(lightness),
     };
   });
 
   expect(measurements.selectedTop).toBeGreaterThanOrEqual(80);
+  expect(measurements.footerSurface).toBe(measurements.finalSurface);
   expect(measurements.toneLightness).toEqual(
     [...measurements.toneLightness].sort((a, b) => b - a),
+  );
+
+  await page.goto("/about");
+  await expect(page.locator(".site-footer")).not.toHaveCSS(
+    "background-color",
+    measurements.finalSurface,
   );
 });
 
