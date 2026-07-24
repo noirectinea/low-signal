@@ -3134,3 +3134,142 @@ a {
     font-size: 15px;
   }
 }
+
+/* Mobile homepage rhythm: preserve the type system, give late chapters room. */
+@media (max-width: 767.98px) {
+  .mobile-editorial-index {
+    height: 480px;
+    grid-template-rows: 140px 340px;
+  }
+
+  .mobile-spring-teaser {
+    min-height: 140px;
+  }
+
+  .mobile-lookbook-teaser {
+    min-height: 340px;
+  }
+
+  .mobile-spring-teaser .home-section-title {
+    white-space: nowrap;
+    font-size: clamp(22px, 6.6vw, 28px);
+    line-height: 0.98;
+    text-wrap: nowrap;
+  }
+
+  .mobile-spring-teaser .home-editorial-cta {
+    white-space: nowrap;
+    font-size: 11.5px;
+  }
+
+  .mobile-lookbook-teaser .home-section-title {
+    font-size: clamp(27px, 7.2vw, 30px);
+    line-height: 0.98;
+    text-wrap: balance;
+  }
+
+  .mobile-selected-editorial {
+    padding-block: 28px 56px;
+  }
+
+  .mobile-selected-editorial .selected-garments-header {
+    margin-bottom: 24px;
+    padding-bottom: 16px;
+  }
+
+  .mobile-selected-editorial .selected-garments-layout {
+    gap: 18px;
+  }
+
+  .mobile-selected-editorial .selected-campaign-copy {
+    padding: 16px 16px 28px;
+  }
+
+  .mobile-material-story > div {
+    height: auto;
+    min-height: 100svh;
+    grid-template-rows: auto auto;
+  }
+
+  .mobile-material-copy {
+    padding: 56px 20px 42px;
+  }
+
+  .mobile-material-copy .editorial-section-title {
+    max-width: 350px;
+    margin-top: 28px;
+    font-size: clamp(27px, 7.6vw, 31px);
+    line-height: 1.02;
+    letter-spacing: 0.006em;
+    text-wrap: balance;
+  }
+
+  .mobile-material-copy .material-selector {
+    margin-top: 34px;
+  }
+
+  .mobile-material-copy .material-selector-row {
+    min-height: 56px;
+  }
+
+  .mobile-material-image-column {
+    padding: 34px 20px 56px;
+  }
+
+  .mobile-material-image-column > div {
+    gap: 22px;
+  }
+
+  .mobile-material-image {
+    aspect-ratio: 4 / 3;
+  }
+
+  .mobile-material-image + div {
+    gap: 22px;
+    padding-top: 20px;
+  }
+
+  .mobile-material-image-column .editorial-body {
+    max-width: 32ch;
+    line-height: 1.55;
+    color: rgb(18 18 17 / 0.76);
+  }
+
+  .mobile-journal {
+    min-height: 88svh;
+    padding: 44px 16px 52px;
+  }
+
+  .mobile-journal > div {
+    min-height: calc(88svh - 96px);
+    grid-template-rows: auto minmax(0, 1fr);
+    gap: 40px;
+  }
+
+  .mobile-journal .home-section-title {
+    font-size: clamp(28px, 7.6vw, 31px);
+    line-height: 0.98;
+    text-wrap: balance;
+  }
+
+  .mobile-journal-intro > .home-editorial-statement,
+  .mobile-journal-intro > p:nth-of-type(1) {
+    max-width: 12ch;
+    margin-top: 30px;
+    font-size: clamp(27px, 7.4vw, 31px);
+    line-height: 1.04;
+    letter-spacing: 0.006em;
+    text-wrap: balance;
+  }
+
+  .mobile-journal-composition {
+    height: 100%;
+    min-height: 320px;
+  }
+
+  .mobile-journal-lead {
+    height: 100%;
+    min-height: 320px;
+    aspect-ratio: auto;
+  }
+}

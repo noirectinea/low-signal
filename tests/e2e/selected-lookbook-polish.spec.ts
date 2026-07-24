@@ -47,6 +47,12 @@ test("Selected Garments and Lookbook remain composed at every requested viewport
       const lookbookLead = document.querySelector<HTMLElement>(
         ".mobile-journal-lead",
       );
+      const material = document.querySelector<HTMLElement>(
+        ".material-form-section",
+      );
+      const materialTitle = material?.querySelector<HTMLElement>(
+        ".editorial-section-title",
+      );
       const campaign = document.querySelector<HTMLElement>(
         ".selected-campaign-card",
       );
@@ -143,6 +149,10 @@ test("Selected Garments and Lookbook remain composed at every requested viewport
         lookbookLeadRatio: leadRect
           ? leadRect.width / leadRect.height
           : 0,
+        materialHeight: rect(material)?.height ?? 0,
+        materialTitleSize: materialTitle
+          ? Number.parseFloat(getComputedStyle(materialTitle).fontSize)
+          : 0,
         nextCardStartsInsideRail:
           (rect(nextCard)?.left ?? Number.POSITIVE_INFINITY) <
           (rect(rail)?.right ?? 0),
@@ -186,9 +196,18 @@ test("Selected Garments and Lookbook remain composed at every requested viewport
       expect(measurements.sectionTitleSize).toBeGreaterThanOrEqual(22);
       expect(measurements.lookbookCompositionPosition).toBe("static");
       expect(measurements.lookbookDetailsDisplay).toBe("none");
-      expect(measurements.lookbookHeight).toBeLessThanOrEqual(450);
-      expect(measurements.lookbookLeadRatio).toBeGreaterThan(1.75);
-      expect(measurements.lookbookLeadRatio).toBeLessThan(1.8);
+      expect(measurements.materialHeight).toBeGreaterThanOrEqual(
+        viewport.height,
+      );
+      expect(measurements.materialTitleSize).toBeGreaterThanOrEqual(27);
+      expect(measurements.lookbookHeight).toBeGreaterThanOrEqual(
+        viewport.height * 0.85,
+      );
+      expect(measurements.lookbookHeight).toBeLessThanOrEqual(
+        viewport.height * 1.02,
+      );
+      expect(measurements.lookbookLeadRatio).toBeGreaterThan(0.85);
+      expect(measurements.lookbookLeadRatio).toBeLessThan(1.1);
     }
     if (viewport.width >= 1024) {
       expect(measurements.campaignHeight).toBeLessThan(

@@ -184,8 +184,8 @@ test("mobile home keeps the first screen exact and removes the large footer", as
 
     expect(metrics.heroHeight).toBe(metrics.viewportHeight);
     expect(metrics.editorialTop).toBeGreaterThanOrEqual(metrics.viewportHeight);
-    expect(metrics.springHeight).toBeGreaterThanOrEqual(80);
-    expect(metrics.springHeight).toBeLessThanOrEqual(110);
+    expect(metrics.springHeight).toBeGreaterThanOrEqual(135);
+    expect(metrics.springHeight).toBeLessThanOrEqual(145);
     expect(metrics.documentWidth).toBe(metrics.viewportWidth);
     expect(metrics.brandRight).toBeLessThanOrEqual(metrics.imageLeft ?? 0);
     expect((metrics.ctaLeft ?? 0) - (metrics.imageLeft ?? 0)).toBeGreaterThanOrEqual(19);

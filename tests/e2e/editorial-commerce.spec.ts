@@ -55,7 +55,8 @@ test("selected garments uses a light mobile campaign and swipe rail", async ({ p
   expect(campaignMetrics.left).toBe(0);
   expect(campaignMetrics.width).toBe(390);
   expect(campaignMetrics.fontSize).toBeGreaterThanOrEqual(28);
-  expect(campaignMetrics.height).toBeLessThan(115);
+  expect(campaignMetrics.height).toBeGreaterThanOrEqual(118);
+  expect(campaignMetrics.height).toBeLessThan(125);
   await expect(section.locator("article")).toHaveCount(18);
   await expect(section.getByRole("link", { name: "Men", exact: true })).toBeVisible();
   await expect(section.getByRole("link", { name: "Women", exact: true })).toBeVisible();
